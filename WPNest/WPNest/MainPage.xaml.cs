@@ -29,8 +29,5 @@ namespace WPNest {
 			ViewModel.Down();
 		}
 
-		private void OnGetInfoClick(object sender, RoutedEventArgs e) {
-			ViewModel.GetInfo();
-		}
 	}
 }

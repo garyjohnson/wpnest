@@ -183,7 +183,7 @@ namespace WPNest {
 				strContent = sr.ReadToEnd();
 			}
 
-//			GetInfo();
+			Refresh();
 		}
 
 		public void Down() {
@@ -224,8 +224,55 @@ namespace WPNest {
 				strContent = sr.ReadToEnd();
 			}
 
-//			GetInfo();
+			Refresh();
 		}
 
+		public void Refresh() {
+			string url = string.Format("{0}/v2/subscribe", transportUrl);
+			HttpWebRequest request = HttpWebRequest.CreateHttp(url);
+			request.Method = "POST";
+			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
+			request.Headers["X-nl-base-version"] = "1190775996";
+			request.Headers["X-nl-protocol-version"] = "1";
+			request.Headers["X-nl-user-id"] = userId;
+			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
+			request.Headers["X-nl-merge-payload"] = "true";
+
+			request.BeginGetRequestStream(RefreshGetRequestStreamCallback, request);
+		}
+
+		private void RefreshGetRequestStreamCallback(IAsyncResult result) {
+			var request = (HttpWebRequest)result.AsyncState;
+			using (Stream requestStream = request.EndGetRequestStream(result)) {
+				string usernameEncoded = HttpUtility.UrlEncode(UserName);
+				string passwordEncoded = HttpUtility.UrlEncode(Password);
+				string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\",\"version\":-2029154136,\"timestamp\":1352247117000}}]}}", firstDeviceId);
+
+				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
+				requestStream.Write(encodedRequestString, 0, encodedRequestString.Length);
+
+			}
+			request.BeginGetResponse(RefreshGetResponseCallback, request);
+		}
+
+		private void RefreshGetResponseCallback(IAsyncResult result) {
+			var request = (HttpWebRequest)result.AsyncState;
+			WebResponse response = request.EndGetResponse(result);
+			Stream responseStream = response.GetResponseStream();
+			string strContent = "";
+			using (var sr = new StreamReader(responseStream)) {
+				strContent = sr.ReadToEnd();
+			}
+
+			var values = JObject.Parse(strContent);
+			double temp = double.Parse(values["target_temperature"].Value<string>());
+			_temperature = CelciusToFahrenheit(temp);
+
+			Deployment.Current.Dispatcher.BeginInvoke(() => {
+				CurrentTemperature = Math.Round(_temperature).ToString();
+				IsLoggedIn = true;
+			});
+
+		}
 	}
 }

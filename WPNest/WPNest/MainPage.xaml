@@ -27,7 +27,6 @@
 				<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Height="100">Up</Button>
 				<TextBlock Text="{Binding CurrentTemperature}" FontSize="30"/>
 				<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" Height="100">Down</Button>
-				<Button Click="OnGetInfoClick" IsEnabled="{Binding IsLoggedIn}">Refresh</Button>
 			</StackPanel>
 		</Grid>
 	</Grid>
