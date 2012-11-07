@@ -4,6 +4,6 @@ obj
 _ReSharper*
 .gitignore~
 *.suo
-
-# mstest test results
+*.v11.suo
 TestResults
+

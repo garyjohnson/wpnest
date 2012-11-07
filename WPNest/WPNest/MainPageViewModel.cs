@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Windows;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace WPNest {
 
@@ -68,7 +69,7 @@ namespace WPNest {
 		}
 
 		private double FahrenheitToCelcius(double fahrenheit) {
-			return (fahrenheit - 32.0d)/1.8d;
+			return (fahrenheit - 32.0d) / 1.8d;
 		}
 
 		public void Login() {
@@ -77,6 +78,17 @@ namespace WPNest {
 			request.Method = "POST";
 
 			request.BeginGetRequestStream(LoginGetRequestStreamCallback, request);
+		}
+
+		public async Task<IAsyncResult> Test() {
+			HttpWebRequest request = HttpWebRequest.CreateHttp("https://home.nest.com/user/login");
+			request.ContentType = @"application/x-www-form-urlencoded; charset=utf-8";
+			request.Method = "POST";
+
+			await new Task<IAsyncResult>(() => {
+				return request.BeginGetRequestStream(LoginGetRequestStreamCallback, request);
+			}).ContinueWith(b => LoginGetRequestStreamCallback(b.Result))
+			.ContinueWith(t => LoginGetResponseCallback(t.Result));
 		}
 
 		private void LoginGetRequestStreamCallback(IAsyncResult result) {
