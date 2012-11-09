@@ -13,21 +13,28 @@
 
 		<!--TitlePanel contains the name of the application and page title-->
 		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-			<TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" />
-			<TextBlock x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" />
+			<TextBlock x:Name="PageTitle" Text="nest mobile" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" />
 		</StackPanel>
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-			<StackPanel Orientation="Vertical">
-				<TextBox x:Name="username" Text="{Binding Path=UserName, Mode=TwoWay}" />
-				<TextBox x:Name="password" Text="{Binding Path=Password, Mode=TwoWay}" />
-				<Button Click="ButtonBase_OnClick">Login</Button>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="30" />
+			</Grid.RowDefinitions>
+			<TextBox x:Name="username" Grid.Row="0" Text="{Binding Path=UserName, Mode=TwoWay}" />
+			<PasswordBox x:Name="password" Grid.Row="1" Password="{Binding Path=Password, Mode=TwoWay}" />
+			<Button Click="ButtonBase_OnClick" Grid.Row="2">Login</Button>
 
-				<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Height="100">Up</Button>
-				<TextBlock Text="{Binding CurrentTemperature}" FontSize="30"/>
-				<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" Height="100">Down</Button>
-			</StackPanel>
+			<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Height="100" Width="140" Grid.Row="4" HorizontalAlignment="Center">Up</Button>
+			<TextBlock Text="{Binding CurrentTemperature}" FontSize="60" HorizontalAlignment="Center" Grid.Row="5"/>
+			<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" Height="100" Width="140" Grid.Row="6" HorizontalAlignment="Center">Down</Button>
 		</Grid>
 	</Grid>
 

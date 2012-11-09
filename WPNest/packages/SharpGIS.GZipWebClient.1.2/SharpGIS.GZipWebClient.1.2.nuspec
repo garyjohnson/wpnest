@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SharpGIS.GZipWebClient</id>
+    <version>1.2</version>
+    <authors>Morten Nielsen</authors>
+    <owners>Morten Nielsen</owners>
+    <projectUrl>http://www.sharpgis.net/post/2011/08/28/GZIP-Compressed-Web-Requests-in-WP7-Take-2.aspx</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>WebClient for Windows Phone 7 that adds support for GZIP compressed web requests.</description>
+    <tags>gzip zip webclient wp7 phone</tags>
+  </metadata>
+</package>

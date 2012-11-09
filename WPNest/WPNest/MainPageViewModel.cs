@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using SharpGIS;
 
 namespace WPNest {
 
@@ -19,7 +20,7 @@ namespace WPNest {
 
 		private double _temperature;
 
-		private string _currentTemperature = "";
+		private string _currentTemperature = "0";
 		public string CurrentTemperature {
 			get { return _currentTemperature; }
 			set {
@@ -37,7 +38,7 @@ namespace WPNest {
 			}
 		}
 
-		private string _userName = "gary@gjtt.com";
+		private string _userName = "";
 		public string UserName {
 			get { return _userName; }
 			set {
@@ -46,7 +47,7 @@ namespace WPNest {
 			}
 		}
 
-		private string _password = "YesMaam";
+		private string _password = "";
 		public string Password {
 			get { return _password; }
 			set {
@@ -73,26 +74,15 @@ namespace WPNest {
 		}
 
 		public void Login() {
-			HttpWebRequest request = HttpWebRequest.CreateHttp("https://home.nest.com/user/login");
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri("https://home.nest.com/user/login"));
 			request.ContentType = @"application/x-www-form-urlencoded; charset=utf-8";
 			request.Method = "POST";
 
 			request.BeginGetRequestStream(LoginGetRequestStreamCallback, request);
 		}
 
-		public async Task<IAsyncResult> Test() {
-			HttpWebRequest request = HttpWebRequest.CreateHttp("https://home.nest.com/user/login");
-			request.ContentType = @"application/x-www-form-urlencoded; charset=utf-8";
-			request.Method = "POST";
-
-			await new Task<IAsyncResult>(() => {
-				return request.BeginGetRequestStream(LoginGetRequestStreamCallback, request);
-			}).ContinueWith(b => LoginGetRequestStreamCallback(b.Result))
-			.ContinueWith(t => LoginGetResponseCallback(t.Result));
-		}
-
 		private void LoginGetRequestStreamCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			using (Stream requestStream = request.EndGetRequestStream(result)) {
 				string usernameEncoded = HttpUtility.UrlEncode(UserName);
 				string passwordEncoded = HttpUtility.UrlEncode(Password);
@@ -106,7 +96,7 @@ namespace WPNest {
 		}
 
 		private void LoginGetResponseCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			WebResponse response = request.EndGetResponse(result);
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
@@ -126,7 +116,7 @@ namespace WPNest {
 
 		public void GetInfo() {
 			string url = string.Format("{0}/v2/mobile/{1}", transportUrl, user);
-			HttpWebRequest request = HttpWebRequest.CreateHttp(url);
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
 			request.Method = "GET";
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
 
@@ -134,7 +124,7 @@ namespace WPNest {
 		}
 
 		private void GetInfoGetResponseCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			WebResponse response = request.EndGetResponse(result);
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
@@ -148,7 +138,7 @@ namespace WPNest {
 			firstDeviceId = first.Name;
 
 			double temp = double.Parse(shared[firstDeviceId]["target_temperature"].Value<string>());
-			_temperature = CelciusToFahrenheit(temp);
+			_temperature = Math.Round(CelciusToFahrenheit(temp));
 
 			Deployment.Current.Dispatcher.BeginInvoke(() => {
 				CurrentTemperature = _temperature.ToString();
@@ -158,7 +148,8 @@ namespace WPNest {
 		}
 
 		public void Up() {
-			HttpWebRequest request = HttpWebRequest.CreateHttp(string.Format(@"{0}/v2/put/shared.{1}", transportUrl, firstDeviceId));
+			string url = string.Format(@"{0}/v2/put/shared.{1}", transportUrl, firstDeviceId);
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
 			request.ContentType = @"application/json";
 			request.Method = "POST";
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
@@ -173,7 +164,7 @@ namespace WPNest {
 		}
 
 		private void UpGetRequestStreamCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			using (Stream requestStream = request.EndGetRequestStream(result)) {
 
 				_temperature += 1.0d;
@@ -187,7 +178,7 @@ namespace WPNest {
 		}
 
 		private void UpGetResponseCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			WebResponse response = request.EndGetResponse(result);
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
@@ -199,7 +190,8 @@ namespace WPNest {
 		}
 
 		public void Down() {
-			HttpWebRequest request = HttpWebRequest.CreateHttp(string.Format(@"{0}/v2/put/shared.{1}", transportUrl, firstDeviceId));
+			string url = string.Format(@"{0}/v2/put/shared.{1}", transportUrl, firstDeviceId);
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
 			request.ContentType = @"application/json";
 			request.Method = "POST";
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
@@ -214,7 +206,7 @@ namespace WPNest {
 		}
 
 		private void DownGetRequestStreamCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			using (Stream requestStream = request.EndGetRequestStream(result)) {
 
 				_temperature -= 1.0d;
@@ -228,13 +220,9 @@ namespace WPNest {
 		}
 
 		private void DownGetResponseCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			WebResponse response = request.EndGetResponse(result);
 			Stream responseStream = response.GetResponseStream();
-			string strContent = "";
-			using (var sr = new StreamReader(responseStream)) {
-				strContent = sr.ReadToEnd();
-			}
 
 			Refresh();
 		}
@@ -254,10 +242,8 @@ namespace WPNest {
 		}
 
 		private void RefreshGetRequestStreamCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			using (Stream requestStream = request.EndGetRequestStream(result)) {
-				string usernameEncoded = HttpUtility.UrlEncode(UserName);
-				string passwordEncoded = HttpUtility.UrlEncode(Password);
 				string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\",\"version\":-2029154136,\"timestamp\":1352247117000}}]}}", firstDeviceId);
 
 				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
@@ -268,7 +254,7 @@ namespace WPNest {
 		}
 
 		private void RefreshGetResponseCallback(IAsyncResult result) {
-			var request = (HttpWebRequest)result.AsyncState;
+			var request = (WebRequest)result.AsyncState;
 			WebResponse response = request.EndGetResponse(result);
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
