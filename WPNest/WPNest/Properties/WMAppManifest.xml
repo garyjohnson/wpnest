@@ -4,7 +4,6 @@
   <App xmlns="" ProductID="{58d4e211-a32b-410d-b2b0-6a317c230d0a}" Title="WPNest" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal"  Author="WPNest author" Description="Sample description" Publisher="WPNest">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
-      <Capability Name="ID_CAP_GAMERSERVICES"/>
       <Capability Name="ID_CAP_IDENTITY_DEVICE"/>
       <Capability Name="ID_CAP_IDENTITY_USER"/>
       <Capability Name="ID_CAP_LOCATION"/>

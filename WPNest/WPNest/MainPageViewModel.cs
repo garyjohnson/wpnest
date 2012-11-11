@@ -21,6 +21,15 @@ namespace WPNest {
 			}
 		}
 
+		private bool _isLoggingIn;
+		public bool IsLoggingIn {
+			get { return _isLoggingIn; }
+			set {
+				_isLoggingIn = value;
+				OnPropertyChanged("IsLoggingIn");
+			}
+		}
+
 		private bool _isLoggedIn;
 		public bool IsLoggedIn {
 			get { return _isLoggedIn; }
@@ -50,10 +59,16 @@ namespace WPNest {
 
 		public async Task InitializeAsync() {
 			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
-
-			if (sessionProvider.IsSessionExpired)
+			if (sessionProvider.IsSessionExpired) {
+				IsLoggingIn = true;
 				return;
+			}
 
+			await OnLoggedIn();
+		}
+
+		private async Task OnLoggedIn() {
+			IsLoggingIn = false;
 			IsLoggedIn = true;
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			_getStatusResult = await nestWebService.GetStatusAsync();
@@ -73,12 +88,7 @@ namespace WPNest {
 					return;
 			}
 
-			IsLoggedIn = true;
-			_getStatusResult = await nestWebService.GetStatusAsync();
-			if (IsErrorHandled(_getStatusResult.Error))
-				return;
-
-			CurrentTemperature = GetFirstThermostat().Temperature.ToString();
+			await OnLoggedIn();
 		}
 
 		private static bool IsErrorHandled(Exception error) {

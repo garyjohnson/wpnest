@@ -114,6 +114,9 @@
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Login\GetTemperatureResult.cs" />
+    <Compile Include="Login\LoginControl.xaml.cs">
+      <DependentUpon>LoginControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Login\LoginResult.cs" />
     <Compile Include="Login\LoginViewModel.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -139,6 +142,7 @@
     <Compile Include="Services\WebServiceResult.cs" />
     <Compile Include="Tests\LoginViewModelTest.cs" />
     <Compile Include="Tests\MockNestWebService.cs" />
+    <Compile Include="TrueToVisibleConverter.cs" />
     <Compile Include="ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +150,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Login\LoginControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

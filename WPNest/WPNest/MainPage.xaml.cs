@@ -8,20 +8,15 @@ namespace WPNest {
 
 		public MainPage() {
 			InitializeComponent();
-
 			Loaded += OnLoaded;
-		}
-
-		private async void OnLoaded(object sender, RoutedEventArgs e) {
-			await ViewModel.InitializeAsync();
 		}
 
 		private MainPageViewModel ViewModel {
 			get { return DataContext as MainPageViewModel; }
 		}
 
-		private async void ButtonBase_OnClick(object sender, RoutedEventArgs e) {
-			await ViewModel.LoginAsync();
+		private async void OnLoaded(object sender, RoutedEventArgs e) {
+			await ViewModel.InitializeAsync();
 		}
 
 		private async void OnUpClick(object sender, RoutedEventArgs e) {
