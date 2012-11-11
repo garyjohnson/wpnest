@@ -49,6 +49,48 @@ namespace WPNest.Services {
 			return ParseGetTemperatureResult(responseString);
 		}
 
+//		public void Up() {
+//			string url = string.Format(@"{0}/v2/put/shared.{1}", transportUrl, firstDeviceId);
+//			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+//			request.ContentType = @"application/json";
+//			request.Method = "POST";
+//			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
+//
+//			request.Headers["X-nl-base-version"] = "1190775996";
+//			request.Headers["X-nl-protocol-version"] = "1";
+//			request.Headers["X-nl-user-id"] = userId;
+//			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
+//			request.Headers["X-nl-merge-payload"] = "true";
+//
+//			request.BeginGetRequestStream(UpGetRequestStreamCallback, request);
+//		}
+//
+//		private void UpGetRequestStreamCallback(IAsyncResult result) {
+//			var request = (WebRequest)result.AsyncState;
+//			using (Stream requestStream = request.EndGetRequestStream(result)) {
+//
+//				_temperature += 1.0d;
+//				double desiredTemp = FahrenheitToCelcius(_temperature);
+//				string t = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTemp.ToString());
+//				byte[] encodedRequestString = Encoding.UTF8.GetBytes(t);
+//				requestStream.Write(encodedRequestString, 0, encodedRequestString.Length);
+//
+//			}
+//			request.BeginGetResponse(UpGetResponseCallback, request);
+//		}
+//
+//		private void UpGetResponseCallback(IAsyncResult result) {
+//			var request = (WebRequest)result.AsyncState;
+//			WebResponse response = request.EndGetResponse(result);
+//			Stream responseStream = response.GetResponseStream();
+//			string strContent = "";
+//			using (var sr = new StreamReader(responseStream)) {
+//				strContent = sr.ReadToEnd();
+//			}
+//
+////			Refresh();
+//		}
+
 		private static GetTemperatureResult ParseGetTemperatureResult(string responseString) {
 			var values = JObject.Parse(responseString);
 			var shared = values["shared"];

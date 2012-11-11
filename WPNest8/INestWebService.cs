@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
-using WPNest.Login;
+using WPNest.Services;
 
 namespace WPNest {
 	
 	public interface INestWebService {
 
 		Task<LoginResult> LoginAsync(string userName, string password);
-		Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string user);
+		Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string user);
 	}
 }
