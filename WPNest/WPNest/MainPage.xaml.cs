@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Windows;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Testing;
 
 namespace WPNest {
 
@@ -11,6 +12,9 @@ namespace WPNest {
 
 		public MainPage() {
 			InitializeComponent();
+
+			if (App.IsTest)
+				Content = UnitTestSystem.CreateTestPage();
 		}
 
 		private MainPageViewModel ViewModel {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask AssemblyFile="Microsoft.Silverlight.Toolkit.Build.Tasks.dll" TaskName="Microsoft.Silverlight.Toolkit.Build.Tasks.RunUnitTestsTask" />
+
+  <PropertyGroup>
+    <TestResultsFile></TestResultsFile>
+    <DeleteTestLogFiles>false</DeleteTestLogFiles>
+    <TestUseEmulator>true</TestUseEmulator>
+    <TestUpdateApplication>false</TestUpdateApplication>
+    <TestPlaformId></TestPlaformId>
+    <TestDeviceId></TestDeviceId>
+	<TestDependsOn>Build</TestDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Test" DependsOnTargets="$(TestDependsOn)">
+
+    <RunUnitTestsTask XapFile="$(MSBuildProjectDirectory)\$(OutputPath)\$(XapFilename)" 
+                  ApplicationManifest="$(MSBuildProjectDirectory)\Properties\WMAppManifest.xml"
+                  TestResultsFile="$(TestResultsFile)" 
+                  DeleteLogFiles="$(DeleteTestLogFiles)"
+                  UseEmulator="$(TestUseEmulator)"
+                  PlatformId="$(TestPlaformId)"
+                  DeviceId="$(TestDeviceId)"
+                  UpdateApplication="$(TestUpdateApplication)"
+                  />
+  </Target>
+
+</Project> 

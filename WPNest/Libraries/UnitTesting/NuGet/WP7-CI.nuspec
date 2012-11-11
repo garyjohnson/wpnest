@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WP7-CI</id>
+    <version>1.1</version>
+    <title>Windows Phone 7 Continuous Integration Testing Framework</title>
+    <authors>richard.szalay</authors>
+    <owners>Richard Szalay, Microsoft Silverlight Toolkit Team</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>A port of the Silverlight Toolkit Test Framework with CI support</summary>
+    <description>A port of the Silverlight Toolkit Test Framework that includes an MSBuild task for Continuous Integration support. 
+	This project will be terminated once there is official support for running in-emulator unit tests in a CI environment.</description>
+    <language>en-GB</language>
+	<projectUrl>http://wp7ci.codeplex.com/</projectUrl>
+    <tags>wp7 unit-testing CI</tags>
+  </metadata>
+  <files>
+    <file src="README-WP7-CI.txt" target="content" />
+    <file src="..\bin\*.dll" target="lib\sl3-wp" />
+    <file src="..\bin\*.xml" target="lib\sl3-wp" />
+    <file src="Install.ps1" target="tools" />
+    <file src="Uninstall.ps1" target="tools" />
+    <file src="..\Infrastructure\Tools\*.dll" target="tools" />
+    <file src="..\Infrastructure\Tools\*.targets" target="tools" />
+  </files>
+</package>
