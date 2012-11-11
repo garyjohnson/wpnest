@@ -13,7 +13,7 @@
 		<WPNest:MainPageViewModel />
 	</d:DataContext>
 
-	<Grid x:Name="ContentPanel" Margin="12,0,12,0">
+	<Grid x:Name="ContentPanel" Margin="12,0,12,0" Background="{StaticResource BackgroundBrush}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -21,7 +21,7 @@
 		</Grid.RowDefinitions>
 		<TextBox x:Name="username" Grid.Row="0" Text="{Binding Path=UserName, Mode=TwoWay}" />
 		<PasswordBox x:Name="password" Grid.Row="1" Password="{Binding Path=Password, Mode=TwoWay}" />
-		<Button Click="OnLoginPressed" Grid.Row="2">Login</Button>
+		<Button Click="OnLoginPressed" Grid.Row="2" Foreground="#FF171717" BorderBrush="#FF212121">Login</Button>
 	</Grid>
 
 </UserControl>

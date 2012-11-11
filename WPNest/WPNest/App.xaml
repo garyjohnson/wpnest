@@ -6,6 +6,11 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
 
     <Application.Resources>
+    	<LinearGradientBrush x:Key="BackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+    		<GradientStop Color="#FFE1E3E6" Offset="0"/>
+    		<GradientStop Color="#FF7E8FA2" Offset="1"/>
+    		<GradientStop Color="#FFBBBEC1" Offset="0.761"/>
+    	</LinearGradientBrush>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>
