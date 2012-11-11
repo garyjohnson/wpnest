@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,18 +50,24 @@ namespace WPNest {
 		public async Task LoginAsync() {
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			_loginResult = await nestWebService.LoginAsync(UserName, Password);
-			if (_loginResult.Error != null) {
-				MessageBox.Show(_loginResult.Error.Message);
+			if (IsErrorHandled(_loginResult.Error))
 				return;
-			}
 
 			_getStatusResult = await nestWebService.GetStatusAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.UserId);
-			if (_getStatusResult.Error != null) {
-				MessageBox.Show(_getStatusResult.Error.Message);
+			if (IsErrorHandled(_getStatusResult.Error))
 				return;
-			}
+
 			CurrentTemperature = GetFirstThermostat().Temperature.ToString();
 			IsLoggedIn = true;
+		}
+
+		private static bool IsErrorHandled(Exception error) {
+			if (error != null) {
+				MessageBox.Show(error.Message);
+				return true;
+			}
+
+			return false;
 		}
 
 		private Thermostat GetFirstThermostat() {
@@ -72,16 +79,13 @@ namespace WPNest {
 			var thermostat = GetFirstThermostat();
 
 			var result = await nestWebService.RaiseTemperatureAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.UserId, thermostat);
-			if (result.Error != null) {
-				MessageBox.Show(result.Error.Message);
+			if (IsErrorHandled(result.Error))
 				return;
-			}
 
 			GetTemperatureResult temperatureResult = await nestWebService.GetTemperatureAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.UserId, thermostat);
-			if (temperatureResult.Error != null) {
-				MessageBox.Show(temperatureResult.Error.Message);
+			if (IsErrorHandled(temperatureResult.Error))
 				return;
-			}
+
 			thermostat.Temperature = temperatureResult.Temperature;
 			CurrentTemperature = thermostat.Temperature.ToString(CultureInfo.InvariantCulture);
 		}
@@ -91,16 +95,13 @@ namespace WPNest {
 			var thermostat = GetFirstThermostat();
 
 			var result = await nestWebService.LowerTemperatureAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.UserId, thermostat);
-			if (result.Error != null) {
-				MessageBox.Show(result.Error.Message);
+			if (IsErrorHandled(result.Error))
 				return;
-			}
 
 			GetTemperatureResult temperatureResult = await nestWebService.GetTemperatureAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.UserId, thermostat);
-			if (temperatureResult.Error != null) {
-				MessageBox.Show(temperatureResult.Error.Message);
+			if (IsErrorHandled(temperatureResult.Error))
 				return;
-			}
+
 			thermostat.Temperature = temperatureResult.Temperature;
 			CurrentTemperature = thermostat.Temperature.ToString(CultureInfo.InvariantCulture);
 		}
