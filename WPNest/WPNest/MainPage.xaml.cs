@@ -1,11 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Windows;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Testing;
-using Microsoft.Phone.Testing.Harness;
 
 namespace WPNest {
 
@@ -14,8 +9,11 @@ namespace WPNest {
 		public MainPage() {
 			InitializeComponent();
 
-			if (App.IsTest)
-				Content = UnitTestSystem.CreateTestPage();
+			Loaded += OnLoaded;
+		}
+
+		private async void OnLoaded(object sender, RoutedEventArgs e) {
+			await ViewModel.InitializeAsync();
 		}
 
 		private MainPageViewModel ViewModel {

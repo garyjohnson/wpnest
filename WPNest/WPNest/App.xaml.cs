@@ -42,6 +42,8 @@ namespace WPNest {
 		}
 
 		private void InitializeServicesForRuntime() {
+			ServiceContainer.RegisterService<ISettingsProvider>(new SettingsProvider());
+			ServiceContainer.RegisterService<ISessionProvider>(new SessionProvider());
 			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
 		}
 

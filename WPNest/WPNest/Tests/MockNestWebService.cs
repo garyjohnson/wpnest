@@ -8,23 +8,23 @@ namespace WPNest.Tests {
 
 		public bool WasLoginCalled { get; private set; }
 
-		public Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string userId) {
+		public Task<WebServiceResult> LoginAsync(string userName, string password) {
 			throw new NotImplementedException();
 		}
 
-		public Task<WebServiceResult> RaiseTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+		public Task<GetStatusResult> GetStatusAsync() {
 			throw new NotImplementedException();
 		}
 
-		public Task<WebServiceResult> LowerTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+		public Task<WebServiceResult> RaiseTemperatureAsync(Thermostat thermostat) {
 			throw new NotImplementedException();
 		}
 
-		public Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+		public Task<WebServiceResult> LowerTemperatureAsync(Thermostat thermostat) {
 			throw new NotImplementedException();
 		}
 
-		public Task<LoginResult> LoginAsync(string userName, string password) {
+		public Task<GetTemperatureResult> GetTemperatureAsync(Thermostat thermostat) {
 			throw new NotImplementedException();
 		}
 	}
