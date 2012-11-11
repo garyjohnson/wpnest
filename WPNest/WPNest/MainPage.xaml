@@ -64,16 +64,17 @@
 				<RowDefinition Height="0.3*"/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
-			<Ellipse Height="380" VerticalAlignment="Center" Margin="0" Grid.RowSpan="3" Width="380" HorizontalAlignment="Center">
+			<Ellipse x:Name="orb" Height="380" VerticalAlignment="Center" Margin="0" Grid.RowSpan="3" Width="380" HorizontalAlignment="Center">
 				<Ellipse.Fill>
 					<RadialGradientBrush>
 						<GradientStop Color="Black" Offset="0"/>
-						<GradientStop Color="#FF0E0E0E" Offset="0.822"/>
-						<GradientStop Color="Black" Offset="0.989"/>
-						<GradientStop Color="#FF0E0E0E" Offset="0.523"/>
+						<GradientStop Color="#FF212020" Offset="0.822"/>
+						<GradientStop Color="#FF0F0F0F" Offset="0.989"/>
+						<GradientStop Color="#FF1D1D1D" Offset="0.523"/>
 					</RadialGradientBrush>
 				</Ellipse.Fill>
 			</Ellipse>
+			<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
 			<TextBlock Text="{Binding CurrentTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-30,0,0" Foreground="#FFBFBFBF"/>
 			<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource BlankButton}" Background="#01010101">
 				<Path Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Left" Height="40.666" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="101.333" Fill="{StaticResource ChevronBrush}" Margin="0,0,0,52"/>
