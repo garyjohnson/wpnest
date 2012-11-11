@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SharpGIS;
@@ -64,28 +62,35 @@ namespace WPNest.Services {
 			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
 			request.Method = "POST";
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
-			request.Headers["X-nl-base-version"] = "1190775996";
 			request.Headers["X-nl-protocol-version"] = "1";
 			request.Headers["X-nl-user-id"] = userId;
-			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
-			request.Headers["X-nl-merge-payload"] = "true";
 
-			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\",\"version\":-2029154136,\"timestamp\":1352247117000}}]}}", thermostat.ID);
+			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
 
 			WebResponse response = null;
 			try {
 				response = await request.GetResponseAsync();
-			}catch(WebException webException) {
+			}
+			catch (WebException webException) {
 				return new GetTemperatureResult(webException);
 			}
 
 			string strContent = await response.GetResponseStringAsync();
-			var values = JObject.Parse(strContent);
-			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
-			double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
+			return ParseGetTemperatureResult(strContent);
+		}
 
-			return new GetTemperatureResult(temperature);
+		private static GetTemperatureResult ParseGetTemperatureResult(string strContent) {
+			try {
+				var values = JObject.Parse(strContent);
+				double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
+				double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
+
+				return new GetTemperatureResult(temperature);
+			}
+			catch (Exception ex) {
+				return new GetTemperatureResult(new JsonParsingException(ex));
+			}
 		}
 
 		private async Task<WebServiceResult> ChangeTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat, double desiredTemperature) {
@@ -94,12 +99,8 @@ namespace WPNest.Services {
 			request.ContentType = ContentTypeJson;
 			request.Method = "POST";
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
-
-			request.Headers["X-nl-base-version"] = "1190775996";
 			request.Headers["X-nl-protocol-version"] = "1";
 			request.Headers["X-nl-user-id"] = userId;
-			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
-			request.Headers["X-nl-merge-payload"] = "true";
 
 			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
 			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
@@ -116,31 +117,36 @@ namespace WPNest.Services {
 		}
 
 		private static GetStatusResult ParseGetStatusResult(string responseString, string userId) {
-			var structureResults = new List<Structure>();
+			try {
+				var structureResults = new List<Structure>();
 
-			var values = JObject.Parse(responseString);
-			var structures = values["user"][userId]["structures"];
-			foreach (var structure in structures) {
-				structureResults.Add(new Structure(structure.Value<string>()));
-			}
-
-			foreach (var structureResult in structureResults) {
-				var devices = values["structure"][structureResult.ID.Replace("structure.", "")]["devices"];
-				foreach (var device in devices) {
-					string id = device.Value<string>().Replace("device.", "");
-					var thermostat = new Thermostat(id);
-					structureResult.Thermostats.Add(thermostat);
+				var values = JObject.Parse(responseString);
+				var structures = values["user"][userId]["structures"];
+				foreach (var structure in structures) {
+					structureResults.Add(new Structure(structure.Value<string>()));
 				}
-			}
 
-			foreach (var structureResult in structureResults) {
-				foreach (var thermostat in structureResult.Thermostats) {
-					double temperature = double.Parse(values["shared"][thermostat.ID]["target_temperature"].Value<string>());
-					thermostat.Temperature = Math.Round(temperature.CelciusToFahrenheit());
+				foreach (var structureResult in structureResults) {
+					var devices = values["structure"][structureResult.ID.Replace("structure.", "")]["devices"];
+					foreach (var device in devices) {
+						string id = device.Value<string>().Replace("device.", "");
+						var thermostat = new Thermostat(id);
+						structureResult.Thermostats.Add(thermostat);
+					}
 				}
-			}
 
-			return new GetStatusResult(structureResults);
+				foreach (var structureResult in structureResults) {
+					foreach (var thermostat in structureResult.Thermostats) {
+						double temperature = double.Parse(values["shared"][thermostat.ID]["target_temperature"].Value<string>());
+						thermostat.Temperature = Math.Round(temperature.CelciusToFahrenheit());
+					}
+				}
+
+				return new GetStatusResult(structureResults);
+			}
+			catch (Exception ex) {
+				return new GetStatusResult(new JsonParsingException(ex));
+			}
 		}
 
 		private static WebRequest GetGetRequest(string url) {
@@ -157,15 +163,20 @@ namespace WPNest.Services {
 		}
 
 		private LoginResult ParseLoginResult(string responseString) {
-			var values = JObject.Parse(responseString);
-			return new LoginResult {
-				AccessToken = values["access_token"].Value<string>(),
-				AccessTokenExpirationDate = values["expires_in"].Value<DateTime>(),
-				User = values["user"].Value<string>(),
-				UserId = values["userid"].Value<string>(),
-				Email = values["email"].Value<string>(),
-				TransportUrl = values["urls"]["transport_url"].Value<string>()
-			};
+			try {
+				var values = JObject.Parse(responseString);
+				return new LoginResult {
+					AccessToken = values["access_token"].Value<string>(),
+					AccessTokenExpirationDate = values["expires_in"].Value<DateTime>(),
+					User = values["user"].Value<string>(),
+					UserId = values["userid"].Value<string>(),
+					Email = values["email"].Value<string>(),
+					TransportUrl = values["urls"]["transport_url"].Value<string>()
+				};
+			}
+			catch (Exception ex) {
+				return new LoginResult(new JsonParsingException(ex));
+			}
 		}
 
 		private string UrlEncode(string value) {

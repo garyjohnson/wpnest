@@ -125,6 +125,7 @@
     <Compile Include="Services\GetStatusResult.cs" />
     <Compile Include="Services\GetTemperatureResult.cs" />
     <Compile Include="Services\INestWebService.cs" />
+    <Compile Include="Services\JsonParsingException.cs" />
     <Compile Include="Services\LoginResult.cs" />
     <Compile Include="Services\NestWebService.cs" />
     <Compile Include="Services\Structure.cs" />
