@@ -54,7 +54,7 @@ namespace WPNest {
 				return;
 			}
 
-			_getStatusResult = await nestWebService.GetStatusAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.User, _loginResult.UserId);
+			_getStatusResult = await nestWebService.GetStatusAsync(_loginResult.TransportUrl, _loginResult.AccessToken, _loginResult.UserId);
 			if (_getStatusResult.Error != null) {
 				MessageBox.Show(_getStatusResult.Error.Message);
 				return;

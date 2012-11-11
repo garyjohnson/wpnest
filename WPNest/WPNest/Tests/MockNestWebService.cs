@@ -8,7 +8,7 @@ namespace WPNest.Tests {
 
 		public bool WasLoginCalled { get; private set; }
 
-		public Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string user, string userId) {
+		public Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string userId) {
 			throw new NotImplementedException();
 		}
 

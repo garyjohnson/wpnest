@@ -13,7 +13,6 @@ namespace WPNest.Services {
 
 		public Exception Error { get; private set; }
 		public string AccessToken { get; set; }
-		public string User { get; set; }
 		public string UserId { get; set; }
 		public string Email { get; set; }
 		public string TransportUrl { get; set; }

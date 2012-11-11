@@ -25,10 +25,10 @@ namespace WPNest.Services {
 			}
 		}
 
-		public async Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string user, string userId) {
-			string url = string.Format("{0}/v2/mobile/{1}", transportUrl, user);
+		public async Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string userId) {
+			string url = string.Format("{0}/v2/mobile/user.{1}", transportUrl, userId);
 			var request = GetGetRequest(url);
-			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
+			SetAuthorizationHeaderOnRequest(request, accessToken);
 
 			try {
 				WebResponse response = await request.GetResponseAsync();
@@ -52,11 +52,9 @@ namespace WPNest.Services {
 
 		public async Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
 			string url = string.Format("{0}/v2/subscribe", transportUrl);
-			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
-			request.Method = "POST";
-			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
-			request.Headers["X-nl-protocol-version"] = "1";
-			request.Headers["X-nl-user-id"] = userId;
+			WebRequest request = GetPostJsonRequest(url);
+			SetAuthorizationHeaderOnRequest(request, accessToken);
+			SetNestHeadersOnRequest(request, userId);
 
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
@@ -80,12 +78,9 @@ namespace WPNest.Services {
 
 		private async Task<WebServiceResult> ChangeTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat, double desiredTemperature) {
 			string url = string.Format(@"{0}/v2/put/shared.{1}", transportUrl, thermostat.ID);
-			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
-			request.ContentType = ContentType.Json;
-			request.Method = "POST";
-			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
-			request.Headers["X-nl-protocol-version"] = "1";
-			request.Headers["X-nl-user-id"] = userId;
+			WebRequest request = GetPostJsonRequest(url);
+			SetAuthorizationHeaderOnRequest(request, accessToken);
+			SetNestHeadersOnRequest(request, userId);
 
 			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
 			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
@@ -106,14 +101,15 @@ namespace WPNest.Services {
 			var values = JObject.Parse(responseString);
 			var structures = values["user"][userId]["structures"];
 			foreach (var structure in structures) {
-				structureResults.Add(new Structure(structure.Value<string>()));
+				string structureId = structure.Value<string>().Replace("structure.", "");
+				structureResults.Add(new Structure(structureId));
 			}
 
 			foreach (var structureResult in structureResults) {
-				var devices = values["structure"][structureResult.ID.Replace("structure.", "")]["devices"];
+				var devices = values["structure"][structureResult.ID]["devices"];
 				foreach (var device in devices) {
-					string id = device.Value<string>().Replace("device.", "");
-					var thermostat = new Thermostat(id);
+					string thermostatId = device.Value<string>().Replace("device.", "");
+					var thermostat = new Thermostat(thermostatId);
 					structureResult.Thermostats.Add(thermostat);
 				}
 			}
@@ -141,12 +137,18 @@ namespace WPNest.Services {
 			return request;
 		}
 
+		private static WebRequest GetPostJsonRequest(string url) {
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+			request.ContentType = ContentType.Json;
+			request.Method = "POST";
+			return request;
+		}
+
 		private LoginResult ParseLoginResult(string responseString) {
 			var values = JObject.Parse(responseString);
 			return new LoginResult {
 				AccessToken = values["access_token"].Value<string>(),
 				AccessTokenExpirationDate = values["expires_in"].Value<DateTime>(),
-				User = values["user"].Value<string>(),
 				UserId = values["userid"].Value<string>(),
 				Email = values["email"].Value<string>(),
 				TransportUrl = values["urls"]["transport_url"].Value<string>()
@@ -155,6 +157,15 @@ namespace WPNest.Services {
 
 		private string UrlEncode(string value) {
 			return HttpUtility.UrlEncode(value);
+		}
+
+		private static void SetAuthorizationHeaderOnRequest(WebRequest request, string accessToken) {
+			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
+		}
+
+		private static void SetNestHeadersOnRequest(WebRequest request, string userId) {
+			request.Headers["X-nl-protocol-version"] = "1";
+			request.Headers["X-nl-user-id"] = userId;
 		}
 	}
 }
