@@ -144,6 +144,9 @@
     <Compile Include="Services\WebServiceResult.cs" />
     <Compile Include="Tests\LoginViewModelTest.cs" />
     <Compile Include="Tests\MockNestWebService.cs" />
+    <Compile Include="ThermostatControl.xaml.cs">
+      <DependentUpon>ThermostatControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TrueToVisibleConverter.cs" />
     <Compile Include="ViewModelBase.cs" />
   </ItemGroup>
@@ -159,6 +162,10 @@
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ThermostatControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
