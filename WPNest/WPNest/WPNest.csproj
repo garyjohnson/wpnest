@@ -113,7 +113,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="INestWebService.cs" />
     <Compile Include="Login\GetTemperatureResult.cs" />
     <Compile Include="Login\LoginResult.cs" />
     <Compile Include="Login\LoginViewModel.cs" />
@@ -123,7 +122,14 @@
     <Compile Include="MainPageViewModel.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\GetStatusResult.cs" />
+    <Compile Include="Services\GetTemperatureResult.cs" />
+    <Compile Include="Services\INestWebService.cs" />
+    <Compile Include="Services\LoginResult.cs" />
     <Compile Include="Services\NestWebService.cs" />
+    <Compile Include="Services\Structure.cs" />
+    <Compile Include="Services\Thermostat.cs" />
+    <Compile Include="Services\WebServiceResult.cs" />
     <Compile Include="Tests\LoginViewModelTest.cs" />
     <Compile Include="Tests\MockNestWebService.cs" />
     <Compile Include="ViewModelBase.cs" />

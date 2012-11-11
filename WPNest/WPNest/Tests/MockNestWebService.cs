@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using WPNest.Login;
+using WPNest.Services;
 
 namespace WPNest.Tests {
 
@@ -8,12 +8,24 @@ namespace WPNest.Tests {
 
 		public bool WasLoginCalled { get; private set; }
 
-		public async Task<LoginResult> LoginAsync(string userName, string password) {
-			return await new Task<LoginResult>(() => new LoginResult());
+		public Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string user, string userId) {
+			throw new NotImplementedException();
 		}
 
-		public async Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string user) {
-			return await new Task<GetTemperatureResult>(() => new GetTemperatureResult(null));
+		public Task<WebServiceResult> RaiseTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+			throw new NotImplementedException();
+		}
+
+		public Task<WebServiceResult> LowerTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+			throw new NotImplementedException();
+		}
+
+		public Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+			throw new NotImplementedException();
+		}
+
+		public Task<LoginResult> LoginAsync(string userName, string password) {
+			throw new NotImplementedException();
 		}
 	}
 }

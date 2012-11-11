@@ -1,18 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using Newtonsoft.Json.Linq;
 using SharpGIS;
-using WPNest.Login;
 
 namespace WPNest.Services {
 
 	public class NestWebService : INestWebService {
 
 		private const string ContentTypeForm = @"application/x-www-form-urlencoded; charset=utf-8";
+		private const string ContentTypeJson = @"application/json";
 
 		private static readonly Uri LoginUri = new Uri("https://home.nest.com/user/login");
 
@@ -33,7 +33,7 @@ namespace WPNest.Services {
 			return ParseLoginResult(responseString);
 		}
 
-		public async Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string user) {
+		public async Task<GetStatusResult> GetStatusAsync(string transportUrl, string accessToken, string user, string userId) {
 			string url = string.Format("{0}/v2/mobile/{1}", transportUrl, user);
 			var request = GetGetRequest(url);
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
@@ -43,61 +43,104 @@ namespace WPNest.Services {
 				response = await request.GetResponseAsync();
 			}
 			catch (Exception webException) {
-				return new GetTemperatureResult(webException);
+				return new GetStatusResult(webException);
 			}
 			string responseString = await response.GetResponseStringAsync();
-			return ParseGetTemperatureResult(responseString);
+			return ParseGetStatusResult(responseString, userId);
 		}
 
-//		public void Up() {
-//			string url = string.Format(@"{0}/v2/put/shared.{1}", transportUrl, firstDeviceId);
-//			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
-//			request.ContentType = @"application/json";
-//			request.Method = "POST";
-//			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
-//
-//			request.Headers["X-nl-base-version"] = "1190775996";
-//			request.Headers["X-nl-protocol-version"] = "1";
-//			request.Headers["X-nl-user-id"] = userId;
-//			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
-//			request.Headers["X-nl-merge-payload"] = "true";
-//
-//			request.BeginGetRequestStream(UpGetRequestStreamCallback, request);
-//		}
-//
-//		private void UpGetRequestStreamCallback(IAsyncResult result) {
-//			var request = (WebRequest)result.AsyncState;
-//			using (Stream requestStream = request.EndGetRequestStream(result)) {
-//
-//				_temperature += 1.0d;
-//				double desiredTemp = FahrenheitToCelcius(_temperature);
-//				string t = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTemp.ToString());
-//				byte[] encodedRequestString = Encoding.UTF8.GetBytes(t);
-//				requestStream.Write(encodedRequestString, 0, encodedRequestString.Length);
-//
-//			}
-//			request.BeginGetResponse(UpGetResponseCallback, request);
-//		}
-//
-//		private void UpGetResponseCallback(IAsyncResult result) {
-//			var request = (WebRequest)result.AsyncState;
-//			WebResponse response = request.EndGetResponse(result);
-//			Stream responseStream = response.GetResponseStream();
-//			string strContent = "";
-//			using (var sr = new StreamReader(responseStream)) {
-//				strContent = sr.ReadToEnd();
-//			}
-//
-////			Refresh();
-//		}
+		public async Task<WebServiceResult> RaiseTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+			double desiredTempFahrenheit = thermostat.Temperature + 1.0d;
+			return await ChangeTemperatureAsync(transportUrl, accessToken, userId, thermostat, desiredTempFahrenheit);
+		}
 
-		private static GetTemperatureResult ParseGetTemperatureResult(string responseString) {
+		public async Task<WebServiceResult> LowerTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+			double desiredTempFahrenheit = thermostat.Temperature - 1.0d;
+			return await ChangeTemperatureAsync(transportUrl, accessToken, userId, thermostat, desiredTempFahrenheit);
+		}
+
+		public async Task<GetTemperatureResult> GetTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat) {
+			string url = string.Format("{0}/v2/subscribe", transportUrl);
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+			request.Method = "POST";
+			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
+			request.Headers["X-nl-base-version"] = "1190775996";
+			request.Headers["X-nl-protocol-version"] = "1";
+			request.Headers["X-nl-user-id"] = userId;
+			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
+			request.Headers["X-nl-merge-payload"] = "true";
+
+			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\",\"version\":-2029154136,\"timestamp\":1352247117000}}]}}", thermostat.ID);
+			await request.SetRequestStringAsync(requestString);
+
+			WebResponse response = null;
+			try {
+				response = await request.GetResponseAsync();
+			}catch(WebException webException) {
+				return new GetTemperatureResult(webException);
+			}
+
+			string strContent = await response.GetResponseStringAsync();
+			var values = JObject.Parse(strContent);
+			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
+			double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
+
+			return new GetTemperatureResult(temperature);
+		}
+
+		private async Task<WebServiceResult> ChangeTemperatureAsync(string transportUrl, string accessToken, string userId, Thermostat thermostat, double desiredTemperature) {
+			string url = string.Format(@"{0}/v2/put/shared.{1}", transportUrl, thermostat.ID);
+			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+			request.ContentType = ContentTypeJson;
+			request.Method = "POST";
+			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
+
+			request.Headers["X-nl-base-version"] = "1190775996";
+			request.Headers["X-nl-protocol-version"] = "1";
+			request.Headers["X-nl-user-id"] = userId;
+			request.Headers["X-nl-session-id"] = string.Format("ios-{0}-373941569.382847", userId);
+			request.Headers["X-nl-merge-payload"] = "true";
+
+			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
+			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
+			await request.SetRequestStringAsync(requestString);
+
+			try {
+				await request.GetResponseAsync();
+			}
+			catch (WebException webException) {
+				return new WebServiceResult(webException);
+			}
+
+			return new WebServiceResult();
+		}
+
+		private static GetStatusResult ParseGetStatusResult(string responseString, string userId) {
+			var structureResults = new List<Structure>();
+
 			var values = JObject.Parse(responseString);
-			var shared = values["shared"];
-			var firstDevice = (JProperty) shared.First;
-			string firstDeviceId = firstDevice.Name;
-			double temperature = double.Parse(shared[firstDeviceId]["target_temperature"].Value<string>());
-			return new GetTemperatureResult(Math.Round(temperature.CelciusToFahrenheit()));
+			var structures = values["user"][userId]["structures"];
+			foreach (var structure in structures) {
+				structureResults.Add(new Structure(structure.Value<string>()));
+			}
+
+			foreach (var structureResult in structureResults) {
+				var devices = values["structure"][structureResult.ID.Replace("structure.", "")]["devices"];
+				foreach (var device in devices) {
+					string id = device.Value<string>().Replace("device.", "");
+					var thermostat = new Thermostat(id);
+					structureResult.Thermostats.Add(thermostat);
+				}
+			}
+
+			foreach (var structureResult in structureResults) {
+				foreach (var thermostat in structureResult.Thermostats) {
+					double temperature = double.Parse(values["shared"][thermostat.ID]["target_temperature"].Value<string>());
+					thermostat.Temperature = Math.Round(temperature.CelciusToFahrenheit());
+				}
+			}
+
+			return new GetStatusResult(structureResults);
 		}
 
 		private static WebRequest GetGetRequest(string url) {
@@ -117,8 +160,10 @@ namespace WPNest.Services {
 			var values = JObject.Parse(responseString);
 			return new LoginResult {
 				AccessToken = values["access_token"].Value<string>(),
+				AccessTokenExpirationDate = values["expires_in"].Value<DateTime>(),
 				User = values["user"].Value<string>(),
 				UserId = values["userid"].Value<string>(),
+				Email = values["email"].Value<string>(),
 				TransportUrl = values["urls"]["transport_url"].Value<string>()
 			};
 		}

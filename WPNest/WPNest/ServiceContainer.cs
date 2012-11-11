@@ -5,7 +5,14 @@ namespace WPNest {
 
 	public class ServiceContainer {
 
-		private static readonly ServiceContainer _container = new ServiceContainer();
+		private static readonly ServiceContainer _container;
+
+		public ServiceContainer() {
+		}
+
+		static ServiceContainer() {
+			_container = new ServiceContainer();
+		}
 
 		public static T GetService<T>() where T : class {
 			return _container.GetDependency<T>();

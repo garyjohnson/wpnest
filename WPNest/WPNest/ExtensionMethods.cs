@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +9,22 @@ namespace WPNest {
 	public static class ExtensionMethods {
 
 		public static async Task SetRequestStringAsync(this WebRequest request, string requestString) {
+			try {
+				
 			using (Stream stream = await request.GetRequestStreamAsync()) {
 				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
 				await stream.WriteAsync(encodedRequestString, 0, encodedRequestString.Length);
+			}
+			}catch(Exception ex) {
+				ex.ToString();
+			}
+		}
+
+		public static async Task<string> GetResponseStringAsync(this WebRequest request) {
+			WebResponse response = await request.GetResponseAsync();
+			Stream responseStream = response.GetResponseStream();
+			using (var streamReader = new StreamReader(responseStream)) {
+				return streamReader.ReadToEnd();
 			}
 		}
 

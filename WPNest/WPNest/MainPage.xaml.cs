@@ -22,16 +22,16 @@ namespace WPNest {
 			get { return DataContext as MainPageViewModel; }
 		}
 
-		private void ButtonBase_OnClick(object sender, RoutedEventArgs e) {
-			ViewModel.Login();
+		private async void ButtonBase_OnClick(object sender, RoutedEventArgs e) {
+			await ViewModel.LoginAsync();
 		}
 
-		private void OnUpClick(object sender, RoutedEventArgs e) {
-			ViewModel.Up();
+		private async void OnUpClick(object sender, RoutedEventArgs e) {
+			await ViewModel.RaiseTemperatureAsync();
 		}
 
-		private void OnDownClick(object sender, RoutedEventArgs e) {
-			ViewModel.Down();
+		private async void OnDownClick(object sender, RoutedEventArgs e) {
+			await ViewModel.LowerTemperatureAsync();
 		}
 
 	}
