@@ -2,7 +2,6 @@
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Microsoft.Phone.Testing;
 using WPNest.Services;
 
 namespace WPNest {

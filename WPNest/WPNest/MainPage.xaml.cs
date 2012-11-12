@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media;
+﻿using System.Windows;
 using Microsoft.Phone.Controls;
 
 namespace WPNest {
@@ -19,7 +17,5 @@ namespace WPNest {
 		private async void OnLoaded(object sender, RoutedEventArgs e) {
 			await ViewModel.InitializeAsync();
 		}
-
-
 	}
 }

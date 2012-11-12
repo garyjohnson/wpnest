@@ -5,7 +5,6 @@ namespace WPNest.Services {
 	public class WebServiceResult {
 
 		public WebServiceResult() {
-			
 		}
 
 		public WebServiceResult(Exception error) {

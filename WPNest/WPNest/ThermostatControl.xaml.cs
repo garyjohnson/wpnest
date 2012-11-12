@@ -55,13 +55,9 @@ namespace WPNest {
 		}
 
 		private PathFigure GetPathFigure(Point start, Point end) {
-			PathFigure tickFigure = new PathFigure();
+			var tickFigure = new PathFigure();
 			tickFigure.StartPoint = start;
-
-			LineSegment endOfTick = new LineSegment();
-			endOfTick.Point = end;
-
-			tickFigure.Segments.Add(endOfTick);
+			tickFigure.Segments.Add(new LineSegment {Point = end});
 			return tickFigure;
 		}
 

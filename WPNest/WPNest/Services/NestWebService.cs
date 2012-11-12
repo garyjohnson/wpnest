@@ -167,8 +167,7 @@ namespace WPNest.Services {
 			var userId = values["userid"].Value<string>();
 			var transportUrl = values["urls"]["transport_url"].Value<string>();
 
-			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
-			sessionProvider.SetSession(transportUrl, userId, accessToken, accessTokenExpirationDate);
+			_sessionProvider.SetSession(transportUrl, userId, accessToken, accessTokenExpirationDate);
 		}
 
 		private string UrlEncode(string value) {

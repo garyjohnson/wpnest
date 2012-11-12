@@ -7,9 +7,6 @@ namespace WPNest {
 
 		private static readonly ServiceContainer _container;
 
-		public ServiceContainer() {
-		}
-
 		static ServiceContainer() {
 			_container = new ServiceContainer();
 		}

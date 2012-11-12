@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using WPNest.Services;
 
-namespace WPNest {
+namespace WPNest.Services {
 	
 	public interface INestWebService {
 
