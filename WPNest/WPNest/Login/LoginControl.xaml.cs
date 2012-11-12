@@ -10,12 +10,12 @@ namespace WPNest.Login {
 			InitializeComponent();
 		}
 
-		private async void OnLoginPressed(object sender, RoutedEventArgs e) {
-			await ViewModel.LoginAsync();
-		}
-
 		private MainPageViewModel ViewModel {
 			get { return DataContext as MainPageViewModel; }
+		}
+
+		private async void OnLoginPressed(object sender, RoutedEventArgs e) {
+			await ViewModel.LoginAsync();
 		}
 
 		private void OnPasswordChangedFocus(object sender, RoutedEventArgs e) {

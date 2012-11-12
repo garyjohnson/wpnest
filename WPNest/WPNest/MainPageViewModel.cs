@@ -67,17 +67,6 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
-		private async Task OnLoggedIn() {
-			IsLoggingIn = false;
-			IsLoggedIn = true;
-			var nestWebService = ServiceContainer.GetService<INestWebService>();
-			_getStatusResult = await nestWebService.GetStatusAsync();
-			if (IsErrorHandled(_getStatusResult.Error))
-				return;
-
-			CurrentTemperature = GetFirstThermostat().Temperature.ToString();
-		}
-
 		public async Task LoginAsync() {
 			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
@@ -91,17 +80,15 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
-		private static bool IsErrorHandled(Exception error) {
-			if (error != null) {
-				MessageBox.Show(error.Message);
-				return true;
-			}
+		private async Task OnLoggedIn() {
+			IsLoggingIn = false;
+			IsLoggedIn = true;
+			var nestWebService = ServiceContainer.GetService<INestWebService>();
+			_getStatusResult = await nestWebService.GetStatusAsync();
+			if (IsErrorHandled(_getStatusResult.Error))
+				return;
 
-			return false;
-		}
-
-		private Thermostat GetFirstThermostat() {
-			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
+			CurrentTemperature = GetFirstThermostat().Temperature.ToString();
 		}
 
 		public async Task RaiseTemperatureAsync() {
@@ -135,6 +122,20 @@ namespace WPNest {
 			thermostat.Temperature = temperatureResult.Temperature;
 			CurrentTemperature = thermostat.Temperature.ToString(CultureInfo.InvariantCulture);
 		}
+
+		private Thermostat GetFirstThermostat() {
+			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
+		}
+
+		private static bool IsErrorHandled(Exception error) {
+			if (error != null) {
+				MessageBox.Show(error.Message);
+				return true;
+			}
+
+			return false;
+		}
+
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

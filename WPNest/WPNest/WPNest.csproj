@@ -115,12 +115,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="Login\GetTemperatureResult.cs" />
     <Compile Include="Login\LoginControl.xaml.cs">
       <DependentUpon>LoginControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Login\LoginResult.cs" />
-    <Compile Include="Login\LoginViewModel.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -133,7 +130,6 @@
     <Compile Include="Services\INestWebService.cs" />
     <Compile Include="Services\ISessionProvider.cs" />
     <Compile Include="Services\ISettingsProvider.cs" />
-    <Compile Include="Services\JsonParsingException.cs" />
     <Compile Include="Services\LoginResult.cs" />
     <Compile Include="Services\NestWebService.cs" />
     <Compile Include="Services\SessionExpiredException.cs" />
@@ -142,13 +138,10 @@
     <Compile Include="Services\Structure.cs" />
     <Compile Include="Services\Thermostat.cs" />
     <Compile Include="Services\WebServiceResult.cs" />
-    <Compile Include="Tests\LoginViewModelTest.cs" />
-    <Compile Include="Tests\MockNestWebService.cs" />
     <Compile Include="ThermostatControl.xaml.cs">
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="TrueToVisibleConverter.cs" />
-    <Compile Include="ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -182,13 +175,6 @@
     </Content>
     <Content Include="README_FIRST.txt" />
     <Content Include="SplashScreenImage.jpg" />
-    <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Email.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Play.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Save.png" />
-    <Content Include="Toolkit.Content\ApplicationBar.Select.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

@@ -9,6 +9,12 @@ namespace WPNest.Services {
 
 	public class NestWebService : INestWebService {
 
+		private ISessionProvider _sessionProvider;
+
+		public NestWebService() {
+			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
+		}
+
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
 			WebRequest request = GetPostFormRequest("https://home.nest.com/user/login");
 
@@ -27,21 +33,42 @@ namespace WPNest.Services {
 		}
 
 		public async Task<GetStatusResult> GetStatusAsync() {
-			var session = ServiceContainer.GetService<ISessionProvider>();
-			if (session.IsSessionExpired)
+			if (_sessionProvider.IsSessionExpired)
 				return new GetStatusResult(new SessionExpiredException());
 
-			string url = string.Format("{0}/v2/mobile/user.{1}", session.TransportUrl, session.UserId);
+			string url = string.Format("{0}/v2/mobile/user.{1}", _sessionProvider.TransportUrl, _sessionProvider.UserId);
 			var request = GetGetRequest(url);
-			SetAuthorizationHeaderOnRequest(request, session.AccessToken);
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
-				return ParseGetStatusResult(responseString, session.UserId);
+				return ParseGetStatusResult(responseString, _sessionProvider.UserId);
 			}
 			catch (Exception exception) {
 				return new GetStatusResult(exception);
+			}
+		}
+
+		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
+			if (_sessionProvider.IsSessionExpired)
+				return new GetStatusResult(new SessionExpiredException());
+
+			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+			WebRequest request = GetPostJsonRequest(url);
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
+
+			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
+			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
+			await request.SetRequestStringAsync(requestString);
+
+			try {
+				await request.GetResponseAsync();
+				return new WebServiceResult();
+			}
+			catch (Exception exception) {
+				return new WebServiceResult(exception);
 			}
 		}
 
@@ -56,14 +83,13 @@ namespace WPNest.Services {
 		}
 
 		public async Task<GetTemperatureResult> GetTemperatureAsync(Thermostat thermostat) {
-			var session = ServiceContainer.GetService<ISessionProvider>();
-			if (session.IsSessionExpired)
+			if (_sessionProvider.IsSessionExpired)
 				return new GetTemperatureResult(new SessionExpiredException());
 
-			string url = string.Format("{0}/v2/subscribe", session.TransportUrl);
+			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			WebRequest request = GetPostJsonRequest(url);
-			SetAuthorizationHeaderOnRequest(request, session.AccessToken);
-			SetNestHeadersOnRequest(request, session.UserId);
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
@@ -83,29 +109,6 @@ namespace WPNest.Services {
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
 			double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
 			return new GetTemperatureResult(temperature);
-		}
-
-		private async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
-			var session = ServiceContainer.GetService<ISessionProvider>();
-			if (session.IsSessionExpired)
-				return new GetStatusResult(new SessionExpiredException());
-
-			string url = string.Format(@"{0}/v2/put/shared.{1}", session.TransportUrl, thermostat.ID);
-			WebRequest request = GetPostJsonRequest(url);
-			SetAuthorizationHeaderOnRequest(request, session.AccessToken);
-			SetNestHeadersOnRequest(request, session.UserId);
-
-			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
-			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
-			await request.SetRequestStringAsync(requestString);
-
-			try {
-				await request.GetResponseAsync();
-				return new WebServiceResult();
-			}
-			catch (Exception exception) {
-				return new WebServiceResult(exception);
-			}
 		}
 
 		private static GetStatusResult ParseGetStatusResult(string responseString, string userId) {
@@ -159,10 +162,10 @@ namespace WPNest.Services {
 
 		private void CacheSession(string responseString) {
 			var values = JObject.Parse(responseString);
-			string accessToken = values["access_token"].Value<string>();
-			DateTime accessTokenExpirationDate = values["expires_in"].Value<DateTime>();
-			string userId = values["userid"].Value<string>();
-			string transportUrl = values["urls"]["transport_url"].Value<string>();
+			var accessToken = values["access_token"].Value<string>();
+			var accessTokenExpirationDate = values["expires_in"].Value<DateTime>();
+			var userId = values["userid"].Value<string>();
+			var transportUrl = values["urls"]["transport_url"].Value<string>();
 
 			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			sessionProvider.SetSession(transportUrl, userId, accessToken, accessTokenExpirationDate);
