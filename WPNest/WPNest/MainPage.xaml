@@ -19,41 +19,9 @@
 
 	<phone:PhoneApplicationPage.Resources>
 		<WPNest:TrueToVisibleConverter x:Key="TrueToVisibleConverter"/>
-		<LinearGradientBrush x:Key="ChevronBrush" EndPoint="-0.124,0.704" StartPoint="1,0.413">
-			<GradientStop Color="#FFC7C7C7" Offset="0"/>
-			<GradientStop Color="#FFDEDEDE" Offset="0.95"/>
-			<GradientStop Color="#FFB0A8A8" Offset="0.092"/>
-		</LinearGradientBrush>
-		<Style x:Key="BlankButton" TargetType="Button">
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>
-			<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
-			<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
-			<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
-			<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
-			<Setter Property="Padding" Value="10,3,10,5"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Background="#01010101">
-							<VisualStateManager.VisualStateGroups>
-								<VisualStateGroup x:Name="CommonStates">
-									<VisualState x:Name="Normal"/>
-									<VisualState x:Name="Disabled"/>
-									<VisualState x:Name="MouseOver"/>
-								</VisualStateGroup>
-								<VisualStateGroup x:Name="FocusStates">
-									<VisualState x:Name="Focused"/>
-								</VisualStateGroup>
-							</VisualStateManager.VisualStateGroups>
-						</ContentControl>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
 	</phone:PhoneApplicationPage.Resources>
 
-	<Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}" Margin="1,0,-1,0">
+	<Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}" Margin="0">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>

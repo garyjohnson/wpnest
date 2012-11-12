@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WPNest.Login {
 
@@ -15,6 +16,17 @@ namespace WPNest.Login {
 
 		private MainPageViewModel ViewModel {
 			get { return DataContext as MainPageViewModel; }
+		}
+
+		private void OnPasswordChangedFocus(object sender, RoutedEventArgs e) {
+			RefreshPasswordHintVisibility();
+		}
+
+		private void RefreshPasswordHintVisibility() {
+			if (string.IsNullOrEmpty(password.Password) && FocusManager.GetFocusedElement() != password)
+				passwordHint.Visibility = Visibility.Visible;
+			else
+				passwordHint.Visibility = Visibility.Collapsed;
 		}
 	}
 }
