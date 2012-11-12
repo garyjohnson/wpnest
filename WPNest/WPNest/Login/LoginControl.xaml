@@ -11,7 +11,7 @@
 			 d:DesignHeight="480" d:DesignWidth="480">
 
 	<d:DataContext>
-		<WPNest:MainPageViewModel />
+		<WPNest:NestViewModel />
 	</d:DataContext>
 
 	<Grid Background="{StaticResource BackgroundBrush}">

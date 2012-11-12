@@ -3,13 +3,35 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace WPNest {
+
 	public partial class ThermostatControl : UserControl {
+
 		public ThermostatControl() {
 			InitializeComponent();
 		}
 
+		private NestViewModel ViewModel {
+			get { return DataContext as NestViewModel; }
+		}
+
+		private void OnLoaded(object sender, RoutedEventArgs e) {
+			DrawTicks();
+		}
+
+		private void OnSizeChanged(object sender, SizeChangedEventArgs e) {
+			DrawTicks();
+		}
+
+		private async void OnUpClick(object sender, RoutedEventArgs e) {
+			await ViewModel.RaiseTemperatureAsync();
+		}
+
+		private async void OnDownClick(object sender, RoutedEventArgs e) {
+			await ViewModel.LowerTemperatureAsync();
+		}
+
 		private void DrawTicks() {
-			PathGeometry ticksGeometry = new PathGeometry();
+			var ticksGeometry = new PathGeometry();
 
 			var rotateTransform = new RotateTransform();
 			rotateTransform.CenterX = orb.ActualWidth / 2;
@@ -43,20 +65,5 @@ namespace WPNest {
 			return tickFigure;
 		}
 
-		private void Thermostat_OnLoaded(object sender, RoutedEventArgs e) {
-			DrawTicks();
-		}
-
-		private async void OnUpClick(object sender, RoutedEventArgs e) {
-			await ViewModel.RaiseTemperatureAsync();
-		}
-
-		private async void OnDownClick(object sender, RoutedEventArgs e) {
-			await ViewModel.LowerTemperatureAsync();
-		}
-
-		private MainPageViewModel ViewModel {
-			get { return DataContext as MainPageViewModel; }
-		}
 	}
 }

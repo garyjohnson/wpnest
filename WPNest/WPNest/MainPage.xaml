@@ -13,8 +13,12 @@
 							SupportedOrientations="Portrait" Orientation="Portrait" 
 							shell:SystemTray.IsVisible="True">
 
+	<d:DataContext>
+		<WPNest:NestSampleViewModel />
+	</d:DataContext>
+
 	<phone:PhoneApplicationPage.DataContext>
-		<WPNest:MainPageViewModel />
+		<WPNest:NestViewModel />
 	</phone:PhoneApplicationPage.DataContext>
 
 	<phone:PhoneApplicationPage.Resources>
@@ -26,7 +30,7 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<WPNest:ThermostatControl Margin="50,194"/>
+		<WPNest:ThermostatControl Margin="50,194" Visibility="{Binding IsLoggedIn, Converter={StaticResource TrueToVisibleConverter}}"/>
 
 		<Login:LoginControl x:Name="loginControl" Visibility="{Binding IsLoggingIn, Converter={StaticResource TrueToVisibleConverter}}"/>
 	</Grid>

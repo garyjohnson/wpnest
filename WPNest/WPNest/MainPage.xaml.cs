@@ -12,8 +12,8 @@ namespace WPNest {
 			Loaded += OnLoaded;
 		}
 
-		private MainPageViewModel ViewModel {
-			get { return DataContext as MainPageViewModel; }
+		private NestViewModel ViewModel {
+			get { return DataContext as NestViewModel; }
 		}
 
 		private async void OnLoaded(object sender, RoutedEventArgs e) {

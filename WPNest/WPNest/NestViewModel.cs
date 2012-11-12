@@ -8,7 +8,7 @@ using WPNest.Services;
 
 namespace WPNest {
 
-	public class MainPageViewModel : INotifyPropertyChanged {
+	public class NestViewModel : INotifyPropertyChanged {
 
 		private GetStatusResult _getStatusResult;
 

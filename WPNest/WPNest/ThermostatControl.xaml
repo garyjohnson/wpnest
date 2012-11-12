@@ -7,9 +7,9 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="380" d:DesignWidth="380"
-			 Loaded="Thermostat_OnLoaded">
+	Loaded="OnLoaded" SizeChanged="OnSizeChanged">
 	<d:DataContext>
-		<WPNest:MainPageViewModel/>
+		<WPNest:NestViewModel/>
 	</d:DataContext>
 	<UserControl.Resources>
 		<LinearGradientBrush x:Key="ChevronBrush" EndPoint="-0.124,0.704" StartPoint="1,0.413">
