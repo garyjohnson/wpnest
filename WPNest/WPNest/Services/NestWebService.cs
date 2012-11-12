@@ -72,16 +72,6 @@ namespace WPNest.Services {
 			}
 		}
 
-		public async Task<WebServiceResult> RaiseTemperatureAsync(Thermostat thermostat) {
-			double desiredTemperature = thermostat.Temperature + 1.0d;
-			return await ChangeTemperatureAsync(thermostat, desiredTemperature);
-		}
-
-		public async Task<WebServiceResult> LowerTemperatureAsync(Thermostat thermostat) {
-			double desiredTemperature = thermostat.Temperature - 1.0d;
-			return await ChangeTemperatureAsync(thermostat, desiredTemperature);
-		}
-
 		public async Task<GetTemperatureResult> GetTemperatureAsync(Thermostat thermostat) {
 			if (_sessionProvider.IsSessionExpired)
 				return new GetTemperatureResult(new SessionExpiredException());

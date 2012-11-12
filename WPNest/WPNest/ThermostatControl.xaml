@@ -12,49 +12,6 @@
 		<WPNest:NestViewModel/>
 	</d:DataContext>
 	<UserControl.Resources>
-		<LinearGradientBrush x:Key="ChevronBrush" EndPoint="-0.124,0.704" StartPoint="1,0.413">
-			<GradientStop Color="#FFC7C7C7" Offset="0"/>
-			<GradientStop Color="#FFDEDEDE" Offset="0.95"/>
-			<GradientStop Color="#FFB0A8A8" Offset="0.092"/>
-		</LinearGradientBrush>
-		<Style x:Key="BlankButton" TargetType="Button">
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>
-			<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
-			<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
-			<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
-			<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
-			<Setter Property="Padding" Value="10,3,10,5"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button">
-						<Grid Background="#01010101">
-							<VisualStateManager.VisualStateGroups>
-								<VisualStateGroup x:Name="CommonStates">
-									<VisualState x:Name="Pressed">
-										<Storyboard>
-											<ColorAnimation Duration="0" To="#FF646464" Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="ContentContainer" d:IsOptimized="True"/>
-										</Storyboard>
-									</VisualState>
-									<VisualState x:Name="Normal"/>
-									<VisualState x:Name="Disabled"/>
-									<VisualState x:Name="MouseOver">
-										<Storyboard>
-											<ColorAnimation Duration="0" To="#FFA4A4A4" Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="ContentContainer" d:IsOptimized="True"/>
-										</Storyboard>
-									</VisualState>
-								</VisualStateGroup>
-								<VisualStateGroup x:Name="FocusStates"/>
-							</VisualStateManager.VisualStateGroups>
-							<ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Background="#02010101" Foreground="#FFEAEAEA"/>
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Color x:Key="ChevronDefaultColor">#FFD4D4D4</Color>
-		<Color x:Key="ChevronMouseOverColor">#FF959595</Color>
-		<SolidColorBrush x:Key="ChevronPressedColor" Color="{StaticResource ChevronDefaultColor}"/>
 		<Style x:Key="UpButton" TargetType="Button">
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>

@@ -95,7 +95,10 @@ namespace WPNest {
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			var thermostat = GetFirstThermostat();
 
-			var result = await nestWebService.RaiseTemperatureAsync(thermostat);
+			double desiredTemperature = thermostat.Temperature + 1.0d;
+			CurrentTemperature = desiredTemperature.ToString(CultureInfo.InvariantCulture);
+
+			var result = await nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
 			if (IsErrorHandled(result.Error))
 				return;
 
@@ -111,7 +114,10 @@ namespace WPNest {
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			var thermostat = GetFirstThermostat();
 
-			var result = await nestWebService.LowerTemperatureAsync(thermostat);
+			double desiredTemperature = thermostat.Temperature - 1.0d;
+			CurrentTemperature = desiredTemperature.ToString(CultureInfo.InvariantCulture);
+
+			var result = await nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
 			if (IsErrorHandled(result.Error))
 				return;
 
