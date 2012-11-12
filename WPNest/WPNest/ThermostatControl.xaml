@@ -28,18 +28,103 @@
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="Button">
-						<ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Background="#01010101">
+						<Grid Background="#01010101">
 							<VisualStateManager.VisualStateGroups>
 								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<ColorAnimation Duration="0" To="#FF646464" Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="ContentContainer" d:IsOptimized="True"/>
+										</Storyboard>
+									</VisualState>
 									<VisualState x:Name="Normal"/>
 									<VisualState x:Name="Disabled"/>
-									<VisualState x:Name="MouseOver"/>
+									<VisualState x:Name="MouseOver">
+										<Storyboard>
+											<ColorAnimation Duration="0" To="#FFA4A4A4" Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="ContentContainer" d:IsOptimized="True"/>
+										</Storyboard>
+									</VisualState>
 								</VisualStateGroup>
-								<VisualStateGroup x:Name="FocusStates">
-									<VisualState x:Name="Focused"/>
-								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates"/>
 							</VisualStateManager.VisualStateGroups>
-						</ContentControl>
+							<ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Background="#02010101" Foreground="#FFEAEAEA"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Color x:Key="ChevronDefaultColor">#FFD4D4D4</Color>
+		<Color x:Key="ChevronMouseOverColor">#FF959595</Color>
+		<SolidColorBrush x:Key="ChevronPressedColor" Color="{StaticResource ChevronDefaultColor}"/>
+		<Style x:Key="UpButton" TargetType="Button">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>
+			<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+			<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+			<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
+			<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+			<Setter Property="Padding" Value="10,3,10,5"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Grid Background="#01010101">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<ColorAnimation Duration="0" To="#FF494949" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path" d:IsOptimized="True"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Normal"/>
+									<VisualState x:Name="Disabled"/>
+									<VisualState x:Name="MouseOver">
+										<Storyboard>
+											<ColorAnimation Duration="0" To="#FFA2A2A2" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path" d:IsOptimized="True"/>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates"/>
+							</VisualStateManager.VisualStateGroups>
+							<Path x:Name="path" Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Center" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Center" Width="80" Fill="LightGray"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="DownButton" TargetType="Button">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>
+			<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+			<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+			<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
+			<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+			<Setter Property="Padding" Value="10,3,10,5"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Grid Background="#01010101">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<ColorAnimation Duration="0" To="#FF424242" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path" d:IsOptimized="True"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Normal"/>
+									<VisualState x:Name="Disabled"/>
+									<VisualState x:Name="MouseOver">
+										<Storyboard>
+											<ColorAnimation Duration="0" To="#FF8B8B8B" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path" d:IsOptimized="True"/>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates"/>
+							</VisualStateManager.VisualStateGroups>
+							<Path x:Name="path" Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Center" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Center" Width="80" RenderTransformOrigin="0.5,0.5" Fill="#FFCDCDCD">
+								<Path.RenderTransform>
+									<CompositeTransform Rotation="180"/>
+								</Path.RenderTransform>
+							</Path>
+						</Grid>
 					</ControlTemplate>
 				</Setter.Value>
 			</Setter>
@@ -64,17 +149,9 @@
     			</Ellipse.Fill>
     		</Ellipse>
     		<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
-    		<TextBlock Text="{Binding CurrentTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-30,0,0" Foreground="#FFBFBFBF"/>
-    		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource BlankButton}" Background="#01010101">
-    			<Path Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Left" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="80" Fill="{StaticResource ChevronBrush}"/>
-    		</Button>
-    		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource BlankButton}" Background="#01010101">
-    			<Path Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Left" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="80" RenderTransformOrigin="0.5,0.5" Fill="{StaticResource ChevronBrush}">
-    				<Path.RenderTransform>
-    					<CompositeTransform Rotation="180"/>
-    				</Path.RenderTransform>
-    			</Path>
-    		</Button>
+    		<TextBlock Text="{Binding CurrentTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="#FFBFBFBF"/>
+    		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101"/>
+    		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101"/>
     	</Grid>
 
     </Grid>
