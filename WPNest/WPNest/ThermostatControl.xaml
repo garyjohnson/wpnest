@@ -89,7 +89,37 @@
 	</UserControl.Resources>
     
     <Grid x:Name="LayoutRoot">
-    	<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380">
+    	<VisualStateManager.VisualStateGroups>
+    		<VisualStateGroup x:Name="HVAC_States">
+    			<VisualStateGroup.Transitions>
+    				<VisualTransition GeneratedDuration="0:0:0.5" To="Cooling">
+    					<Storyboard/>
+    				</VisualTransition>
+    				<VisualTransition GeneratedDuration="0:0:0.5" To="Heating">
+    					<Storyboard/>
+    				</VisualTransition>
+    				<VisualTransition GeneratedDuration="0:0:0.5" To="Default"/>
+    			</VisualStateGroup.Transitions>
+    			<VisualState x:Name="Default"/>
+    			<VisualState x:Name="Heating">
+    				<Storyboard>
+    					<ColorAnimation Duration="0" To="#FFF51010" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[3].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    					<ColorAnimation Duration="0" To="#FFFD4914" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    					<ColorAnimation Duration="0" To="#FFFF6F0C" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    					<ColorAnimation Duration="0" To="#FFFD1414" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    				</Storyboard>
+    			</VisualState>
+    			<VisualState x:Name="Cooling">
+    				<Storyboard>
+    					<ColorAnimation Duration="0" To="#FF3B27FF" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    					<ColorAnimation Duration="0" To="#FF3622FF" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[3].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    					<ColorAnimation Duration="0" To="#FF5048FF" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    					<ColorAnimation Duration="0" To="#FF6151FB" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+    				</Storyboard>
+    			</VisualState>
+    		</VisualStateGroup>
+    	</VisualStateManager.VisualStateGroups>
+    	<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" Margin="1,0,-1,0">
     		<Grid.RowDefinitions>
     			<RowDefinition/>
     			<RowDefinition Height="0*"/>
@@ -106,7 +136,9 @@
     			</Ellipse.Fill>
     		</Ellipse>
     		<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
-    		<TextBlock Text="{Binding CurrentTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="#FFBFBFBF"/>
+    		<Path x:Name="mediumTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="2"/>
+    		<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7"/>
+    		<TextBlock Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="#FFBFBFBF"/>
     		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101"/>
     		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101"/>
     	</Grid>

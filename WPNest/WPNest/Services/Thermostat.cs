@@ -7,6 +7,9 @@
 		}
 
 		public string ID { get; private set; }
-		public double Temperature { get; set; }
+		public double TargetTemperature { get; set; }
+		public double CurrentTemperature { get; set; }
+		public bool IsHeating { get; set; }
+		public bool IsCooling { get; set; }
 	}
 }

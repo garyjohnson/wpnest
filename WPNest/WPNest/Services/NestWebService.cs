@@ -98,7 +98,11 @@ namespace WPNest.Services {
 			var values = JObject.Parse(strContent);
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
 			double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
-			return new GetTemperatureResult(temperature);
+			double currentTemperatureCelcius = double.Parse(values["current_temperature"].Value<string>());
+			double currentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
+			bool isHeating = values["hvac_heater_state"].Value<bool>();
+			bool isCooling = values["hvac_ac_state"].Value<bool>();
+			return new GetTemperatureResult(temperature, currentTemperature, isHeating, isCooling);
 		}
 
 		private static GetStatusResult ParseGetStatusResult(string responseString, string userId) {
@@ -122,8 +126,13 @@ namespace WPNest.Services {
 
 			foreach (var structureResult in structureResults) {
 				foreach (var thermostat in structureResult.Thermostats) {
-					double temperature = double.Parse(values["shared"][thermostat.ID]["target_temperature"].Value<string>());
-					thermostat.Temperature = Math.Round(temperature.CelciusToFahrenheit());
+					var thermostatValues = values["shared"][thermostat.ID];
+					double temperature = double.Parse(thermostatValues["target_temperature"].Value<string>());
+					thermostat.TargetTemperature = Math.Round(temperature.CelciusToFahrenheit());
+					double currentTemperature = double.Parse(thermostatValues["current_temperature"].Value<string>());
+					thermostat.CurrentTemperature = Math.Round(temperature.CelciusToFahrenheit());
+					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
+					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
 				}
 			}
 
