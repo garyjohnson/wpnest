@@ -7,7 +7,7 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="380" d:DesignWidth="380"
-	Loaded="OnLoaded" SizeChanged="OnSizeChanged">
+	Loaded="OnLoaded" SizeChanged="OnSizeChanged" >
 	<d:DataContext>
 		<WPNest:NestViewModel/>
 	</d:DataContext>
