@@ -91,6 +91,8 @@ namespace WPNest {
 			ClearTicks();
 			DrawMinorTicks();
 			DrawTargetTemperatureTick();
+			DrawCurrentTemperatureTick();
+			RefreshCurrentTemperatureLabelPosition();
 		}
 
 		private async void OnUpClick(object sender, RoutedEventArgs e) {
@@ -147,7 +149,20 @@ namespace WPNest {
 			Point rotatedTargetEnd = rotateTransform.Transform(targetEnd);
 			var tickTargetFigure = GetPathFigure(rotatedTargetStart, rotatedTargetEnd);
 			_heavyTicksGeometry.Figures.Add(tickTargetFigure);
+		}
 
+		private void RefreshCurrentTemperatureLabelPosition() {
+			RotateTransform rotateTransform = GetRotateTransform();
+			var currentTempLabelPos = new Point(GetHalfWidth(), 35);
+			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
+			Point rotatedLabelPos = rotateTransform.Transform(currentTempLabelPos);
+
+			Canvas.SetLeft(currentTemperature, rotatedLabelPos.X + 10.0d);
+			Canvas.SetTop(currentTemperature, rotatedLabelPos.Y - currentTemperature.ActualHeight / 2);
+		}
+
+		private void DrawCurrentTemperatureTick() {
+			RotateTransform rotateTransform = GetRotateTransform();
 			var currentStart = new Point(GetHalfWidth(), TickMarginFromTop);
 			var currentEnd = new Point(GetHalfWidth(), TickMarginFromTop + TickLength);
 			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
@@ -155,14 +170,6 @@ namespace WPNest {
 			Point rotatedCurrentEnd = rotateTransform.Transform(currentEnd);
 			var tickCurrentFigure = GetPathFigure(rotatedCurrentStart, rotatedCurrentEnd);
 			_heavyTicksGeometry.Figures.Add(tickCurrentFigure);
-
-			var currentTempLabelPos = new Point(GetHalfWidth(), 35);
-			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
-			Point rotatedLabelPos = rotateTransform.Transform(currentTempLabelPos);
-
-			Canvas.SetLeft(currentTemperature, rotatedLabelPos.X + 10.0d);
-			Canvas.SetTop(currentTemperature, rotatedLabelPos.Y - currentTemperature.ActualHeight / 2);
-
 		}
 
 		private void DrawMinorTicks() {
