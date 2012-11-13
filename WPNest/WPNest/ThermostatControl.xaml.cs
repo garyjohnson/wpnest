@@ -8,16 +8,28 @@ namespace WPNest {
 
 	public partial class ThermostatControl : UserControl {
 
+		private const double StartAngle = -140.0d;
+		private const double EndAngle = 140.0d;
+		private const double AngleRange = EndAngle - StartAngle;
+		private const double StartDegrees = 50.0d;
+		private const double EndDegrees = 90.0d;
+		private const double DegreeRange = EndDegrees - StartDegrees;
+		private const double TickAngleIncrement = 2.5d;
+		private const double AngleDegreeScale = AngleRange / DegreeRange;
+
+		private const double TickMarginFromTop = 20.0d;
+		private const double TickLength = 30.0d;
+		private const double TickTargetTemperatureLength = 45.0d;
+
+		private const string VisualStateCooling = "Cooling";
+		private const string VisualStateHeating = "Heating";
+		private const string VisualStateDefault = "Default";
+
 		public ThermostatControl() {
 			InitializeComponent();
 
-			var binding = new Binding("TargetTemperature");
-			binding.Mode = BindingMode.OneWay;
-			SetBinding(TargetTemperatureProperty, binding);
-
-			var currentBinding = new Binding("CurrentTemperature");
-			currentBinding.Mode = BindingMode.OneWay;
-			SetBinding(CurrentTemperatureProperty, currentBinding);
+			BindTargetTemperatureToViewModel();
+			BindCurrentTemperatureToViewModel();
 		}
 
 		public static readonly DependencyProperty TargetTemperatureProperty =
@@ -38,14 +50,26 @@ namespace WPNest {
 			set { SetValue(CurrentTemperatureProperty, value); }
 		}
 
+		private NestViewModel ViewModel {
+			get { return DataContext as NestViewModel; }
+		}
+
+		private void BindCurrentTemperatureToViewModel() {
+			var currentBinding = new Binding("CurrentTemperature");
+			currentBinding.Mode = BindingMode.OneWay;
+			SetBinding(CurrentTemperatureProperty, currentBinding);
+		}
+
+		private void BindTargetTemperatureToViewModel() {
+			var binding = new Binding("TargetTemperature");
+			binding.Mode = BindingMode.OneWay;
+			SetBinding(TargetTemperatureProperty, binding);
+		}
+
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostatControl = (ThermostatControl)sender;
 			thermostatControl.DrawMinorTicks();
 			thermostatControl.DrawTemperatureTicks();
-		}
-
-		private NestViewModel ViewModel {
-			get { return DataContext as NestViewModel; }
 		}
 
 		private void OnLoaded(object sender, RoutedEventArgs e) {
@@ -70,52 +94,50 @@ namespace WPNest {
 
 		private void UpdateVisualState() {
 			if (ViewModel.IsCooling)
-				VisualStateManager.GoToState(this, "Cooling", true);
+				VisualStateManager.GoToState(this, VisualStateCooling, true);
 			else if (ViewModel.IsHeating)
-				VisualStateManager.GoToState(this, "Heating", true);
+				VisualStateManager.GoToState(this, VisualStateHeating, true);
 			else
-				VisualStateManager.GoToState(this, "Default", true);
+				VisualStateManager.GoToState(this, VisualStateDefault, true);
 		}
 
-		private const double StartAngle = -140.0d;
-		private const double EndAngle = 140.0d;
-		private const double AngleRange = EndAngle - StartAngle;
-		private const double StartDegrees = 50.0d;
-		private const double EndDegrees = 90.0d;
-		private const double DegreeRange = EndDegrees - StartDegrees;
-		private const double TickAngleIncrement = 2.5d;
-
 		private double AngleFromTemperature(double temperature) {
-			double scale = AngleRange / DegreeRange;
-			return ((temperature - StartDegrees) * scale) + StartAngle;
+			return ((temperature - StartDegrees) * AngleDegreeScale) + StartAngle;
+		}
+
+		private RotateTransform GetRotateTransform() {
+			double halfWidth = orb.ActualWidth / 2;
+			double halfHeight = orb.ActualHeight / 2;
+
+			var rotateTransform = new RotateTransform();
+			rotateTransform.CenterX = halfWidth;
+			rotateTransform.CenterY = halfHeight;
+
+			return rotateTransform;
 		}
 
 		private void DrawTemperatureTicks() {
 			var heavyTicksGeometry = new PathGeometry();
 			double halfWidth = orb.ActualWidth / 2;
-			double halfHeight = orb.ActualHeight / 2;
-			var rotateTransform = new RotateTransform();
-			rotateTransform.CenterX = halfWidth;
-			rotateTransform.CenterY = halfHeight;
+			RotateTransform rotateTransform = GetRotateTransform();
 
-			Point targetStart = new Point(halfWidth, 20);
-			Point targetEnd = new Point(halfWidth, 65);
+			var targetStart = new Point(halfWidth, TickMarginFromTop);
+			var targetEnd = new Point(halfWidth, TickMarginFromTop + TickTargetTemperatureLength);
 			rotateTransform.Angle = AngleFromTemperature(TargetTemperature);
 			Point rotatedTargetStart = rotateTransform.Transform(targetStart);
 			Point rotatedTargetEnd = rotateTransform.Transform(targetEnd);
 			var tickTargetFigure = GetPathFigure(rotatedTargetStart, rotatedTargetEnd);
 			heavyTicksGeometry.Figures.Add(tickTargetFigure);
 
-			Point currentStart = new Point(halfWidth, 20);
-			Point currentEnd = new Point(halfWidth, 50);
+			var currentStart = new Point(halfWidth, TickMarginFromTop);
+			var currentEnd = new Point(halfWidth, TickMarginFromTop + TickLength);
 			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
 			Point rotatedCurrentStart = rotateTransform.Transform(currentStart);
 			Point rotatedCurrentEnd = rotateTransform.Transform(currentEnd);
 			var tickCurrentFigure = GetPathFigure(rotatedCurrentStart, rotatedCurrentEnd);
 			heavyTicksGeometry.Figures.Add(tickCurrentFigure);
 
-
-			Point currentTempLabelPos = new Point(halfWidth, 35);
+			var currentTempLabelPos = new Point(halfWidth, 35);
 			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
 			Point rotatedLabelPos = rotateTransform.Transform(currentTempLabelPos);
 
@@ -129,15 +151,12 @@ namespace WPNest {
 			var lightTicksGeometry = new PathGeometry();
 			var mediumTicksGeometry = new PathGeometry();
 
-			var rotateTransform = new RotateTransform();
+			RotateTransform rotateTransform = GetRotateTransform();
 
 			double halfWidth = orb.ActualWidth / 2;
-			double halfHeight = orb.ActualHeight / 2;
-			rotateTransform.CenterX = halfWidth;
-			rotateTransform.CenterY = halfHeight;
 
-			Point start = new Point(halfWidth, 20);
-			Point end = new Point(halfWidth, 50);
+			var start = new Point(halfWidth, 20);
+			var end = new Point(halfWidth, 50);
 
 			double startTemp = Math.Min(CurrentTemperature, TargetTemperature);
 			double startAngle = AngleFromTemperature(startTemp);
