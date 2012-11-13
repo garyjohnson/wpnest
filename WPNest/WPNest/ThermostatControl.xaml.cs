@@ -140,58 +140,54 @@ namespace WPNest {
 		}
 
 		private void DrawTargetTemperatureTick() {
-			RotateTransform rotateTransform = GetRotateTransform();
-			rotateTransform.Angle = AngleFromTemperature(TargetTemperature);
-
 			var targetStart = new Point(GetHalfWidth(), TickMarginFromTop);
 			var targetEnd = new Point(GetHalfWidth(), TickMarginFromTop + TickTargetTemperatureLength);
-			Point rotatedTargetStart = rotateTransform.Transform(targetStart);
-			Point rotatedTargetEnd = rotateTransform.Transform(targetEnd);
-			var tickTargetFigure = GetPathFigure(rotatedTargetStart, rotatedTargetEnd);
+			double angle = AngleFromTemperature(TargetTemperature);
+			var tickTargetFigure = GetRotatedPathFigure(targetStart, targetEnd, angle);
 			_heavyTicksGeometry.Figures.Add(tickTargetFigure);
 		}
 
 		private void RefreshCurrentTemperatureLabelPosition() {
-			RotateTransform rotateTransform = GetRotateTransform();
-			var currentTempLabelPos = new Point(GetHalfWidth(), 35);
+			var rotateTransform = GetRotateTransform();
 			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
-			Point rotatedLabelPos = rotateTransform.Transform(currentTempLabelPos);
+			double labelHalfHeight = currentTemperature.ActualHeight / 2;
+			var labelPosition = new Point(GetHalfWidth(), 35 - labelHalfHeight);
 
-			Canvas.SetLeft(currentTemperature, rotatedLabelPos.X + 10.0d);
-			Canvas.SetTop(currentTemperature, rotatedLabelPos.Y - currentTemperature.ActualHeight / 2);
+			Point rotatedLabelPosition = rotateTransform.Transform(labelPosition);
+			Canvas.SetLeft(currentTemperature, rotatedLabelPosition.X + 10.0d);
+			Canvas.SetTop(currentTemperature, rotatedLabelPosition.Y);
 		}
 
 		private void DrawCurrentTemperatureTick() {
-			RotateTransform rotateTransform = GetRotateTransform();
 			var currentStart = new Point(GetHalfWidth(), TickMarginFromTop);
 			var currentEnd = new Point(GetHalfWidth(), TickMarginFromTop + TickLength);
-			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
-			Point rotatedCurrentStart = rotateTransform.Transform(currentStart);
-			Point rotatedCurrentEnd = rotateTransform.Transform(currentEnd);
-			var tickCurrentFigure = GetPathFigure(rotatedCurrentStart, rotatedCurrentEnd);
+			double angle = AngleFromTemperature(CurrentTemperature);
+			var tickCurrentFigure = GetRotatedPathFigure(currentStart, currentEnd, angle);
 			_heavyTicksGeometry.Figures.Add(tickCurrentFigure);
 		}
 
-		private void DrawMinorTicks() {
+		private PathFigure GetRotatedPathFigure(Point start, Point end, double angle) {
 			RotateTransform rotateTransform = GetRotateTransform();
+			rotateTransform.Angle = angle;
+			Point rotatedStart = rotateTransform.Transform(start);
+			Point rotatedEnd = rotateTransform.Transform(end);
+			return GetPathFigure(rotatedStart, rotatedEnd);
+		}
 
+		private void DrawMinorTicks() {
 			double halfWidth = orb.ActualWidth / 2;
 
-			var start = new Point(halfWidth, 20);
-			var end = new Point(halfWidth, 50);
+			var start = new Point(halfWidth, TickMarginFromTop);
+			var end = new Point(halfWidth, TickMarginFromTop + TickLength);
 
-			double startTemp = Math.Min(CurrentTemperature, TargetTemperature);
-			double startAngle = AngleFromTemperature(startTemp);
-			double endTemp = Math.Max(CurrentTemperature, TargetTemperature);
-			double endAngle = AngleFromTemperature(endTemp);
+			double startTemperature = Math.Min(CurrentTemperature, TargetTemperature);
+			double startAngle = AngleFromTemperature(startTemperature);
+			double endTemperature = Math.Max(CurrentTemperature, TargetTemperature);
+			double endAngle = AngleFromTemperature(endTemperature);
 
-			for (double i = StartAngle; i <= EndAngle; i += TickAngleIncrement) {
-				rotateTransform.Angle = i;
-				Point rotatedStart = rotateTransform.Transform(start);
-				Point rotatedEnd = rotateTransform.Transform(end);
-				var tickFigure = GetPathFigure(rotatedStart, rotatedEnd);
-
-				if (i >= startAngle && i <= endAngle)
+			for (double angle = StartAngle; angle <= EndAngle; angle += TickAngleIncrement) {
+				var tickFigure = GetRotatedPathFigure(start, end, angle);
+				if (angle >= startAngle && angle <= endAngle)
 					_mediumTicksGeometry.Figures.Add(tickFigure);
 				else
 					_lightTicksGeometry.Figures.Add(tickFigure);
@@ -204,10 +200,5 @@ namespace WPNest {
 			tickFigure.Segments.Add(new LineSegment { Point = end });
 			return tickFigure;
 		}
-
-		private void UserControl_Loaded_1(object sender, RoutedEventArgs e) {
-
-		}
-
 	}
 }
