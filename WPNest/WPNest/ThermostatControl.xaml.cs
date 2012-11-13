@@ -40,6 +40,7 @@ namespace WPNest {
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostatControl = (ThermostatControl)sender;
+			thermostatControl.DrawMinorTicks();
 			thermostatControl.DrawTemperatureTicks();
 		}
 
@@ -96,7 +97,7 @@ namespace WPNest {
 			var rotateTransform = new RotateTransform();
 			rotateTransform.CenterX = halfWidth;
 			rotateTransform.CenterY = halfHeight;
-			
+
 			Point targetStart = new Point(halfWidth, 20);
 			Point targetEnd = new Point(halfWidth, 65);
 			rotateTransform.Angle = AngleFromTemperature(TargetTemperature);
@@ -112,6 +113,14 @@ namespace WPNest {
 			Point rotatedCurrentEnd = rotateTransform.Transform(currentEnd);
 			var tickCurrentFigure = GetPathFigure(rotatedCurrentStart, rotatedCurrentEnd);
 			heavyTicksGeometry.Figures.Add(tickCurrentFigure);
+
+
+			Point currentTempLabelPos = new Point(halfWidth, 35);
+			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
+			Point rotatedLabelPos = rotateTransform.Transform(currentTempLabelPos);
+
+			Canvas.SetLeft(currentTemperature, rotatedLabelPos.X + 10.0d);
+			Canvas.SetTop(currentTemperature, rotatedLabelPos.Y - currentTemperature.ActualHeight / 2);
 
 			heavyTicks.Data = heavyTicksGeometry;
 		}
@@ -130,14 +139,24 @@ namespace WPNest {
 			Point start = new Point(halfWidth, 20);
 			Point end = new Point(halfWidth, 50);
 
+			double startTemp = Math.Min(CurrentTemperature, TargetTemperature);
+			double startAngle = AngleFromTemperature(startTemp);
+			double endTemp = Math.Max(CurrentTemperature, TargetTemperature);
+			double endAngle = AngleFromTemperature(endTemp);
+
 			for (double i = StartAngle; i <= EndAngle; i += TickAngleIncrement) {
 				rotateTransform.Angle = i;
 				Point rotatedStart = rotateTransform.Transform(start);
 				Point rotatedEnd = rotateTransform.Transform(end);
 				var tickFigure = GetPathFigure(rotatedStart, rotatedEnd);
-				lightTicksGeometry.Figures.Add(tickFigure);
-			}
 
+				if (i >= startAngle && i <= endAngle) {
+					mediumTicksGeometry.Figures.Add(tickFigure);
+				}
+				else {
+					lightTicksGeometry.Figures.Add(tickFigure);
+				}
+			}
 
 			ticks.Data = lightTicksGeometry;
 			mediumTicks.Data = mediumTicksGeometry;
