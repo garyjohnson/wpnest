@@ -72,9 +72,9 @@ namespace WPNest.Services {
 			}
 		}
 
-		public async Task<GetTemperatureResult> GetTemperatureAsync(Thermostat thermostat) {
+		public async Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat) {
 			if (_sessionProvider.IsSessionExpired)
-				return new GetTemperatureResult(new SessionExpiredException());
+				return new GetThermostatStatusResult(new SessionExpiredException());
 
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			WebRequest request = GetPostJsonRequest(url);
@@ -90,11 +90,11 @@ namespace WPNest.Services {
 				return ParseGetTemperatureResult(strContent);
 			}
 			catch (Exception exception) {
-				return new GetTemperatureResult(exception);
+				return new GetThermostatStatusResult(exception);
 			}
 		}
 
-		private static GetTemperatureResult ParseGetTemperatureResult(string strContent) {
+		private static GetThermostatStatusResult ParseGetTemperatureResult(string strContent) {
 			var values = JObject.Parse(strContent);
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
 			double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
@@ -102,7 +102,7 @@ namespace WPNest.Services {
 			double currentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
 			bool isHeating = values["hvac_heater_state"].Value<bool>();
 			bool isCooling = values["hvac_ac_state"].Value<bool>();
-			return new GetTemperatureResult(temperature, currentTemperature, isHeating, isCooling);
+			return new GetThermostatStatusResult(temperature, currentTemperature, isHeating, isCooling);
 		}
 
 		private static GetStatusResult ParseGetStatusResult(string responseString, string userId) {
@@ -130,7 +130,7 @@ namespace WPNest.Services {
 					double temperature = double.Parse(thermostatValues["target_temperature"].Value<string>());
 					thermostat.TargetTemperature = Math.Round(temperature.CelciusToFahrenheit());
 					double currentTemperature = double.Parse(thermostatValues["current_temperature"].Value<string>());
-					thermostat.CurrentTemperature = Math.Round(temperature.CelciusToFahrenheit());
+					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
 				}

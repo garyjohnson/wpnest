@@ -148,6 +148,11 @@ namespace WPNest {
 		}
 
 		private void RefreshCurrentTemperatureLabelPosition() {
+			if (CurrentTemperature == TargetTemperature) {
+				currentTemperature.Visibility = Visibility.Collapsed;
+				return;
+			}
+
 			var rotateTransform = GetRotateTransform();
 			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
 			double labelHalfHeight = currentTemperature.ActualHeight / 2;
@@ -156,6 +161,7 @@ namespace WPNest {
 			Point rotatedLabelPosition = rotateTransform.Transform(labelPosition);
 			Canvas.SetLeft(currentTemperature, rotatedLabelPosition.X + 10.0d);
 			Canvas.SetTop(currentTemperature, rotatedLabelPosition.Y);
+			currentTemperature.Visibility = Visibility.Visible;
 		}
 
 		private void DrawCurrentTemperatureTick() {

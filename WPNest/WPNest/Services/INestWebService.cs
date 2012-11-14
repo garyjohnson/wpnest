@@ -7,6 +7,6 @@ namespace WPNest.Services {
 		Task<WebServiceResult> LoginAsync(string userName, string password);
 		Task<GetStatusResult> GetStatusAsync();
 		Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature);
-		Task<GetTemperatureResult> GetTemperatureAsync(Thermostat thermostat);
+		Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat);
 	}
 }

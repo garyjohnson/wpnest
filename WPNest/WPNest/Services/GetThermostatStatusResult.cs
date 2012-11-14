@@ -2,16 +2,16 @@
 
 namespace WPNest.Services {
 
-	public class GetTemperatureResult : WebServiceResult {
+	public class GetThermostatStatusResult : WebServiceResult {
 
-		public GetTemperatureResult(double targetTemperature, double currentTemperature, bool isHeating, bool isCooling) {
+		public GetThermostatStatusResult(double targetTemperature, double currentTemperature, bool isHeating, bool isCooling) {
 			TargetTemperature = targetTemperature;
 			CurrentTemperature = currentTemperature;
 			IsHeating = isHeating;
 			IsCooling = isCooling;
 		}
 
-		public GetTemperatureResult(Exception error) {
+		public GetThermostatStatusResult(Exception error) {
 			Error = error;
 		}
 

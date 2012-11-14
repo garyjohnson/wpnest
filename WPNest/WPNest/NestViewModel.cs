@@ -157,7 +157,7 @@ namespace WPNest {
 
 		private async Task UpdateStatusAsync(Thermostat thermostat) {
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
-			GetTemperatureResult temperatureResult = await nestWebService.GetTemperatureAsync(thermostat);
+			GetThermostatStatusResult temperatureResult = await nestWebService.GetThermostatStatusAsync(thermostat);
 			if (IsErrorHandled(temperatureResult.Error))
 				return;
 
