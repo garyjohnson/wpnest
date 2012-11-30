@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -15,6 +16,9 @@ namespace WPNest.Login {
 		}
 
 		private async void OnLoginPressed(object sender, RoutedEventArgs e) {
+			if (LoginPressed != null)
+				LoginPressed(this, EventArgs.Empty);
+
 			await ViewModel.LoginAsync();
 		}
 
@@ -28,5 +32,7 @@ namespace WPNest.Login {
 			else
 				passwordHint.Visibility = Visibility.Collapsed;
 		}
+
+		public event EventHandler LoginPressed;
 	}
 }

@@ -6,9 +6,12 @@
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 							xmlns:WPNest="clr-namespace:WPNest" xmlns:Login="clr-namespace:WPNest.Login" 
-							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" x:Class="WPNest.MainPage" 
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="WPNest.MainPage" 
 							mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768" 
 							SupportedOrientations="Portrait" Orientation="Portrait" 
+							shell:SystemTray.BackgroundColor="Transparent"
+							shell:SystemTray.ForegroundColor="#444444"
+							shell:SystemTray.Opacity="0"
 							shell:SystemTray.IsVisible="True">
 
 	<phone:PhoneApplicationPage.Resources>
@@ -34,18 +37,80 @@
 	</phone:PhoneApplicationPage.DataContext>
 
 	<Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}" Margin="0">
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="LogInState" ec:ExtendedVisualStateManager.UseFluidLayout="True">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.3"/>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="Default">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="loginControl" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="loginControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>False</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="thermostatControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>False</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="PromptingLogIn">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="loginControl" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="loginControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>True</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="LoggedIn">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="loadingPanel" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="loadingPanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>False</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="thermostatControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>True</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="thermostatControl" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center">
+		<VisualStateManager.CustomVisualStateManager>
+			<ec:ExtendedVisualStateManager/>
+		</VisualStateManager.CustomVisualStateManager>
+
+		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="1" IsHitTestVisible="True" d:IsHidden="True">
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="wpnest" VerticalAlignment="Center" FontSize="48" FontFamily="Segoe WP SemiLight" Foreground="{StaticResource logoBrush}" Margin="0"/>
 			<toolkit:PerformanceProgressBar IsIndeterminate="True"/>
 		</StackPanel>
 
-		<WPNest:ThermostatControl Margin="50,194" Visibility="{Binding IsLoggedIn, Converter={StaticResource TrueToVisibleConverter}}" d:IsHidden="True"/>
+		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194" Visibility="{Binding IsLoggedIn, Converter={StaticResource TrueToVisibleConverter}}" Opacity="0" IsHitTestVisible="False" d:IsHidden="True"/>
 
-		<Login:LoginControl x:Name="loginControl" Visibility="{Binding IsLoggingIn, Converter={StaticResource TrueToVisibleConverter}}"/>
+		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" d:IsHidden="True"/>
 	</Grid>
 
 </phone:PhoneApplicationPage>

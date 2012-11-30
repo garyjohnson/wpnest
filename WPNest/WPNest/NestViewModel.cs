@@ -92,7 +92,7 @@ namespace WPNest {
 		}
 
 		private void StartUpdateTimer() {
-			_updateStatusTimer.Change(0, 5000);
+			_updateStatusTimer.Change(2000, 5000);
 		}
 
 		private void StopUpdateTimer() {
@@ -130,12 +130,12 @@ namespace WPNest {
 
 		private async Task OnLoggedIn() {
 			IsLoggingIn = false;
-			IsLoggedIn = true;
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			_getStatusResult = await nestWebService.GetStatusAsync();
 			if (IsErrorHandled(_getStatusResult.Error))
 				return;
 
+			IsLoggedIn = true;
 			TargetTemperature = GetFirstThermostat().TargetTemperature;
 			CurrentTemperature = GetFirstThermostat().CurrentTemperature;
 			StartUpdateTimer();
