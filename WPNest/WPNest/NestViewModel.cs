@@ -155,10 +155,18 @@ namespace WPNest {
 			await UpdateStatusAsync(thermostat);
 		}
 
+		private Guid latestUpdateStatusRequest;
+
 		private async Task UpdateStatusAsync(Thermostat thermostat) {
+			var requestId = new Guid();
+			latestUpdateStatusRequest = requestId;
+
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			GetThermostatStatusResult temperatureResult = await nestWebService.GetThermostatStatusAsync(thermostat);
 			if (IsErrorHandled(temperatureResult.Error))
+				return;
+
+			if (latestUpdateStatusRequest != requestId)
 				return;
 
 			thermostat.TargetTemperature = temperatureResult.TargetTemperature;

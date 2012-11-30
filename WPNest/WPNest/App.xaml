@@ -11,6 +11,7 @@
     		<GradientStop Color="#FF7E8FA2" Offset="1"/>
     		<GradientStop Color="#FFBBBEC1" Offset="0.761"/>
     	</LinearGradientBrush>
+    	<SolidColorBrush x:Key="logoBrush" Color="#FF535353"/>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

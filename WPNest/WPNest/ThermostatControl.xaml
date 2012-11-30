@@ -41,7 +41,7 @@
 								</VisualStateGroup>
 								<VisualStateGroup x:Name="FocusStates"/>
 							</VisualStateManager.VisualStateGroups>
-							<Path x:Name="path" Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Center" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Center" Width="80" Fill="LightGray"/>
+							<Path x:Name="path" Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Center" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Center" Width="80" Fill="#7FFFFFFF"/>
 						</Grid>
 					</ControlTemplate>
 				</Setter.Value>
@@ -76,7 +76,7 @@
 								</VisualStateGroup>
 								<VisualStateGroup x:Name="FocusStates"/>
 							</VisualStateManager.VisualStateGroups>
-							<Path x:Name="path" Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Center" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Center" Width="80" RenderTransformOrigin="0.5,0.5" Fill="#FFCDCDCD">
+							<Path x:Name="path" Data="M131.667,73.3333 L132,57.0003 L182.332,32.667 L232.998,57.0002 L232.665,73.3336 L181.999,51.3336 z" HorizontalAlignment="Center" Height="30" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Center" Width="80" RenderTransformOrigin="0.5,0.5" Fill="#7FFFFFFF">
 								<Path.RenderTransform>
 									<CompositeTransform Rotation="180"/>
 								</Path.RenderTransform>
@@ -133,12 +133,12 @@
     		<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
     		<Path x:Name="mediumTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="3"/>
     		<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7"/>
-    		<TextBlock Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="#FFBFBFBF"/>
+    		<TextBlock Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="White"/>
     		<Canvas Grid.RowSpan="3">
     			<TextBlock x:Name="currentTemperature" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" FontSize="18.667" FontWeight="Bold" Foreground="White"/>
     		</Canvas>
-    		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101"/>
-    		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101"/>
+    		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
+    		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
     	</Grid>
 
     </Grid>
