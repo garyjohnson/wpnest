@@ -13,6 +13,8 @@ namespace WPNest {
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
 
 			Loaded += OnLoaded;
+
+			GoToDefaultVisualState();
 		}
 
 		public static readonly DependencyProperty IsLoggedInProperty =
@@ -40,28 +42,39 @@ namespace WPNest {
 		}
 
 		private void OnLoginPressed(object sender, EventArgs e) {
-			VisualStateManager.GoToState(this, "Default", true);
+			GoToDefaultVisualState();
 		}
 
 		private static void OnIsLoggedInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-			MainPage mainPage = (MainPage) sender;
+			var mainPage = (MainPage) sender;
 			bool isLoggedIn = (bool) args.NewValue;
 
 			if (isLoggedIn)
-				VisualStateManager.GoToState(mainPage, "LoggedIn", true);
+				mainPage.GoToLoggedInVisualState();
 			else
-				VisualStateManager.GoToState(mainPage, "Default", true);
+				mainPage.GoToDefaultVisualState();
 		}
 
 		private static void OnIsLoggingInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-			MainPage mainPage = (MainPage) sender;
+			var mainPage = (MainPage) sender;
 			bool isLoggingIn = (bool) args.NewValue;
 
 			if (isLoggingIn)
-				VisualStateManager.GoToState(mainPage, "PromptingLogIn", true);
+				mainPage.GoToPromptingLoginVisualState();
 			else
-				VisualStateManager.GoToState(mainPage, "Default", true);
+				mainPage.GoToDefaultVisualState();
 		}
 
+		private void GoToPromptingLoginVisualState() {
+			VisualStateManager.GoToState(this, "PromptingLogIn", true);
+		}
+
+		private void GoToLoggedInVisualState() {
+			VisualStateManager.GoToState(this, "LoggedIn", true);
+		}
+
+		private void GoToDefaultVisualState() {
+			VisualStateManager.GoToState(this, "Default", true);
+		}
 	}
 }

@@ -40,7 +40,22 @@
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="LogInState" ec:ExtendedVisualStateManager.UseFluidLayout="True">
 				<VisualStateGroup.Transitions>
-					<VisualTransition GeneratedDuration="0:0:0.3"/>
+					<VisualTransition GeneratedDuration="0:0:0.3">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.3" To="Default"/>
+					<VisualTransition GeneratedDuration="0:0:0.3" To="PromptingLogIn">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.3" To="LoggedIn">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="Default">
 					<Storyboard>
@@ -59,6 +74,8 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="thermostatControl" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0.995" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="loadingPanel" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="PromptingLogIn">
@@ -71,6 +88,7 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="thermostatControl" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="LoggedIn">
@@ -103,14 +121,14 @@
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 
-		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="1" IsHitTestVisible="True" d:IsHidden="True">
+		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="True">
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="wpnest" VerticalAlignment="Center" FontSize="48" FontFamily="Segoe WP SemiLight" Foreground="{StaticResource logoBrush}" Margin="0"/>
 			<toolkit:PerformanceProgressBar IsIndeterminate="True"/>
 		</StackPanel>
 
-		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194" Visibility="{Binding IsLoggedIn, Converter={StaticResource TrueToVisibleConverter}}" Opacity="0" IsHitTestVisible="False" d:IsHidden="True"/>
+		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194" IsHitTestVisible="False"/>
 
-		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" d:IsHidden="True"/>
+		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed"/>
 	</Grid>
 
 </phone:PhoneApplicationPage>
