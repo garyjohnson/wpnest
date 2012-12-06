@@ -100,9 +100,7 @@ namespace WPNest {
 		}
 
 		private async void OnTimerTick(object state) {
-			await Deployment.Current.Dispatcher.InvokeAsync(() => {
-				UpdateStatusAsync(GetFirstThermostat());
-			});
+			await UpdateStatusAsync(GetFirstThermostat());
 		}
 
 		public async Task InitializeAsync() {
@@ -169,14 +167,16 @@ namespace WPNest {
 			if (latestUpdateStatusRequest != requestId)
 				return;
 
-			thermostat.TargetTemperature = temperatureResult.TargetTemperature;
-			thermostat.CurrentTemperature = temperatureResult.CurrentTemperature;
-			thermostat.IsHeating = temperatureResult.IsHeating;
-			thermostat.IsCooling = temperatureResult.IsCooling;
-			TargetTemperature = thermostat.TargetTemperature;
-			CurrentTemperature = thermostat.CurrentTemperature;
-			IsHeating = thermostat.IsHeating;
-			IsCooling = thermostat.IsCooling;
+			await Deployment.Current.Dispatcher.InvokeAsync(() => {
+				thermostat.TargetTemperature = temperatureResult.TargetTemperature;
+				thermostat.CurrentTemperature = temperatureResult.CurrentTemperature;
+				thermostat.IsHeating = temperatureResult.IsHeating;
+				thermostat.IsCooling = temperatureResult.IsCooling;
+				TargetTemperature = thermostat.TargetTemperature;
+				CurrentTemperature = thermostat.CurrentTemperature;
+				IsHeating = thermostat.IsHeating;
+				IsCooling = thermostat.IsCooling;
+			});
 		}
 
 		public async Task LowerTemperatureAsync() {

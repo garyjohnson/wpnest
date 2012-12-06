@@ -32,8 +32,10 @@ namespace WPNest {
 		public ThermostatControl() {
 			InitializeComponent();
 
-			BindTargetTemperatureToViewModel();
-			BindCurrentTemperatureToViewModel();
+			SetBinding(CurrentTemperatureProperty, new Binding("CurrentTemperature"));
+			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
+			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
+			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
 		}
 
 		public static readonly DependencyProperty TargetTemperatureProperty =
@@ -54,20 +56,31 @@ namespace WPNest {
 			set { SetValue(CurrentTemperatureProperty, value); }
 		}
 
+		public static readonly DependencyProperty IsHeatingProperty =
+			DependencyProperty.Register("IsHeating", typeof(bool), typeof(ThermostatControl),
+			new PropertyMetadata(false, OnHVACChanged));
+
+		public bool IsHeating {
+			get { return (bool)GetValue(IsHeatingProperty); }
+			set { SetValue(IsHeatingProperty, value); }
+		}
+
+		public static readonly DependencyProperty IsCoolingProperty =
+			DependencyProperty.Register("IsCooling", typeof(bool), typeof(ThermostatControl),
+			new PropertyMetadata(false, OnHVACChanged));
+
+		public bool IsCooling {
+			get { return (bool)GetValue(IsCoolingProperty); }
+			set { SetValue(IsCoolingProperty, value); }
+		}
+
+		private static void OnHVACChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var thermostat = (ThermostatControl) sender;
+			thermostat.UpdateVisualState();
+		}
+
 		private NestViewModel ViewModel {
 			get { return DataContext as NestViewModel; }
-		}
-
-		private void BindCurrentTemperatureToViewModel() {
-			var currentBinding = new Binding("CurrentTemperature");
-			currentBinding.Mode = BindingMode.OneWay;
-			SetBinding(CurrentTemperatureProperty, currentBinding);
-		}
-
-		private void BindTargetTemperatureToViewModel() {
-			var binding = new Binding("TargetTemperature");
-			binding.Mode = BindingMode.OneWay;
-			SetBinding(TargetTemperatureProperty, binding);
 		}
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -97,12 +110,10 @@ namespace WPNest {
 
 		private async void OnUpClick(object sender, RoutedEventArgs e) {
 			await ViewModel.RaiseTemperatureAsync();
-			UpdateVisualState();
 		}
 
 		private async void OnDownClick(object sender, RoutedEventArgs e) {
 			await ViewModel.LowerTemperatureAsync();
-			UpdateVisualState();
 		}
 
 		private void UpdateVisualState() {
