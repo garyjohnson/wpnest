@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -92,35 +91,8 @@ namespace WPNest {
 		public NestViewModel() {
 			_updateStatusTimer = new Timer(OnTimerTick);
 			_displayCachedStatusTimer = new Timer(OnDisplayCachedStatusTick);
-
 		}
 
-		private void OnDisplayCachedStatusTick(object state) {
-			Deployment.Current.Dispatcher.InvokeAsync(() => {
-				GetThermostatStatusResult cachedStatus = _cachedThermostatStatus;
-				if (cachedStatus != null) {
-					var thermostat = GetFirstThermostat();
-					thermostat.TargetTemperature = cachedStatus.TargetTemperature;
-					thermostat.CurrentTemperature = cachedStatus.CurrentTemperature;
-					thermostat.IsHeating = cachedStatus.IsHeating;
-					thermostat.IsCooling = cachedStatus.IsCooling;
-					TargetTemperature = thermostat.TargetTemperature;
-					CurrentTemperature = thermostat.CurrentTemperature;
-					IsHeating = thermostat.IsHeating;
-					IsCooling = thermostat.IsCooling;
-
-					_cachedThermostatStatus = null;
-				}
-			});
-		}
-
-		private void StartUpdateTimer() {
-			_updateStatusTimer.Change(2000, 5000);
-		}
-
-		private async void OnTimerTick(object state) {
-			await UpdateStatusAsync(GetFirstThermostat());
-		}
 
 		public async Task InitializeAsync() {
 			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
@@ -153,9 +125,18 @@ namespace WPNest {
 				return;
 
 			IsLoggedIn = true;
-			TargetTemperature = GetFirstThermostat().TargetTemperature;
-			CurrentTemperature = GetFirstThermostat().CurrentTemperature;
+
+			var thermostat = GetFirstThermostat();
+			TargetTemperature = thermostat.TargetTemperature;
+			CurrentTemperature = thermostat.CurrentTemperature;
+			IsHeating = thermostat.IsHeating;
+			IsCooling = thermostat.IsCooling;
+
 			StartUpdateTimer();
+			StartDisplayCachedStatusTimer();
+		}
+
+		private void StartDisplayCachedStatusTimer() {
 			_displayCachedStatusTimer.Change(1000, 1000);
 		}
 
@@ -186,7 +167,6 @@ namespace WPNest {
 			_cachedThermostatStatus = temperatureResult;
 		}
 
-
 		public async Task LowerTemperatureAsync() {
 			_cachedThermostatStatus = null;
 
@@ -201,6 +181,37 @@ namespace WPNest {
 				return;
 
 			await UpdateStatusAsync(thermostat);
+		}
+
+		private async void OnTimerTick(object state) {
+			await UpdateStatusAsync(GetFirstThermostat());
+		}
+
+		private void OnDisplayCachedStatusTick(object state) {
+			Deployment.Current.Dispatcher.InvokeAsync(() => {
+				GetThermostatStatusResult cachedStatus = _cachedThermostatStatus;
+				if (cachedStatus != null) {
+					UpdateThermostatFromCachedStatus(cachedStatus);
+					_cachedThermostatStatus = null;
+				}
+			});
+		}
+
+		private void UpdateThermostatFromCachedStatus(GetThermostatStatusResult cachedStatus) {
+//			var thermostat = GetFirstThermostat();
+//			thermostat.TargetTemperature = cachedStatus.TargetTemperature;
+//			thermostat.CurrentTemperature = cachedStatus.CurrentTemperature;
+//			thermostat.IsHeating = cachedStatus.IsHeating;
+//			thermostat.IsCooling = cachedStatus.IsCooling;
+
+			TargetTemperature = cachedStatus.TargetTemperature;
+			CurrentTemperature = cachedStatus.CurrentTemperature;
+			IsHeating = cachedStatus.IsHeating;
+			IsCooling = cachedStatus.IsCooling;
+		}
+
+		private void StartUpdateTimer() {
+			_updateStatusTimer.Change(2000, 5000);
 		}
 
 		private Thermostat GetFirstThermostat() {
