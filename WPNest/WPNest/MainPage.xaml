@@ -6,7 +6,7 @@
 							xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 							xmlns:WPNest="clr-namespace:WPNest" xmlns:Login="clr-namespace:WPNest.Login" 
-							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="WPNest.MainPage" 
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" x:Class="WPNest.MainPage" 
 							mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768" 
 							SupportedOrientations="Portrait" Orientation="Portrait" 
 							shell:SystemTray.BackgroundColor="Transparent"
@@ -129,6 +129,7 @@
 		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194" IsHitTestVisible="False"/>
 
 		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed"/>
+		<WPNest:HVACControl Visibility="Collapsed"/>
 	</Grid>
 
 </phone:PhoneApplicationPage>
