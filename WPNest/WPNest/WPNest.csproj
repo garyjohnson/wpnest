@@ -61,6 +61,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\Libraries\Moq\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions" />
@@ -89,6 +92,9 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTesting.Phone, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WPToolkitTestFx.4.2012.11.07\lib\sl4-wp71\Microsoft.VisualStudio.QualityTools.UnitTesting.Phone.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq.Silverlight">
+      <HintPath>..\Libraries\Moq\Moq.Silverlight.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
@@ -133,19 +139,25 @@
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContentType.cs" />
+    <Compile Include="Services\DelayedStatusProvider.cs" />
     <Compile Include="Services\GetStatusResult.cs" />
     <Compile Include="Services\GetThermostatStatusResult.cs" />
     <Compile Include="Services\INestWebService.cs" />
     <Compile Include="Services\ISessionProvider.cs" />
     <Compile Include="Services\ISettingsProvider.cs" />
+    <Compile Include="Services\IStatusProvider.cs" />
     <Compile Include="Services\LoginResult.cs" />
     <Compile Include="Services\NestWebService.cs" />
     <Compile Include="Services\SessionExpiredException.cs" />
     <Compile Include="Services\SessionProvider.cs" />
     <Compile Include="Services\SettingsProvider.cs" />
+    <Compile Include="Services\StatusUpdaterService.cs" />
     <Compile Include="Services\Structure.cs" />
     <Compile Include="Services\Thermostat.cs" />
+    <Compile Include="Services\ThermostatStatusEventArgs.cs" />
     <Compile Include="Services\WebServiceResult.cs" />
+    <Compile Include="Test\MockStatusProvider.cs" />
+    <Compile Include="Test\NestViewModelTest.cs" />
     <Compile Include="ThermostatControl.xaml.cs">
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>

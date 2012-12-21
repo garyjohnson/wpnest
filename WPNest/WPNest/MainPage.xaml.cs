@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Testing;
 
 namespace WPNest {
 
@@ -9,11 +10,16 @@ namespace WPNest {
 
 		public MainPage() {
 			InitializeComponent();
+
+			if (App.IsTest) {
+				Content = UnitTestSystem.CreateTestPage();
+				return;
+			}
+
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
 
 			Loaded += OnLoaded;
-
 			GoToDefaultVisualState();
 		}
 

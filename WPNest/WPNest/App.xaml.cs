@@ -3,6 +3,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using WPNest.Services;
+using WPNest.Test;
 
 namespace WPNest {
 
@@ -44,9 +45,16 @@ namespace WPNest {
 			ServiceContainer.RegisterService<ISettingsProvider>(new SettingsProvider());
 			ServiceContainer.RegisterService<ISessionProvider>(new SessionProvider());
 			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
+			ServiceContainer.RegisterService<IStatusProvider>(new DelayedStatusProvider());
+			ServiceContainer.RegisterService<StatusUpdaterService>(new StatusUpdaterService());
 		}
 
 		private void InitializeServicesForTest() {
+			ServiceContainer.RegisterService<ISettingsProvider>(new SettingsProvider());
+			ServiceContainer.RegisterService<ISessionProvider>(new SessionProvider());
+			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
+			ServiceContainer.RegisterService<IStatusProvider>(new MockStatusProvider());
+			ServiceContainer.RegisterService<StatusUpdaterService>(new StatusUpdaterService());
 		}
 
 		private void InitializePhoneApplication() {
