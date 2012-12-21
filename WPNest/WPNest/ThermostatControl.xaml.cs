@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace WPNest {
 
@@ -164,15 +165,20 @@ namespace WPNest {
 				return;
 			}
 
-			var rotateTransform = GetRotateTransform();
-			rotateTransform.Angle = AngleFromTemperature(CurrentTemperature);
-			double labelHalfHeight = currentTemperature.ActualHeight / 2;
-			var labelPosition = new Point(GetHalfWidth(), 35 - labelHalfHeight);
+			double tempThatLabelIsAt = CurrentTemperature + 1.0d;
+			if(CurrentTemperature < TargetTemperature)
+				tempThatLabelIsAt = CurrentTemperature - 1.0d;
 
-			Point rotatedLabelPosition = rotateTransform.Transform(labelPosition);
-			Canvas.SetLeft(currentTemperature, rotatedLabelPosition.X + 10.0d);
-			Canvas.SetTop(currentTemperature, rotatedLabelPosition.Y);
+			var rotateTransform = GetRotateTransform();
+			rotateTransform.Angle = AngleFromTemperature(tempThatLabelIsAt);
+
 			currentTemperature.Visibility = Visibility.Visible;
+			var labelPosition = new Point(GetHalfWidth(), TickMarginFromTop + (TickLength / 2));
+			Point rotatedLabelPosition = rotateTransform.Transform(labelPosition);
+			double labelHalfHeight = currentTemperature.ActualHeight / 2;
+			double labelHalfWidth = currentTemperature.ActualWidth / 2;
+			Canvas.SetLeft(currentTemperature, rotatedLabelPosition.X - labelHalfWidth);
+			Canvas.SetTop(currentTemperature, rotatedLabelPosition.Y - labelHalfHeight);
 		}
 
 		private void DrawCurrentTemperatureTick() {
@@ -216,6 +222,10 @@ namespace WPNest {
 			tickFigure.StartPoint = start;
 			tickFigure.Segments.Add(new LineSegment { Point = end });
 			return tickFigure;
+		}
+
+		private void OnCurrentTemperatureLayoutUpdated(object sender, EventArgs e) {
+			RefreshCurrentTemperatureLabelPosition();
 		}
 	}
 }

@@ -135,8 +135,10 @@
     		<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7"/>
     		<TextBlock Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="White"/>
     		<Canvas Grid.RowSpan="3">
-    			<TextBlock x:Name="currentTemperature" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" FontSize="18.667" FontWeight="Bold" Foreground="White"/>
-    		</Canvas>
+				<TextBlock x:Name="currentTemperature" HorizontalAlignment="Left" TextWrapping="NoWrap" TextAlignment="Center" 
+						   LayoutUpdated="OnCurrentTemperatureLayoutUpdated" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" 
+						   FontSize="18.667" FontWeight="Bold" Foreground="White" />
+			</Canvas>
     		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
     		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
     	</Grid>
