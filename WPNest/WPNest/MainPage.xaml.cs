@@ -19,8 +19,13 @@ namespace WPNest {
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
 
+			ResetZoom.Completed += ResetZoomOnCompleted;
 			Loaded += OnLoaded;
 			GoToDefaultVisualState();
+		}
+
+		private void ResetZoomOnCompleted(object sender, EventArgs eventArgs) {
+			ZoomIn.Begin();
 		}
 
 		public static readonly DependencyProperty IsLoggedInProperty =
@@ -55,10 +60,13 @@ namespace WPNest {
 			var mainPage = (MainPage) sender;
 			bool isLoggedIn = (bool) args.NewValue;
 
-			if (isLoggedIn)
+			if (isLoggedIn) {
 				mainPage.GoToLoggedInVisualState();
-			else
+				mainPage.ResetZoom.Begin();
+			}
+			else {
 				mainPage.GoToDefaultVisualState();
+			}
 		}
 
 		private static void OnIsLoggingInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using WPNest.Services;
@@ -177,8 +178,16 @@ namespace WPNest {
 			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
 		}
 
-		private static bool IsErrorHandled(Exception error) {
-			if (error != null) {
+		private bool IsErrorHandled(Exception error) {
+			var webException = error as WebException;
+			if(webException != null) {
+				if(webException.Status == WebExceptionStatus.UnknownError) {
+					IsLoggingIn = false;	
+					IsLoggingIn = true;	
+					return true;
+				}
+			}
+			else if (error != null) {
 				MessageBox.Show(error.Message);
 				return true;
 			}

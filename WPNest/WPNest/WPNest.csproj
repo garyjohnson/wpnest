@@ -93,9 +93,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WPToolkitTestFx.4.2012.11.07\lib\sl4-wp71\Microsoft.VisualStudio.QualityTools.UnitTesting.Phone.dll</HintPath>
     </Reference>
-    <Reference Include="Moq.Silverlight">
-      <HintPath>..\Libraries\Moq\Moq.Silverlight.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -156,8 +153,6 @@
     <Compile Include="Services\Thermostat.cs" />
     <Compile Include="Services\ThermostatStatusEventArgs.cs" />
     <Compile Include="Services\WebServiceResult.cs" />
-    <Compile Include="Test\MockStatusProvider.cs" />
-    <Compile Include="Test\NestViewModelTest.cs" />
     <Compile Include="ThermostatControl.xaml.cs">
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>

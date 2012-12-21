@@ -13,12 +13,12 @@ namespace WPNest.Services {
 	internal class StatusUpdaterService : IStatusUpdaterService {
 
 		private readonly Timer _updateStatusTimer;
-		private readonly DelayedStatusProvider _delayedStatusProvider;
+		private readonly IStatusProvider _delayedStatusProvider;
 
 		public Thermostat CurrentThermostat { get; set; }
 
 		public StatusUpdaterService() {
-			_delayedStatusProvider = ServiceContainer.GetService<DelayedStatusProvider>();
+			_delayedStatusProvider = ServiceContainer.GetService<IStatusProvider>();
 			_updateStatusTimer = new Timer(OnTimerTick);
 		}
 
