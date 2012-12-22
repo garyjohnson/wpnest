@@ -17,55 +17,22 @@ namespace WPNest.Services {
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
 			WebRequest request = GetPostFormRequest("https://home.nest.com/user/login");
-
 			string requestString = string.Format("username={0}&password={1}", UrlEncode(userName), UrlEncode(password));
 			await request.SetRequestStringAsync(requestString);
+			Exception exception = null;
 
-			Exception responseException = null;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
 				CacheSession(responseString);
+				return new WebServiceResult();
 			}
-			catch (Exception exception) {
-				responseException = exception;
-			}
-
-			if (responseException != null) {
-				var error = await GetWebServiceError(responseException);
-				return new WebServiceResult(error, responseException);
+			catch (Exception ex) {
+				exception = ex;
 			}
 
-			return new WebServiceResult();
-		}
-
-		private async Task<WebServiceError> GetWebServiceError(Exception responseException) {
-			var error = WebServiceError.Unknown;
-			var webException = responseException as WebException;
-			if (webException != null && webException.Response != null) {
-				string responseString = await webException.Response.GetResponseStringAsync();
-
-				JObject values = null;
-				try {
-					values = JObject.Parse(responseString);
-				}catch(Newtonsoft.Json.JsonException) {
-				}
-
-				if (values != null) {
-					var errorJson = values["error"];
-					if (errorJson != null) {
-						var errorMessage = errorJson.Value<string>();
-						if (errorMessage.Equals("access_denied"))
-							error = WebServiceError.InvalidCredentials;
-					}
-				}
-
-				var res = (HttpWebResponse)webException.Response;
-				if (res.StatusCode == HttpStatusCode.Unauthorized) {
-					error = WebServiceError.SessionTokenExpired;
-				}
-			}
-			return error;
+			var error = await ParseWebServiceErrorAsync(exception);
+			return new WebServiceResult(error, exception);
 		}
 
 		public async Task<GetStatusResult> GetStatusAsync() {
@@ -75,19 +42,19 @@ namespace WPNest.Services {
 			string url = string.Format("{0}/v2/mobile/user.{1}", _sessionProvider.TransportUrl, _sessionProvider.UserId);
 			var request = GetGetRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+			Exception exception = null;
 
-			Exception responseException = null;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
 				return ParseGetStatusResult(responseString, _sessionProvider.UserId);
 			}
-			catch (Exception exception) {
-				responseException = exception;
+			catch (Exception ex) {
+				exception = ex;
 			}
 
-			var error = await GetWebServiceError(responseException);
-			return new GetStatusResult(error, responseException);
+			var error = await ParseWebServiceErrorAsync(exception);
+			return new GetStatusResult(error, exception);
 		}
 
 		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
@@ -102,18 +69,18 @@ namespace WPNest.Services {
 			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
 			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
 			await request.SetRequestStringAsync(requestString);
+			Exception exception = null;
 
-			Exception responseException = null;
 			try {
 				await request.GetResponseAsync();
 				return new WebServiceResult();
 			}
-			catch (Exception exception) {
-				responseException = exception;
+			catch (Exception ex) {
+				exception = ex;
 			}
 
-			var error = await GetWebServiceError(responseException);
-			return new WebServiceResult(error, responseException);
+			var error = await ParseWebServiceErrorAsync(exception);
+			return new WebServiceResult(error, exception);
 		}
 
 		private Random r = new Random();
@@ -134,19 +101,49 @@ namespace WPNest.Services {
 
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
+			Exception exception = null;
 
-			Exception responseException = null;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
 				return ParseGetTemperatureResult(strContent);
 			}
-			catch (Exception exception) {
-				responseException = exception;
+			catch (Exception ex) {
+				exception = ex;
 			}
 
-			var error = await GetWebServiceError(responseException);
-			return new GetThermostatStatusResult(error, responseException);
+			var error = await ParseWebServiceErrorAsync(exception);
+			return new GetThermostatStatusResult(error, exception);
+		}
+
+		private async Task<WebServiceError> ParseWebServiceErrorAsync(Exception responseException) {
+			var error = WebServiceError.Unknown;
+			var webException = responseException as WebException;
+			if (webException != null && webException.Response != null) {
+				string responseString = await webException.Response.GetResponseStringAsync();
+
+				JObject values = null;
+				try {
+					values = JObject.Parse(responseString);
+				}
+				catch (Newtonsoft.Json.JsonException) {
+				}
+
+				if (values != null) {
+					var errorJson = values["error"];
+					if (errorJson != null) {
+						var errorMessage = errorJson.Value<string>();
+						if (errorMessage.Equals("access_denied"))
+							error = WebServiceError.InvalidCredentials;
+					}
+				}
+
+				var res = (HttpWebResponse)webException.Response;
+				if (res.StatusCode == HttpStatusCode.Unauthorized) {
+					error = WebServiceError.SessionTokenExpired;
+				}
+			}
+			return error;
 		}
 
 		private static GetThermostatStatusResult ParseGetTemperatureResult(string strContent) {
