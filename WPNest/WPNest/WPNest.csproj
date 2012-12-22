@@ -124,6 +124,7 @@
     <Compile Include="HVACControl.xaml.cs">
       <DependentUpon>HVACControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Login\LoginMessageConverter.cs" />
     <Compile Include="NestSampleViewModel.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Login\LoginControl.xaml.cs">

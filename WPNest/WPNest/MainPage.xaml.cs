@@ -24,10 +24,6 @@ namespace WPNest {
 			GoToDefaultVisualState(false);
 		}
 
-		private void ResetZoomOnCompleted(object sender, EventArgs eventArgs) {
-			ZoomIn.Begin();
-		}
-
 		public static readonly DependencyProperty IsLoggedInProperty =
 			DependencyProperty.Register("IsLoggedIn", typeof(bool), typeof(MainPage), new PropertyMetadata(false, OnIsLoggedInChanged));
 
@@ -48,6 +44,10 @@ namespace WPNest {
 			get { return DataContext as NestViewModel; }
 		}
 
+		private void ResetZoomOnCompleted(object sender, EventArgs eventArgs) {
+			ZoomIn.Begin();
+		}
+
 		private async void OnLoaded(object sender, RoutedEventArgs e) {
 			await ViewModel.InitializeAsync();
 		}
@@ -57,8 +57,8 @@ namespace WPNest {
 		}
 
 		private static void OnIsLoggedInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-			var mainPage = (MainPage) sender;
-			bool isLoggedIn = (bool) args.NewValue;
+			var mainPage = (MainPage)sender;
+			var isLoggedIn = (bool)args.NewValue;
 
 			if (isLoggedIn) {
 				mainPage.GoToLoggedInVisualState();
@@ -70,8 +70,8 @@ namespace WPNest {
 		}
 
 		private static void OnIsLoggingInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-			var mainPage = (MainPage) sender;
-			bool isLoggingIn = (bool) args.NewValue;
+			var mainPage = (MainPage)sender;
+			var isLoggingIn = (bool)args.NewValue;
 
 			if (isLoggingIn)
 				mainPage.GoToPromptingLoginVisualState();

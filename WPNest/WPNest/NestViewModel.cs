@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using WPNest.Services;
@@ -87,6 +86,15 @@ namespace WPNest {
 			}
 		}
 
+		private WebServiceError _currentError = WebServiceError.None;
+		public WebServiceError CurrentError {
+			get { return _currentError; }
+			set {
+				_currentError = value;
+				OnPropertyChanged("CurrentError");
+			}
+		}
+
 		public NestViewModel() {
 			_statusProvider = ServiceContainer.GetService<IStatusProvider>();
 			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;
@@ -111,6 +119,8 @@ namespace WPNest {
 		}
 
 		public async Task LoginAsync() {
+			CurrentError = WebServiceError.None;
+
 			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 
@@ -180,13 +190,15 @@ namespace WPNest {
 
 		private bool IsErrorHandled(WebServiceError error, Exception exception) {
 			if (error == WebServiceError.InvalidCredentials) {
+				IsLoggingIn = false;
 				var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 				sessionProvider.ClearSession();
-				IsLoggingIn = false;
+				CurrentError = error;
 				IsLoggingIn = true;
 				return true;
 			}
 			else if (exception != null) {
+				IsLoggingIn = false;
 				MessageBox.Show(exception.Message);
 				return true;
 			}
