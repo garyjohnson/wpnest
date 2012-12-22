@@ -83,25 +83,18 @@ namespace WPNest.Services {
 			return new WebServiceResult(error, exception);
 		}
 
-		private Random r = new Random();
 		public async Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat) {
 			if (_sessionProvider.IsSessionExpired)
 				return new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			WebRequest request = GetPostJsonRequest(url);
-
-			if (r.Next(0, 10) == 7) {
-				SetAuthorizationHeaderOnRequest(request, "t2gpo2ghpohgo2phgo2onpog2opgo2jgp2ohgoi2");
-			}
-			else {
-				SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
-			}
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
-			Exception exception = null;
+			Exception exception;
 
 			try {
 				WebResponse response = await request.GetResponseAsync();
@@ -116,34 +109,55 @@ namespace WPNest.Services {
 			return new GetThermostatStatusResult(error, exception);
 		}
 
-		private async Task<WebServiceError> ParseWebServiceErrorAsync(Exception responseException) {
+		private async Task<WebServiceError> ParseWebServiceErrorAsync(Exception exception) {
 			var error = WebServiceError.Unknown;
+
+			if (await IsInvalidCredentialsErrorAsync(exception))
+				error = WebServiceError.InvalidCredentials;
+			else if (IsSessionTokenExpiredError(exception))
+				error = WebServiceError.SessionTokenExpired;
+
+			return error;
+		}
+
+		private bool IsSessionTokenExpiredError(Exception responseException) {
+			bool isExpired = false;
 			var webException = responseException as WebException;
 			if (webException != null && webException.Response != null) {
+				var res = (HttpWebResponse)webException.Response;
+				if (res.StatusCode == HttpStatusCode.Unauthorized) {
+					isExpired = true;
+				}
+			}
+			return isExpired;
+		}
+
+		private async Task<bool> IsInvalidCredentialsErrorAsync(Exception exception) {
+			bool isInvalidCredentials = false;
+			var webException = exception as WebException;
+			if (webException != null && webException.Response != null) {
 				string responseString = await webException.Response.GetResponseStringAsync();
-
-				JObject values = null;
-				try {
-					values = JObject.Parse(responseString);
-				}
-				catch (Newtonsoft.Json.JsonException) {
-				}
-
+				var values = ParseAsJsonOrNull(responseString);
 				if (values != null) {
 					var errorJson = values["error"];
 					if (errorJson != null) {
 						var errorMessage = errorJson.Value<string>();
 						if (errorMessage.Equals("access_denied"))
-							error = WebServiceError.InvalidCredentials;
+							isInvalidCredentials = true;
 					}
 				}
-
-				var res = (HttpWebResponse)webException.Response;
-				if (res.StatusCode == HttpStatusCode.Unauthorized) {
-					error = WebServiceError.SessionTokenExpired;
-				}
 			}
-			return error;
+
+			return isInvalidCredentials;
+		}
+
+		private static JObject ParseAsJsonOrNull(string responseString) {
+			JObject values = null;
+			try {
+				values = JObject.Parse(responseString);
+			}
+			catch (Newtonsoft.Json.JsonException) { }
+			return values;
 		}
 
 		private static GetThermostatStatusResult ParseGetTemperatureResult(string strContent) {
