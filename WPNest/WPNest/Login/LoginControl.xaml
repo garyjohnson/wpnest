@@ -9,6 +9,8 @@
 			 FontSize="{StaticResource PhoneFontSizeNormal}" 
 			 Foreground="{StaticResource PhoneForegroundBrush}" 
 			 d:DesignHeight="800" d:DesignWidth="480">
+	<UserControl.Resources>
+	</UserControl.Resources>
 
 	<d:DataContext>
 		<WPNest:NestViewModel />
@@ -32,7 +34,7 @@
 			</Grid.RowDefinitions>
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Log in to your Nest account" VerticalAlignment="Top" Foreground="{StaticResource logoBrush}" Margin="12,0,0,8" FontSize="24"/>
 			<toolkit:PhoneTextBox x:Name="username" Grid.Row="1" Text="{Binding UserName, Mode=TwoWay}" Hint="Email address" InputScope="EmailUserName" />
-			<PasswordBox x:Name="password" Grid.Row="2" Password="{Binding Password, Mode=TwoWay}" GotFocus="OnPasswordChangedFocus" LostFocus="OnPasswordChangedFocus" />
+			<PasswordBox x:Name="password" Grid.Row="2" Password="{Binding Password, Mode=TwoWay}" GotFocus="OnPasswordChangedFocus" LostFocus="OnPasswordChangedFocus" Style="{StaticResource PasswordBoxStyle}" />
 			<TextBlock x:Name="passwordHint" TextWrapping="Wrap" Text="Password" IsHitTestVisible="False" Grid.Row="2" Padding="17,0,0,0" VerticalAlignment="Center" FontSize="24" Foreground="#FF919191" Margin="0,20"/>
 			<Button Click="OnLoginPressed" Grid.Row="3" Foreground="#FF474747" BorderBrush="#FF515151" Content="Log In" Margin="0,30,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250" Background="#4CF6FBFF"/>
 		</Grid>
