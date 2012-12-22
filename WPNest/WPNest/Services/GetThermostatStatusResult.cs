@@ -11,8 +11,9 @@ namespace WPNest.Services {
 			IsCooling = isCooling;
 		}
 
-		public GetThermostatStatusResult(Exception error) {
-			Exception = error;
+		public GetThermostatStatusResult(WebServiceError error, Exception exception) {
+			Error = error;
+			Exception = exception;
 		}
 
 		public bool IsHeating { get; private set; }

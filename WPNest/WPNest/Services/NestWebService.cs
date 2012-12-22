@@ -32,45 +32,67 @@ namespace WPNest.Services {
 			}
 
 			if (responseException != null) {
-				var error = WebServiceError.Unknown;
-				var webException = responseException as WebException;
-				if(webException != null && webException.Response != null) {
-					string responseString = await webException.Response.GetResponseStringAsync();
-					var values = JObject.Parse(responseString);
-					var structures = values["error"];
-					string errorMessage = structures.Value<string>();
-					if(errorMessage.Equals("access_denied"))
-						error = WebServiceError.InvalidCredentials;
-				}
-
+				var error = await GetWebServiceError(responseException);
 				return new WebServiceResult(error, responseException);
 			}
-			else {
-				return new WebServiceResult();
+
+			return new WebServiceResult();
+		}
+
+		private async Task<WebServiceError> GetWebServiceError(Exception responseException) {
+			var error = WebServiceError.Unknown;
+			var webException = responseException as WebException;
+			if (webException != null && webException.Response != null) {
+				string responseString = await webException.Response.GetResponseStringAsync();
+
+				JObject values = null;
+				try {
+					values = JObject.Parse(responseString);
+				}catch(Newtonsoft.Json.JsonException) {
+				}
+
+				if (values != null) {
+					var errorJson = values["error"];
+					if (errorJson != null) {
+						var errorMessage = errorJson.Value<string>();
+						if (errorMessage.Equals("access_denied"))
+							error = WebServiceError.InvalidCredentials;
+					}
+				}
+
+				var res = (HttpWebResponse)webException.Response;
+				if (res.StatusCode == HttpStatusCode.Unauthorized) {
+					error = WebServiceError.SessionTokenExpired;
+				}
 			}
+			return error;
 		}
 
 		public async Task<GetStatusResult> GetStatusAsync() {
 			if (_sessionProvider.IsSessionExpired)
-				return new GetStatusResult(new SessionExpiredException());
+				return new GetStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
 			string url = string.Format("{0}/v2/mobile/user.{1}", _sessionProvider.TransportUrl, _sessionProvider.UserId);
 			var request = GetGetRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 
+			Exception responseException = null;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
 				return ParseGetStatusResult(responseString, _sessionProvider.UserId);
 			}
 			catch (Exception exception) {
-				return new GetStatusResult(exception);
+				responseException = exception;
 			}
+
+			var error = await GetWebServiceError(responseException);
+			return new GetStatusResult(error, responseException);
 		}
 
 		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
 			if (_sessionProvider.IsSessionExpired)
-				return new GetStatusResult(new SessionExpiredException());
+				return new GetStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
 			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
 			WebRequest request = GetPostJsonRequest(url);
@@ -81,35 +103,50 @@ namespace WPNest.Services {
 			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
 			await request.SetRequestStringAsync(requestString);
 
+			Exception responseException = null;
 			try {
 				await request.GetResponseAsync();
 				return new WebServiceResult();
 			}
 			catch (Exception exception) {
-				return new WebServiceResult(exception);
+				responseException = exception;
 			}
+
+			var error = await GetWebServiceError(responseException);
+			return new WebServiceResult(error, responseException);
 		}
 
+		private Random r = new Random();
 		public async Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat) {
 			if (_sessionProvider.IsSessionExpired)
-				return new GetThermostatStatusResult(new SessionExpiredException());
+				return new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			WebRequest request = GetPostJsonRequest(url);
-			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+
+			if (r.Next(0, 10) == 7) {
+				SetAuthorizationHeaderOnRequest(request, "t2gpo2ghpohgo2phgo2onpog2opgo2jgp2ohgoi2");
+			}
+			else {
+				SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+			}
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
 
+			Exception responseException = null;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
 				return ParseGetTemperatureResult(strContent);
 			}
 			catch (Exception exception) {
-				return new GetThermostatStatusResult(exception);
+				responseException = exception;
 			}
+
+			var error = await GetWebServiceError(responseException);
+			return new GetThermostatStatusResult(error, responseException);
 		}
 
 		private static GetThermostatStatusResult ParseGetTemperatureResult(string strContent) {

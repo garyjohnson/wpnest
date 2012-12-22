@@ -9,8 +9,9 @@ namespace WPNest.Services {
 			Structures = structures;
 		}
 
-		public GetStatusResult(Exception error) {
-			Exception = error;
+		public GetStatusResult(WebServiceError error, Exception exception) {
+			Error = error;
+			Exception = exception;
 		}
 
 		public IEnumerable<Structure> Structures { get; set; }

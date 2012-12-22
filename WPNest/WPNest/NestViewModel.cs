@@ -102,6 +102,9 @@ namespace WPNest {
 		}
 
 		private void OnThermostatStatusUpdated(object sender, ThermostatStatusEventArgs e) {
+			if (IsErrorHandled(e.ThermostatStatus.Error, e.ThermostatStatus.Exception))
+				return;
+
 			TargetTemperature = e.ThermostatStatus.TargetTemperature;
 			CurrentTemperature = e.ThermostatStatus.CurrentTemperature;
 			IsHeating = e.ThermostatStatus.IsHeating;
@@ -189,7 +192,9 @@ namespace WPNest {
 		}
 
 		private bool IsErrorHandled(WebServiceError error, Exception exception) {
-			if (error == WebServiceError.InvalidCredentials) {
+			if (error == WebServiceError.InvalidCredentials ||
+				error == WebServiceError.SessionTokenExpired) {
+				IsLoggedIn = false;
 				IsLoggingIn = false;
 				var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 				sessionProvider.ClearSession();

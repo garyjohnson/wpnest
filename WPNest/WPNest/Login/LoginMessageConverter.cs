@@ -12,6 +12,8 @@ namespace WPNest.Login {
 				var error = (WebServiceError)value;
 				if (error == WebServiceError.InvalidCredentials)
 					return "Please enter a correct email address and password.";
+				if (error == WebServiceError.SessionTokenExpired)
+					return "Your session has expired. Please log in again.";
 
 				return "";
 			}
