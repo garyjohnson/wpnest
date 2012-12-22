@@ -116,7 +116,7 @@ namespace WPNest {
 
 			if (sessionProvider.IsSessionExpired) {
 				var loginResult = await nestWebService.LoginAsync(UserName, Password);
-				if (IsErrorHandled(loginResult.Exception))
+				if (IsErrorHandled(loginResult.Error, loginResult.Exception))
 					return;
 			}
 
@@ -127,7 +127,7 @@ namespace WPNest {
 			IsLoggingIn = false;
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			_getStatusResult = await nestWebService.GetStatusAsync();
-			if (IsErrorHandled(_getStatusResult.Exception))
+			if (IsErrorHandled(_getStatusResult.Error, _getStatusResult.Exception))
 				return;
 
 			IsLoggedIn = true;
@@ -152,7 +152,7 @@ namespace WPNest {
 			TargetTemperature = desiredTemperature;
 
 			var result = await nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
-			if (IsErrorHandled(result.Exception))
+			if (IsErrorHandled(result.Error, result.Exception))
 				return;
 
 			await _statusUpdater.UpdateStatusAsync();
@@ -168,7 +168,7 @@ namespace WPNest {
 			TargetTemperature = desiredTemperature;
 
 			var result = await nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
-			if (IsErrorHandled(result.Exception))
+			if (IsErrorHandled(result.Error, result.Exception))
 				return;
 
 			await _statusUpdater.UpdateStatusAsync();
@@ -178,19 +178,16 @@ namespace WPNest {
 			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
 		}
 
-		private bool IsErrorHandled(Exception error) {
-			var webException = error as WebException;
-			if(webException != null) {
-				if(webException.Status == WebExceptionStatus.UnknownError) {
-					var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
-					sessionProvider.ClearSession();
-					IsLoggingIn = false;	
-					IsLoggingIn = true;	
-					return true;
-				}
+		private bool IsErrorHandled(WebServiceError error, Exception exception) {
+			if (error == WebServiceError.InvalidCredentials) {
+				var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
+				sessionProvider.ClearSession();
+				IsLoggingIn = false;
+				IsLoggingIn = true;
+				return true;
 			}
-			else if (error != null) {
-				MessageBox.Show(error.Message);
+			else if (exception != null) {
+				MessageBox.Show(exception.Message);
 				return true;
 			}
 

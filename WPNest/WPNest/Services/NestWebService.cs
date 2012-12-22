@@ -32,13 +32,18 @@ namespace WPNest.Services {
 			}
 
 			if (responseException != null) {
-
+				var error = WebServiceError.Unknown;
 				var webException = responseException as WebException;
-				if(webException != null) {
-					
+				if(webException != null && webException.Response != null) {
+					string responseString = await webException.Response.GetResponseStringAsync();
+					var values = JObject.Parse(responseString);
+					var structures = values["error"];
+					string errorMessage = structures.Value<string>();
+					if(errorMessage.Equals("access_denied"))
+						error = WebServiceError.InvalidCredentials;
 				}
 
-				return new WebServiceResult(responseException);
+				return new WebServiceResult(error, responseException);
 			}
 			else {
 				return new WebServiceResult();
