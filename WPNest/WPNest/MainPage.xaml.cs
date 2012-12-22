@@ -21,7 +21,7 @@ namespace WPNest {
 
 			ResetZoom.Completed += ResetZoomOnCompleted;
 			Loaded += OnLoaded;
-			GoToDefaultVisualState();
+			GoToDefaultVisualState(false);
 		}
 
 		private void ResetZoomOnCompleted(object sender, EventArgs eventArgs) {
@@ -87,8 +87,8 @@ namespace WPNest {
 			VisualStateManager.GoToState(this, "LoggedIn", true);
 		}
 
-		private void GoToDefaultVisualState() {
-			VisualStateManager.GoToState(this, "Default", true);
+		private void GoToDefaultVisualState(bool useTransition = true) {
+			VisualStateManager.GoToState(this, "Default", useTransition);
 		}
 	}
 }

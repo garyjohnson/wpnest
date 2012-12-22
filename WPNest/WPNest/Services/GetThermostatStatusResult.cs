@@ -12,7 +12,7 @@ namespace WPNest.Services {
 		}
 
 		public GetThermostatStatusResult(Exception error) {
-			Error = error;
+			Exception = error;
 		}
 
 		public bool IsHeating { get; private set; }

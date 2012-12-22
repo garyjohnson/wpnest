@@ -39,7 +39,7 @@ namespace WPNest.Services {
 
 			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			GetThermostatStatusResult temperatureResult = await nestWebService.GetThermostatStatusAsync(thermostat);
-			if(temperatureResult.Error != null)
+			if(temperatureResult.Exception != null)
 				Stop();
 			
 			_delayedStatusProvider.CacheThermostatStatus(temperatureResult);

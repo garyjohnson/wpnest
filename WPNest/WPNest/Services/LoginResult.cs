@@ -8,7 +8,7 @@ namespace WPNest.Services {
 		}
 
 		public LoginResult(Exception error) {
-			Error = error;
+			Exception = error;
 		}
 
 		public string AccessToken { get; set; }

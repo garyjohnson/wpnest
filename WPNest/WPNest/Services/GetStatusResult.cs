@@ -10,7 +10,7 @@ namespace WPNest.Services {
 		}
 
 		public GetStatusResult(Exception error) {
-			Error = error;
+			Exception = error;
 		}
 
 		public IEnumerable<Structure> Structures { get; set; }

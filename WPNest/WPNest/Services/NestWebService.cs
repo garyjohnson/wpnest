@@ -21,14 +21,27 @@ namespace WPNest.Services {
 			string requestString = string.Format("username={0}&password={1}", UrlEncode(userName), UrlEncode(password));
 			await request.SetRequestStringAsync(requestString);
 
+			Exception responseException = null;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
 				CacheSession(responseString);
-				return new WebServiceResult();
 			}
 			catch (Exception exception) {
-				return new WebServiceResult(exception);
+				responseException = exception;
+			}
+
+			if (responseException != null) {
+
+				var webException = responseException as WebException;
+				if(webException != null) {
+					
+				}
+
+				return new WebServiceResult(responseException);
+			}
+			else {
+				return new WebServiceResult();
 			}
 		}
 

@@ -7,11 +7,17 @@ namespace WPNest.Services {
 		public WebServiceResult() {
 		}
 
-		public WebServiceResult(Exception error) {
-			Error = error;
+		public WebServiceResult(Exception exception) {
+			Exception = exception;
 		}
 
-		public Exception Error { get; protected set; }
+		public WebServiceResult(WebServiceError error, Exception exception) {
+			Error = error;
+			Exception = exception;
+		}
+
+		public Exception Exception { get; protected set; }
+		public WebServiceError Error { get; protected set; }
 	}
 
 }

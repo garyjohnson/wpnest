@@ -152,6 +152,7 @@
     <Compile Include="Services\Structure.cs" />
     <Compile Include="Services\Thermostat.cs" />
     <Compile Include="Services\ThermostatStatusEventArgs.cs" />
+    <Compile Include="Services\WebServiceError.cs" />
     <Compile Include="Services\WebServiceResult.cs" />
     <Compile Include="ThermostatControl.xaml.cs">
       <DependentUpon>ThermostatControl.xaml</DependentUpon>

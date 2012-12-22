@@ -24,8 +24,8 @@
 		<Storyboard x:Name="ZoomIn">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="thermostatControl">
 				<EasingDoubleKeyFrame KeyTime="0" Value="180"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="181"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="181"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1.333" Value="0">
 					<EasingDoubleKeyFrame.EasingFunction>
 						<QuadraticEase EasingMode="EaseOut"/>
 					</EasingDoubleKeyFrame.EasingFunction>
@@ -33,13 +33,13 @@
 			</DoubleAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="thermostatControl">
 				<EasingDoubleKeyFrame KeyTime="0" Value="0.3"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0.3"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.3">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="0.3"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1.333" Value="0.3">
 					<EasingDoubleKeyFrame.EasingFunction>
 						<QuadraticEase EasingMode="EaseOut"/>
 					</EasingDoubleKeyFrame.EasingFunction>
 				</EasingDoubleKeyFrame>
-				<EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="1">
+				<EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="1">
 					<EasingDoubleKeyFrame.EasingFunction>
 						<QuadraticEase EasingMode="EaseIn"/>
 					</EasingDoubleKeyFrame.EasingFunction>
@@ -47,13 +47,13 @@
 			</DoubleAnimationUsingKeyFrames>
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="thermostatControl">
 				<EasingDoubleKeyFrame KeyTime="0" Value="0.3"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="0.3"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.3">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="0.3"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1.333" Value="0.3">
 					<EasingDoubleKeyFrame.EasingFunction>
 						<QuadraticEase EasingMode="EaseOut"/>
 					</EasingDoubleKeyFrame.EasingFunction>
 				</EasingDoubleKeyFrame>
-				<EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="1">
+				<EasingDoubleKeyFrame KeyTime="0:0:1.6" Value="1">
 					<EasingDoubleKeyFrame.EasingFunction>
 						<QuadraticEase EasingMode="EaseIn"/>
 					</EasingDoubleKeyFrame.EasingFunction>
