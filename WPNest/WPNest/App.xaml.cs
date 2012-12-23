@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using WPNest.Error;
 using WPNest.Services;
 
 namespace WPNest {
@@ -72,8 +74,15 @@ namespace WPNest {
 		}
 
 		private void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {
+			if (e.ExceptionObject is CloseApplicationException)
+				return;
+
 			_analyticsService.LogError(e.ExceptionObject);
 			BreakIfDebuggerAttached();
+		}
+
+		public static void Close() {
+			throw new CloseApplicationException();
 		}
 
 		private static void BreakIfDebuggerAttached() {

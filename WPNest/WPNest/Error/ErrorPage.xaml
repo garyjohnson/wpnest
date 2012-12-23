@@ -1,0 +1,36 @@
+﻿<phone:PhoneApplicationPage 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+	x:Class="WPNest.ErrorPage"
+	Orientation="Portrait"
+	shell:SystemTray.IsVisible="True">
+
+    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0,20,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,17">
+            <TextBlock x:Name="ApplicationTitle" Text="wpnest Error" FontFamily="Segoe WP Semibold" FontSize="26.667" Foreground="{StaticResource PhoneForegroundBrush}"/>
+        </StackPanel>
+
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="0.749*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="error" TextWrapping="Wrap" d:LayoutOverrides="Width, Height" FontSize="21.333" FontFamily="Segoe WP Light" Margin="20,0" 
+                       Text="An error has occurred and wpnest will now close. We are sorry for the inconvenience." Foreground="{StaticResource PhoneForegroundBrush}"/>
+            <Button x:Name="closeButton" Content="Close" Grid.Row="2" VerticalAlignment="Bottom" d:LayoutOverrides="Width" Click="closeButton_Click" Foreground="{StaticResource PhoneForegroundBrush}"/>
+        </Grid>
+    </Grid>
+</phone:PhoneApplicationPage>

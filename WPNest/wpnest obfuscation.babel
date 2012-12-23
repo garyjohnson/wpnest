@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Babel Obfuscator MSBuild Project File
+	Version 6.1.0.0	
+-->
+<Project DefaultTargets="WPNest" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="Babel" AssemblyName="Babel.Build, Version=6.1.0.0, Culture=neutral, PublicKeyToken=138d17b5bd621ab7" />
+  <Target Name="WPNest">
+    <PropertyGroup>
+      <BabelInputFile>Builds\1.0\Release\WPNest.xap</BabelInputFile>
+      <CleanAttributes>[mscorlib]System.Runtime.CompilerServices.CompilerGeneratedAttribute;[mscorlib]System.Diagnostics.DebuggerDisplayAttribute;[mscorlib]System.Diagnostics.DebuggerBrowsableAttribute;[mscorlib]System.Diagnostics.DebuggerNonUserCodeAttribute;[mscorlib]System.Diagnostics.DebuggerHiddenAttribute;[mscorlib]System.Diagnostics.DebuggerStepThroughAttribute;False</CleanAttributes>
+      <ConstRemoval>false</ConstRemoval>
+      <ControlFlowObfuscation>true;goto=true;switch=true;case=true;if=true;call=true;value=true;token=false;underflow=false</ControlFlowObfuscation>
+      <CopyAttributes>True</CopyAttributes>
+      <DeadCodeElimination>False</DeadCodeElimination>
+      <DynamicProxy>None</DynamicProxy>
+      <EmitInvalidOpcodes>false</EmitInvalidOpcodes>
+      <EnableObfuscationAgent>true</EnableObfuscationAgent>
+      <EnumRemoval>false</EnumRemoval>
+      <FlattenNamespaces>True</FlattenNamespaces>
+      <GenerateDebug>false</GenerateDebug>
+      <GenerateLogFile>false</GenerateLogFile>
+      <GenerateMapOutFile>false</GenerateMapOutFile>
+      <ILIterations>5</ILIterations>
+      <Instrument>false</Instrument>
+      <InstrumentEmptyMethods>true</InstrumentEmptyMethods>
+      <Internalize>false</Internalize>
+      <MsilEncryption>False</MsilEncryption>
+      <ObfuscateEvents>true</ObfuscateEvents>
+      <ObfuscateFields>true</ObfuscateFields>
+      <ObfuscateMethods>true</ObfuscateMethods>
+      <ObfuscateProperties>true</ObfuscateProperties>
+      <ObfuscateTypes>true</ObfuscateTypes>
+      <ObfuscateXaml>false</ObfuscateXaml>
+      <OverloadedRenaming>false</OverloadedRenaming>
+      <ResourceEncryption>false</ResourceEncryption>
+      <SealClasses>false</SealClasses>
+      <SearchSatelliteAssemblies>true</SearchSatelliteAssemblies>
+      <ShowLogo>true</ShowLogo>
+      <ShowStatistics>true</ShowStatistics>
+      <SkipFile>FlurryWP7SDK.dll;Microsoft.Expression.Controls.dll;Microsoft.Expression.Drawing.dll;Microsoft.Expression.Interactions.dll;Microsoft.Phone.Controls.Toolkit.dll;Microsoft.Phone.Toolkit.Testing.dll;Microsoft.Threading.Tasks.dll;Microsoft.Threading.Tasks.Extensions.dll;Microsoft.Threading.Tasks.Extensions.Phone.dll;Microsoft.VisualStudio.QualityTools.UnitTesting.Phone.dll;Newtonsoft.Json.dll;SharpGIS.GZipWebClient.dll;System.Runtime.dll;System.Threading.Tasks.dll;System.Windows.Interactivity.dll;Microsoft.Phone.Controls.dll</SkipFile>
+      <StringEncryption>hash</StringEncryption>
+      <SuppressIldasm>false</SuppressIldasm>
+      <SuppressReflection>false</SuppressReflection>
+      <TakeFile>WPNest.dll</TakeFile>
+      <UnicodeNormalization>True</UnicodeNormalization>
+      <ValueEncryption>false</ValueEncryption>
+      <VerboseLevel>1</VerboseLevel>
+      <VirtualFunctions>true</VirtualFunctions>
+    </PropertyGroup>
+    <ItemGroup>
+      <RuleFile Include="rules.xml" />
+    </ItemGroup>
+    <Message Text="Obfuscating $(BabelInputFile)..." />
+    <Babel InputFile="$(BabelInputFile)" SearchSatelliteAssemblies="$(SearchSatelliteAssemblies)" RulesFiles="@(RuleFile)" GenerateMapOutFile="$(GenerateMapOutFile)" TakeFiles="$(TakeFile)" SkipFiles="$(SkipFile)" GenerateLogFile="$(GenerateLogFile)" ShowLogo="$(ShowLogo)" Internalize="$(Internalize)" CopyAttributes="$(CopyAttributes)" EnableObfuscationAgent="$(EnableObfuscationAgent)" FlattenNamespaces="$(FlattenNamespaces)" UnicodeNormalization="$(UnicodeNormalization)" ObfuscateTypes="$(ObfuscateTypes)" ObfuscateEvents="$(ObfuscateEvents)" ObfuscateMethods="$(ObfuscateMethods)" ObfuscateProperties="$(ObfuscateProperties)" ObfuscateFields="$(ObfuscateFields)" ObfuscateXaml="$(ObfuscateXaml)" VirtualFunctions="$(VirtualFunctions)" OverloadedRenaming="$(OverloadedRenaming)" ControlFlowObfuscation="$(ControlFlowObfuscation)" ILIterations="$(ILIterations)" EmitInvalidOpcodes="$(EmitInvalidOpcodes)" StringEncryption="$(StringEncryption)" ValueEncryption="$(ValueEncryption)" MsilEncryption="$(MsilEncryption)" DynamicProxy="$(DynamicProxy)" ResourceEncryption="$(ResourceEncryption)" SuppressIldasm="$(SuppressIldasm)" SuppressReflection="$(SuppressReflection)" Instrument="$(Instrument)" InstrumentEmptyMethods="$(InstrumentEmptyMethods)" SealClasses="$(SealClasses)" CleanAttributes="$(CleanAttributes)" EnumRemoval="$(EnumRemoval)" ConstRemoval="$(ConstRemoval)" DeadCodeElimination="$(DeadCodeElimination)" GenerateDebug="$(GenerateDebug)" VerboseLevel="$(VerboseLevel)" ShowStatistics="$(ShowStatistics)" />
+  </Target>
+</Project>

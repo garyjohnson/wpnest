@@ -1,0 +1,10 @@
+<Rules xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+	<Rule name="rule 1" feature="default" exclude="true">
+		<Target>Events</Target>
+		<Pattern>WPNest.Login.LoginControl::LoginPressed*</Pattern>
+	</Rule>
+	<Rule name="rule 2" feature="default" exclude="true">
+		<Target>Methods</Target>
+		<Pattern>WPNest.MainPage::OnLoginPressed*</Pattern>
+	</Rule>
+</Rules>
