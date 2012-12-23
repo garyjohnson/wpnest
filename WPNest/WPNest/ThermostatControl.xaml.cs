@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace WPNest {
 
@@ -32,11 +31,7 @@ namespace WPNest {
 
 		public ThermostatControl() {
 			InitializeComponent();
-
-			SetBinding(CurrentTemperatureProperty, new Binding("CurrentTemperature"));
-			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
-			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
-			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
+			InitializeBindings();
 		}
 
 		public static readonly DependencyProperty TargetTemperatureProperty =
@@ -82,6 +77,13 @@ namespace WPNest {
 
 		private NestViewModel ViewModel {
 			get { return DataContext as NestViewModel; }
+		}
+
+		private void InitializeBindings() {
+			SetBinding(CurrentTemperatureProperty, new Binding("CurrentTemperature"));
+			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
+			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
+			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
 		}
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -165,12 +167,12 @@ namespace WPNest {
 				return;
 			}
 
-			double tempThatLabelIsAt = CurrentTemperature + 1.0d;
+			double temperaturePositionOfLabel = CurrentTemperature + 1.0d;
 			if(CurrentTemperature < TargetTemperature)
-				tempThatLabelIsAt = CurrentTemperature - 1.0d;
+				temperaturePositionOfLabel = CurrentTemperature - 1.0d;
 
 			var rotateTransform = GetRotateTransform();
-			rotateTransform.Angle = AngleFromTemperature(tempThatLabelIsAt);
+			rotateTransform.Angle = AngleFromTemperature(temperaturePositionOfLabel);
 
 			currentTemperature.Visibility = Visibility.Visible;
 			var labelPosition = new Point(GetHalfWidth(), TickMarginFromTop + (TickLength / 2));

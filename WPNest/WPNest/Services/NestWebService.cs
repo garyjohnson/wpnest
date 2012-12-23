@@ -116,20 +116,20 @@ namespace WPNest.Services {
 				error = WebServiceError.InvalidCredentials;
 			else if (IsSessionTokenExpiredError(exception))
 				error = WebServiceError.SessionTokenExpired;
+			else if(IsNotFoundError(exception))
+				error = WebServiceError.ServerNotFound;
 
 			return error;
 		}
 
-		private bool IsSessionTokenExpiredError(Exception responseException) {
-			bool isExpired = false;
-			var webException = responseException as WebException;
-			if (webException != null && webException.Response != null) {
-				var res = (HttpWebResponse)webException.Response;
-				if (res.StatusCode == HttpStatusCode.Unauthorized) {
-					isExpired = true;
-				}
-			}
-			return isExpired;
+		private bool IsNotFoundError(Exception exception) {
+			HttpStatusCode? statusCode = GetHttpStatusCodeFromException(exception);
+			return (statusCode.HasValue && statusCode.Value == HttpStatusCode.NotFound);
+		}
+
+		private bool IsSessionTokenExpiredError(Exception exception) {
+			HttpStatusCode? statusCode = GetHttpStatusCodeFromException(exception);
+			return (statusCode.HasValue && statusCode.Value == HttpStatusCode.Unauthorized);
 		}
 
 		private async Task<bool> IsInvalidCredentialsErrorAsync(Exception exception) {
@@ -142,8 +142,7 @@ namespace WPNest.Services {
 					var errorJson = values["error"];
 					if (errorJson != null) {
 						var errorMessage = errorJson.Value<string>();
-						if (errorMessage.Equals("access_denied"))
-							isInvalidCredentials = true;
+						isInvalidCredentials = errorMessage.Equals("access_denied");
 					}
 				}
 			}
@@ -247,5 +246,15 @@ namespace WPNest.Services {
 			request.Headers["X-nl-protocol-version"] = "1";
 			request.Headers["X-nl-user-id"] = userId;
 		}
+
+		private static HttpStatusCode? GetHttpStatusCodeFromException(Exception exception) {
+			var webException = exception as WebException;
+			if (webException != null && webException.Response != null) {
+				var response = (HttpWebResponse)webException.Response;
+				return response.StatusCode;
+			}
+			return null;
+		}
+
 	}
 }

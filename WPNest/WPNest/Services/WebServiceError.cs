@@ -4,6 +4,7 @@
 		None,
 		InvalidCredentials,
 		SessionTokenExpired,
+		ServerNotFound,
 		Unknown
 	}
 }

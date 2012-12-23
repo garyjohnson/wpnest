@@ -125,7 +125,7 @@ namespace WPNest {
 		}
 
 		public async Task LoginAsync() {
-			CurrentError = WebServiceError.None;
+			ResetCurrentError();
 			string userName = UserName;
 			string password = Password;
 			ClearLoginFields();
@@ -139,6 +139,10 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
+		private void ResetCurrentError() {
+			CurrentError = WebServiceError.None;
+		}
+
 		private void ClearLoginFields() {
 			UserName = string.Empty;
 			Password = string.Empty;
@@ -146,6 +150,7 @@ namespace WPNest {
 
 		private async Task OnLoggedIn() {
 			IsLoggingIn = false;
+
 			_getStatusResult = await _nestWebService.GetStatusAsync();
 			if (IsErrorHandled(_getStatusResult.Error, _getStatusResult.Exception))
 				return;
@@ -197,22 +202,28 @@ namespace WPNest {
 
 		private bool IsErrorHandled(WebServiceError error, Exception exception) {
 			if (error == WebServiceError.InvalidCredentials ||
-				error == WebServiceError.SessionTokenExpired) {
-				IsLoggedIn = false;
-				IsLoggingIn = false;
-				var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
-				sessionProvider.ClearSession();
-				CurrentError = error;
-				IsLoggingIn = true;
-				return true;
-			}
-			else if (exception != null) {
-				IsLoggingIn = false;
-				MessageBox.Show(exception.Message);
-				return true;
-			}
+				error == WebServiceError.SessionTokenExpired)
+				HandleLoginException(error);
+			else if(error == WebServiceError.ServerNotFound)
+				HandleException("Server was not found. Please check your network connection and press OK to retry.");
+			else if (exception != null)
+				HandleException("An unknown error occurred. Press OK to retry.");
 
-			return false;
+			return exception != null;
+		}
+
+		private void HandleException(string message) {
+			IsLoggingIn = false;
+			MessageBox.Show(message);
+			OnLoggedIn();
+		}
+
+		private void HandleLoginException(WebServiceError error) {
+			IsLoggedIn = false;
+			IsLoggingIn = false;
+			_sessionProvider.ClearSession();
+			CurrentError = error;
+			IsLoggingIn = true;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
