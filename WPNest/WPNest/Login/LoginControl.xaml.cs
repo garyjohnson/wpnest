@@ -20,6 +20,7 @@ namespace WPNest.Login {
 				LoginPressed(this, EventArgs.Empty);
 
 			await ViewModel.LoginAsync();
+			RefreshPasswordHintVisibility();
 		}
 
 		private void OnPasswordChangedFocus(object sender, RoutedEventArgs e) {

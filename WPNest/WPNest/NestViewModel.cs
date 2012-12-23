@@ -10,6 +10,8 @@ namespace WPNest {
 	public class NestViewModel : INotifyPropertyChanged {
 
 		private readonly IStatusProvider _statusProvider;
+		private readonly ISessionProvider _sessionProvider;
+		private readonly INestWebService _nestWebService;
 		private readonly StatusUpdaterService _statusUpdater;
 		private GetStatusResult _getStatusResult;
 
@@ -97,6 +99,8 @@ namespace WPNest {
 
 		public NestViewModel() {
 			_statusProvider = ServiceContainer.GetService<IStatusProvider>();
+			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
+			_nestWebService = ServiceContainer.GetService<INestWebService>();
 			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;
 			_statusUpdater = ServiceContainer.GetService<StatusUpdaterService>();
 		}
@@ -112,8 +116,7 @@ namespace WPNest {
 		}
 
 		public async Task InitializeAsync() {
-			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
-			if (sessionProvider.IsSessionExpired) {
+			if (_sessionProvider.IsSessionExpired) {
 				IsLoggingIn = true;
 				return;
 			}
@@ -123,12 +126,12 @@ namespace WPNest {
 
 		public async Task LoginAsync() {
 			CurrentError = WebServiceError.None;
+			string userName = UserName;
+			string password = Password;
+			ClearLoginFields();
 
-			var sessionProvider = ServiceContainer.GetService<ISessionProvider>();
-			var nestWebService = ServiceContainer.GetService<INestWebService>();
-
-			if (sessionProvider.IsSessionExpired) {
-				var loginResult = await nestWebService.LoginAsync(UserName, Password);
+			if (_sessionProvider.IsSessionExpired) {
+				var loginResult = await _nestWebService.LoginAsync(userName, password);
 				if (IsErrorHandled(loginResult.Error, loginResult.Exception))
 					return;
 			}
@@ -136,10 +139,14 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
+		private void ClearLoginFields() {
+			UserName = string.Empty;
+			Password = string.Empty;
+		}
+
 		private async Task OnLoggedIn() {
 			IsLoggingIn = false;
-			var nestWebService = ServiceContainer.GetService<INestWebService>();
-			_getStatusResult = await nestWebService.GetStatusAsync();
+			_getStatusResult = await _nestWebService.GetStatusAsync();
 			if (IsErrorHandled(_getStatusResult.Error, _getStatusResult.Exception))
 				return;
 
@@ -158,13 +165,12 @@ namespace WPNest {
 		public async Task RaiseTemperatureAsync() {
 			_statusProvider.Reset();
 
-			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			var thermostat = GetFirstThermostat();
 
 			double desiredTemperature = TargetTemperature + 1.0d;
 			TargetTemperature = desiredTemperature;
 
-			var result = await nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
+			var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
 			if (IsErrorHandled(result.Error, result.Exception))
 				return;
 
@@ -174,13 +180,11 @@ namespace WPNest {
 		public async Task LowerTemperatureAsync() {
 			_statusProvider.Reset();
 
-			var nestWebService = ServiceContainer.GetService<INestWebService>();
 			var thermostat = GetFirstThermostat();
-
 			double desiredTemperature = TargetTemperature - 1.0d;
 			TargetTemperature = desiredTemperature;
 
-			var result = await nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
+			var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
 			if (IsErrorHandled(result.Error, result.Exception))
 				return;
 
