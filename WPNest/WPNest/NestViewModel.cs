@@ -9,6 +9,9 @@ namespace WPNest {
 
 	public class NestViewModel : INotifyPropertyChanged {
 
+		private const double MinTemperature = 50.0d;
+		private const double MaxTemperature = 90.0d;
+
 		private readonly IStatusProvider _statusProvider;
 		private readonly ISessionProvider _sessionProvider;
 		private readonly INestWebService _nestWebService;
@@ -170,6 +173,9 @@ namespace WPNest {
 		}
 
 		public async Task RaiseTemperatureAsync() {
+			if (TargetTemperature >= MaxTemperature)
+				return;
+
 			_statusProvider.Reset();
 
 			var thermostat = GetFirstThermostat();
@@ -185,6 +191,9 @@ namespace WPNest {
 		}
 
 		public async Task LowerTemperatureAsync() {
+			if (TargetTemperature <= MinTemperature)
+				return;
+
 			_statusProvider.Reset();
 
 			var thermostat = GetFirstThermostat();
