@@ -8,13 +8,8 @@ namespace WPNest {
 
 	public partial class App : Application {
 
-#if TEST
-		public const bool IsTest = true;
-#else
-		public const bool IsTest = false;
-#endif
-
 		private bool _isInitialized;
+		private readonly IAnalyticsService _analyticsService = new AnalyticsService();
 		public PhoneApplicationFrame RootFrame { get; private set; }
 
 		public App() {
@@ -30,25 +25,12 @@ namespace WPNest {
 		}
 
 		private void InitializeServices() {
-			InitializeServicesCommonToTestAndRuntime();
-			if (IsTest)
-				InitializeServicesForTest();
-			else
-				InitializeServicesForRuntime();
-		}
-
-		private void InitializeServicesCommonToTestAndRuntime() {
-		}
-
-		private void InitializeServicesForRuntime() {
+			ServiceContainer.RegisterService<IAnalyticsService>(_analyticsService);
 			ServiceContainer.RegisterService<ISettingsProvider>(new SettingsProvider());
 			ServiceContainer.RegisterService<ISessionProvider>(new SessionProvider());
 			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
 			ServiceContainer.RegisterService<IStatusProvider>(new DelayedStatusProvider());
 			ServiceContainer.RegisterService<StatusUpdaterService>(new StatusUpdaterService());
-		}
-
-		private void InitializeServicesForTest() {
 		}
 
 		private void InitializePhoneApplication() {
@@ -59,10 +41,10 @@ namespace WPNest {
 			RootFrame.Navigated += CompleteInitializePhoneApplication;
 			RootFrame.NavigationFailed += OnNavigationFailed;
 			_isInitialized = true;
-
 		}
 
 		private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) {
+			_analyticsService.LogEvent("Navigation Failed");
 			BreakIfDebuggerAttached();
 		}
 
@@ -74,18 +56,23 @@ namespace WPNest {
 		}
 
 		private void OnApplicationLaunching(object sender, LaunchingEventArgs e) {
+			_analyticsService.StartSession();
 		}
 
 		private void OnApplicationActivated(object sender, ActivatedEventArgs e) {
+			_analyticsService.StartSession();
 		}
 
 		private void OnApplicationDeactivated(object sender, DeactivatedEventArgs e) {
+			_analyticsService.EndSession();
 		}
 
 		private void OnApplicationClosing(object sender, ClosingEventArgs e) {
+			_analyticsService.EndSession();
 		}
 
 		private void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {
+			_analyticsService.LogError(e.ExceptionObject);
 			BreakIfDebuggerAttached();
 		}
 

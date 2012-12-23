@@ -11,11 +11,6 @@ namespace WPNest {
 		public MainPage() {
 			InitializeComponent();
 
-			if (App.IsTest) {
-				Content = UnitTestSystem.CreateTestPage();
-				return;
-			}
-
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
 

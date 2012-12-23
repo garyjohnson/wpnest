@@ -13,6 +13,7 @@ namespace WPNest {
 		private readonly ISessionProvider _sessionProvider;
 		private readonly INestWebService _nestWebService;
 		private readonly StatusUpdaterService _statusUpdater;
+		private readonly IAnalyticsService _analyticsService;
 		private GetStatusResult _getStatusResult;
 
 		private double _targetTemperature;
@@ -101,8 +102,9 @@ namespace WPNest {
 			_statusProvider = ServiceContainer.GetService<IStatusProvider>();
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			_nestWebService = ServiceContainer.GetService<INestWebService>();
-			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;
 			_statusUpdater = ServiceContainer.GetService<StatusUpdaterService>();
+			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
+			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;
 		}
 
 		private void OnThermostatStatusUpdated(object sender, ThermostatStatusEventArgs e) {
@@ -208,6 +210,9 @@ namespace WPNest {
 				HandleException("Server was not found. Please check your network connection and press OK to retry.");
 			else if (exception != null)
 				HandleException("An unknown error occurred. Press OK to retry.");
+
+			if(exception != null)
+				_analyticsService.LogError(exception);
 
 			return exception != null;
 		}

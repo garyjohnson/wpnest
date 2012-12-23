@@ -61,8 +61,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\Libraries\Moq\Castle.Core.dll</HintPath>
+    <Reference Include="FlurryWP7SDK">
+      <HintPath>..\..\..\SharkDice\WindowsPhone\Flurry\FlurryWP7SDK.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Drawing" />
@@ -136,10 +136,12 @@
     <Compile Include="NestViewModel.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AnalyticsService.cs" />
     <Compile Include="Services\ContentType.cs" />
     <Compile Include="Services\DelayedStatusProvider.cs" />
     <Compile Include="Services\GetStatusResult.cs" />
     <Compile Include="Services\GetThermostatStatusResult.cs" />
+    <Compile Include="Services\IAnalyticsService.cs" />
     <Compile Include="Services\INestWebService.cs" />
     <Compile Include="Services\ISessionProvider.cs" />
     <Compile Include="Services\ISettingsProvider.cs" />

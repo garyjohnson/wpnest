@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -10,16 +11,18 @@ namespace WPNest.Services {
 	public class NestWebService : INestWebService {
 
 		private ISessionProvider _sessionProvider;
+		private IAnalyticsService _analyticsService;
 
 		public NestWebService() {
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
+			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
 			WebRequest request = GetPostFormRequest("https://home.nest.com/user/login");
 			string requestString = string.Format("username={0}&password={1}", UrlEncode(userName), UrlEncode(password));
 			await request.SetRequestStringAsync(requestString);
-			Exception exception = null;
+			Exception exception;
 
 			try {
 				WebResponse response = await request.GetResponseAsync();
@@ -170,7 +173,7 @@ namespace WPNest.Services {
 			return new GetThermostatStatusResult(temperature, currentTemperature, isHeating, isCooling);
 		}
 
-		private static GetStatusResult ParseGetStatusResult(string responseString, string userId) {
+		private GetStatusResult ParseGetStatusResult(string responseString, string userId) {
 			var structureResults = new List<Structure>();
 
 			var values = JObject.Parse(responseString);
@@ -180,9 +183,12 @@ namespace WPNest.Services {
 				structureResults.Add(new Structure(structureId));
 			}
 
+
+			int deviceCount = 0;
 			foreach (var structureResult in structureResults) {
 				var devices = values["structure"][structureResult.ID]["devices"];
 				foreach (var device in devices) {
+					deviceCount++;
 					string thermostatId = device.Value<string>().Replace("device.", "");
 					var thermostat = new Thermostat(thermostatId);
 					structureResult.Thermostats.Add(thermostat);
@@ -201,6 +207,7 @@ namespace WPNest.Services {
 				}
 			}
 
+			_analyticsService.LogEvent("Structures: {0}, Devices: {1}", structures.Count(), deviceCount);
 			return new GetStatusResult(structureResults);
 		}
 
