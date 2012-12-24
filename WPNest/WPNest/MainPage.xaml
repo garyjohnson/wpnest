@@ -60,6 +60,22 @@
 				</EasingDoubleKeyFrame>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
+		<Storyboard x:Name="Storyboard1">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="thermostatControl">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.517" Value="-70"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="-48">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<QuadraticEase EasingMode="EaseInOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="grid">
+				<EasingDoubleKeyFrame KeyTime="0" Value="-48"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
 	</phone:PhoneApplicationPage.Resources>
 
 	<phone:PhoneApplicationPage.FontFamily>
@@ -169,15 +185,27 @@
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="wpnest" VerticalAlignment="Center" FontSize="48" FontFamily="Segoe WP SemiLight" Foreground="{StaticResource logoBrush}" Margin="0"/>
 			<toolkit:PerformanceProgressBar IsIndeterminate="True"/>
 		</StackPanel>
+		<Grid x:Name="grid" HorizontalAlignment="Center" Height="380" VerticalAlignment="Center" Width="380">
+			<Grid.Projection>
+				<PlaneProjection CenterOfRotationY="7" RotationX="-48"/>
+			</Grid.Projection>
+			<Ellipse Fill="#FF404257"/>
+			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="SETTINGS" VerticalAlignment="Center" Foreground="#DEFFFFFF" FontSize="64" FontWeight="Bold" FontFamily="Segoe WP Semibold"/>
+		</Grid>
 
 		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5">
+			<WPNest:ThermostatControl.Projection>
+				<PlaneProjection CenterOfRotationY="7"/>
+			</WPNest:ThermostatControl.Projection>
 			<WPNest:ThermostatControl.RenderTransform>
 				<CompositeTransform/>
 			</WPNest:ThermostatControl.RenderTransform>
 		</WPNest:ThermostatControl>
 
 		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed"/>
+
 		<WPNest:HVACControl Visibility="Collapsed"/>
+
 	</Grid>
 
 </phone:PhoneApplicationPage>
