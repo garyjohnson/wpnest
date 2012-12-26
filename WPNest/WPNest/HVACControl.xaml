@@ -3,11 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="WPNest.HVACControl"
+    xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" x:Class="WPNest.HVACControl"
     mc:Ignorable="d"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="800" d:DesignWidth="480">
 	<UserControl.Resources>
 		<Storyboard x:Name="Show">
@@ -29,11 +26,21 @@
 		</Storyboard>
 	</UserControl.Resources>
     
+	<UserControl.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</UserControl.FontFamily>
+	<UserControl.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</UserControl.FontSize>
+	<UserControl.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</UserControl.Foreground>
+    
     <Grid x:Name="LayoutRoot" RenderTransformOrigin="0.5,0.5">
     	<Grid.RenderTransform>
     		<CompositeTransform/>
     	</Grid.RenderTransform>
-    	<Grid x:Name="grid" Height="98" VerticalAlignment="Bottom" Background="#66303030" RenderTransformOrigin="0.5,0.5">
+    	<Grid x:Name="grid" Height="98" VerticalAlignment="Bottom" Background="#66303030" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed" d:IsHidden="True">
     		<Grid.RenderTransform>
     			<CompositeTransform/>
     		</Grid.RenderTransform>
@@ -42,23 +49,108 @@
     			<ColumnDefinition/>
     			<ColumnDefinition Width="Auto"/>
     		</Grid.ColumnDefinitions>
-    		<Grid HorizontalAlignment="Left" Margin="0,8" VerticalAlignment="Center" Height="82" Width="136">
+    		<Grid HorizontalAlignment="Left" Margin="0,8" VerticalAlignment="Center" Height="82" Width="136" Grid.Column="2">
     			<Grid.RowDefinitions>
     				<RowDefinition Height="Auto"/>
     				<RowDefinition Height="Auto"/>
     			</Grid.RowDefinitions>
     			<TextBlock HorizontalAlignment="Center" Text="HOME" VerticalAlignment="Top" Foreground="White"/>
-    			<toolkitPrimitives:ToggleSwitchButton Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Margin="0,-20" Background="#FF1C1F21" Style="{StaticResource ToggleSwitchTemplate}" Foreground="White" SwitchForeground="{StaticResource PhoneAccentBrush}"/>
+    			<toolkitPrimitives:ToggleSwitchButton Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Margin="0,-20" Background="#FF232323" Style="{StaticResource ToggleSwitchTemplate}" Foreground="White" SwitchForeground="{StaticResource PhoneAccentBrush}"/>
     		</Grid>
-    		<Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="2" Width="100" Height="50" Margin="0,0,15,15" Visibility="Collapsed">
+    		<Grid HorizontalAlignment="Left" Margin="0,8" VerticalAlignment="Center" Height="82" Width="136">
+    			<Grid.RowDefinitions>
+    				<RowDefinition Height="Auto"/>
+    				<RowDefinition Height="Auto"/>
+    			</Grid.RowDefinitions>
+    			<TextBlock HorizontalAlignment="Center" Text="FAN AUTO" VerticalAlignment="Top" Foreground="White"/>
+    			<toolkitPrimitives:ToggleSwitchButton Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Margin="0,-20" Background="#FF252525" Style="{StaticResource ToggleSwitchTemplate}" Foreground="White" SwitchForeground="{StaticResource PhoneAccentBrush}"/>
+    		</Grid>
+    		<Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="1" Margin="54,0,54,13" Width="100">
+    			<Grid.RowDefinitions>
+    				<RowDefinition Height="6*"/>
+    				<RowDefinition Height="19*"/>
+    			</Grid.RowDefinitions>
     			<Grid.ColumnDefinitions>
     				<ColumnDefinition/>
     				<ColumnDefinition/>
     			</Grid.ColumnDefinitions>
-    			<Rectangle Fill="#FF1C1F21" RadiusX="20" RadiusY="20" Grid.ColumnSpan="2"/>
-    			<Ellipse Fill="#FFFF2E00" HorizontalAlignment="Center" Height="30" VerticalAlignment="Center" Width="30"/>
-    			<Ellipse Fill="#FF0017FF" HorizontalAlignment="Center" Height="30" VerticalAlignment="Center" Width="30" Grid.Column="1"/>
+    			<Rectangle Fill="#FF1C1F21" RadiusX="20" RadiusY="20" Grid.ColumnSpan="2" Grid.Row="1" Width="100"/>
+    			<Ellipse Fill="#FFFF2E00" HorizontalAlignment="Center" Height="30" VerticalAlignment="Center" Width="30" Margin="10" Grid.Row="1"/>
+    			<Ellipse Fill="#FF0017FF" HorizontalAlignment="Center" Height="30" VerticalAlignment="Center" Width="30" Grid.Column="1" Margin="10" Grid.Row="1"/>
     		</Grid>
+    	</Grid>
+    	<Grid x:Name="appBar" VerticalAlignment="Bottom" Height="326" Background="{StaticResource PhoneSubtleBrush}">
+    		<Grid.RowDefinitions>
+    			<RowDefinition Height="65"/>
+    			<RowDefinition Height="Auto"/>
+    			<RowDefinition Height="Auto"/>
+    			<RowDefinition Height="Auto"/>
+    		</Grid.RowDefinitions>
+    		<Grid x:Name="appBarThumb" HorizontalAlignment="Right" Height="5" VerticalAlignment="Top" Width="25" Margin="0,12,24,0" Background="Black">
+    			<Grid.ColumnDefinitions>
+    				<ColumnDefinition Width="5"/>
+    				<ColumnDefinition Width="5"/>
+    				<ColumnDefinition Width="5"/>
+    				<ColumnDefinition Width="5"/>
+    				<ColumnDefinition Width="5"/>
+    			</Grid.ColumnDefinitions>
+    			<Rectangle Fill="White" HorizontalAlignment="Left" Height="5" RadiusY="1" RadiusX="1" VerticalAlignment="Top" Width="5"/>
+    			<Rectangle Fill="White" HorizontalAlignment="Left" Height="5" RadiusY="1" RadiusX="1" VerticalAlignment="Top" Width="5" Grid.Column="2"/>
+    			<Rectangle Fill="White" HorizontalAlignment="Left" Height="5" RadiusY="1" RadiusX="1" VerticalAlignment="Top" Width="5" Grid.Column="4"/>
+    		</Grid>
+    		<toolkit:ListPicker Margin="0" VerticalAlignment="Top" Grid.Row="1" Foreground="{StaticResource PhoneBackgroundBrush}">
+    			<toolkit:ListPickerItem HorizontalAlignment="Left" Width="474">
+    				<StackPanel Orientation="Horizontal">
+    					<Grid HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Height="30" Margin="0,5,0,0">
+    						<Grid.RowDefinitions>
+    							<RowDefinition/>
+    						</Grid.RowDefinitions>
+    						<Grid.ColumnDefinitions>
+    							<ColumnDefinition/>
+    							<ColumnDefinition/>
+    						</Grid.ColumnDefinitions>
+    						<Rectangle Fill="#FF1C1F21" RadiusX="15" RadiusY="15" Width="60" Height="30" Grid.ColumnSpan="2"/>
+    						<Ellipse Fill="#FFFF2E00" HorizontalAlignment="Center" Height="18" VerticalAlignment="Center" Width="18"/>
+    						<Ellipse Fill="#FF0017FF" HorizontalAlignment="Center" Height="18" VerticalAlignment="Center" Width="18" Grid.Column="1"/>
+    					</Grid>
+    					<TextBlock TextWrapping="Wrap" Text="HEAT + COOL" VerticalAlignment="Center" FontSize="32" FontFamily="Segoe WP Light" Margin="10,0,0,0"/>
+    				</StackPanel>
+    			</toolkit:ListPickerItem>
+    			<toolkit:ListPickerItem HorizontalAlignment="Left" Width="474">
+    				<StackPanel Orientation="Horizontal">
+    					<Grid HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Height="30" Margin="0,5,0,0">
+    						<Grid.RowDefinitions>
+    							<RowDefinition/>
+    						</Grid.RowDefinitions>
+    						<Grid.ColumnDefinitions>
+    							<ColumnDefinition/>
+    							<ColumnDefinition/>
+    						</Grid.ColumnDefinitions>
+    						<Rectangle Fill="#FF1C1F21" RadiusX="15" RadiusY="15" Width="60" Height="30" Grid.ColumnSpan="2"/>
+    						<Ellipse Fill="#FF0017FF" HorizontalAlignment="Center" Height="18" VerticalAlignment="Center" Width="18" Grid.Column="1"/>
+    					</Grid>
+    					<TextBlock TextWrapping="Wrap" Text="COOL ONLY" VerticalAlignment="Center" FontSize="32" FontFamily="Segoe WP Light" Margin="10,0,0,0"/>
+    				</StackPanel>
+    			</toolkit:ListPickerItem>
+    			<toolkit:ListPickerItem HorizontalAlignment="Left" Width="474">
+    				<StackPanel Orientation="Horizontal">
+    					<Grid HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Height="30" Margin="0,5,0,0">
+    						<Grid.RowDefinitions>
+    							<RowDefinition/>
+    						</Grid.RowDefinitions>
+    						<Grid.ColumnDefinitions>
+    							<ColumnDefinition/>
+    							<ColumnDefinition/>
+    						</Grid.ColumnDefinitions>
+    						<Rectangle Fill="#FF1C1F21" RadiusX="15" RadiusY="15" Width="60" Height="30" Grid.ColumnSpan="2"/>
+    						<Ellipse Fill="#FFFF2E00" HorizontalAlignment="Center" Height="18" VerticalAlignment="Center" Width="18"/>
+    					</Grid>
+    					<TextBlock TextWrapping="Wrap" Text="HEAT ONLY" VerticalAlignment="Center" FontSize="32" FontFamily="Segoe WP Light" Margin="10,0,0,0"/>
+    				</StackPanel>
+    			</toolkit:ListPickerItem>
+    		</toolkit:ListPicker>
+    		<toolkit:ToggleSwitch VerticalAlignment="Top" Grid.Row="2" Foreground="White" Background="Black"/>
+    		<toolkit:ToggleSwitch VerticalAlignment="Top" Grid.Row="3" Foreground="White" Background="Black"/>
     	</Grid>
     </Grid>
 </UserControl>

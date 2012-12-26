@@ -5,7 +5,8 @@ namespace WPNest {
 	public class NestSampleViewModel : INotifyPropertyChanged {
 
 		public NestSampleViewModel() {
-			CurrentTemperature = "70";
+			CurrentTemperature = "62";
+			TargetTemperature = "70";
 			IsLoggedIn = true;
 		}
 
@@ -15,6 +16,15 @@ namespace WPNest {
 			set {
 				_currentTemperature = value;
 				OnPropertyChanged("CurrentTemperature");
+			}
+		}
+		
+		private string _targetTemperature = "0";
+		public string TargetTemperature {
+			get { return _targetTemperature; }
+			set {
+				_targetTemperature = value;
+				OnPropertyChanged("TargetTemperature");
 			}
 		}
 

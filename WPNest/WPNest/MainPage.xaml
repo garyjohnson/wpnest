@@ -61,19 +61,21 @@
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Name="Storyboard1">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="thermostatControl">
-				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.517" Value="-70"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="-48">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="thermostatControl">
+				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="60">
 					<EasingDoubleKeyFrame.EasingFunction>
 						<QuadraticEase EasingMode="EaseInOut"/>
 					</EasingDoubleKeyFrame.EasingFunction>
 				</EasingDoubleKeyFrame>
 			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="grid">
-				<EasingDoubleKeyFrame KeyTime="0" Value="-48"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="thermostatControl">
+				<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="60">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<QuadraticEase EasingMode="EaseInOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 	</phone:PhoneApplicationPage.Resources>
@@ -174,26 +176,20 @@
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
+			<RowDefinition Height="768" />
+			<RowDefinition/>
 		</Grid.RowDefinitions>
 
 		<VisualStateManager.CustomVisualStateManager>
 			<ec:ExtendedVisualStateManager/>
 		</VisualStateManager.CustomVisualStateManager>
 
-		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="True">
+		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="True" Margin="0,352,0,330">
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="wpnest" VerticalAlignment="Center" FontSize="48" FontFamily="Segoe WP SemiLight" Foreground="{StaticResource logoBrush}" Margin="0"/>
 			<toolkit:PerformanceProgressBar IsIndeterminate="True"/>
 		</StackPanel>
-		<Grid x:Name="grid" HorizontalAlignment="Center" Height="380" VerticalAlignment="Center" Width="380">
-			<Grid.Projection>
-				<PlaneProjection CenterOfRotationY="7" RotationX="-48"/>
-			</Grid.Projection>
-			<Ellipse Fill="#FF404257"/>
-			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="SETTINGS" VerticalAlignment="Center" Foreground="#DEFFFFFF" FontSize="64" FontWeight="Bold" FontFamily="Segoe WP Semibold"/>
-		</Grid>
 
-		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5">
+		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194,50,176" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5">
 			<WPNest:ThermostatControl.Projection>
 				<PlaneProjection CenterOfRotationY="7"/>
 			</WPNest:ThermostatControl.Projection>
@@ -202,9 +198,9 @@
 			</WPNest:ThermostatControl.RenderTransform>
 		</WPNest:ThermostatControl>
 
-		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed"/>
+		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed" Grid.RowSpan="2"/>
 
-		<WPNest:HVACControl Visibility="Collapsed"/>
+		<WPNest:HVACControl Visibility="Collapsed" Grid.RowSpan="2"/>
 
 	</Grid>
 
