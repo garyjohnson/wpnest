@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 
@@ -25,16 +26,22 @@ namespace WPNest.Services {
 		public event EventHandler<ThermostatStatusEventArgs> ThermostatStatusUpdated;
 
 		private void OnDisplayCachedStatusTick(object state) {
-			Deployment.Current.Dispatcher.InvokeAsync(() => {
-				GetThermostatStatusResult cachedStatus = _cachedThermostatStatus;
-				if (cachedStatus != null) {
+			try {
+				Deployment.Current.Dispatcher.InvokeAsync(() => {
+					GetThermostatStatusResult cachedStatus = _cachedThermostatStatus;
+					if (cachedStatus != null) {
 
-					if(ThermostatStatusUpdated != null)
-						ThermostatStatusUpdated(this, new ThermostatStatusEventArgs(cachedStatus));
+						if (ThermostatStatusUpdated != null)
+							ThermostatStatusUpdated(this, new ThermostatStatusEventArgs(cachedStatus));
 
-					_cachedThermostatStatus = null;
-				}
-			});
+						_cachedThermostatStatus = null;
+					}
+				});
+			}
+			catch (NullReferenceException ex) {
+//				Debugger.Break();
+//				ex.ToString();
+			}
 		}
 
 		private void StartDisplayCachedStatusTimer() {

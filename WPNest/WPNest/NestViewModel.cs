@@ -172,6 +172,10 @@ namespace WPNest {
 			_statusUpdater.Start();
 		}
 
+		public void Teardown() {
+			_statusUpdater.Stop();
+		}
+
 		public async Task RaiseTemperatureAsync() {
 			if (TargetTemperature >= MaxTemperature)
 				return;

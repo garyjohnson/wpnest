@@ -27,7 +27,16 @@ namespace WPNest {
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
 			using (var sr = new StreamReader(responseStream)) {
+//				var builder = new StringBuilder();
+//				var buffer = new char[128];
+//				while(!sr.EndOfStream) {
+//					sr.Read(buffer, 0, 128);
+////					await sr.ReadAsync(buffer, 0, 128);
+//					builder.Append(buffer);
+//					buffer = new char[128];
+//				}
 				strContent = await sr.ReadToEndAsync();
+//				strContent = builder.ToString();
 			}
 
 			return strContent;

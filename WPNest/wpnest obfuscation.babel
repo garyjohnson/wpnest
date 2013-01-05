@@ -7,7 +7,7 @@
   <UsingTask TaskName="Babel" AssemblyName="Babel.Build, Version=6.1.0.0, Culture=neutral, PublicKeyToken=138d17b5bd621ab7" />
   <Target Name="WPNest">
     <PropertyGroup>
-      <BabelInputFile>Builds\1.0\Release\WPNest.xap</BabelInputFile>
+      <BabelInputFile>Builds\1.1\Release\WPNest.xap</BabelInputFile>
       <CleanAttributes>[mscorlib]System.Runtime.CompilerServices.CompilerGeneratedAttribute;[mscorlib]System.Diagnostics.DebuggerDisplayAttribute;[mscorlib]System.Diagnostics.DebuggerBrowsableAttribute;[mscorlib]System.Diagnostics.DebuggerNonUserCodeAttribute;[mscorlib]System.Diagnostics.DebuggerHiddenAttribute;[mscorlib]System.Diagnostics.DebuggerStepThroughAttribute;False</CleanAttributes>
       <ConstRemoval>false</ConstRemoval>
       <ControlFlowObfuscation>true;goto=true;switch=true;case=true;if=true;call=true;value=true;token=false;underflow=false</ControlFlowObfuscation>
@@ -39,7 +39,7 @@
       <ShowLogo>true</ShowLogo>
       <ShowStatistics>true</ShowStatistics>
       <SkipFile>FlurryWP7SDK.dll;Microsoft.Expression.Controls.dll;Microsoft.Expression.Drawing.dll;Microsoft.Expression.Interactions.dll;Microsoft.Phone.Controls.Toolkit.dll;Microsoft.Phone.Toolkit.Testing.dll;Microsoft.Threading.Tasks.dll;Microsoft.Threading.Tasks.Extensions.dll;Microsoft.Threading.Tasks.Extensions.Phone.dll;Microsoft.VisualStudio.QualityTools.UnitTesting.Phone.dll;Newtonsoft.Json.dll;SharpGIS.GZipWebClient.dll;System.Runtime.dll;System.Threading.Tasks.dll;System.Windows.Interactivity.dll;Microsoft.Phone.Controls.dll</SkipFile>
-      <StringEncryption>hash</StringEncryption>
+      <StringEncryption>False</StringEncryption>
       <SuppressIldasm>false</SuppressIldasm>
       <SuppressReflection>false</SuppressReflection>
       <TakeFile>WPNest.dll</TakeFile>

@@ -62,7 +62,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FlurryWP7SDK">
-      <HintPath>..\..\..\SharkDice\WindowsPhone\Flurry\FlurryWP7SDK.dll</HintPath>
+      <HintPath>..\Libraries\Flurry\FlurryWP7SDK.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Drawing" />

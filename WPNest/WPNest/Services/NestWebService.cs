@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using SharpGIS;
 
 namespace WPNest.Services {
 
@@ -212,20 +211,20 @@ namespace WPNest.Services {
 		}
 
 		private static WebRequest GetGetRequest(string url) {
-			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+			WebRequest request = WebRequest.Create(new Uri(url));
 			request.Method = "GET";
 			return request;
 		}
 
 		private static WebRequest GetPostFormRequest(string url) {
-			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+			WebRequest request = WebRequest.Create(new Uri(url));
 			request.ContentType = ContentType.Form;
 			request.Method = "POST";
 			return request;
 		}
 
 		private static WebRequest GetPostJsonRequest(string url) {
-			WebRequest request = WebRequestCreator.GZip.Create(new Uri(url));
+			WebRequest request = WebRequest.Create(new Uri(url));
 			request.ContentType = ContentType.Json;
 			request.Method = "POST";
 			return request;

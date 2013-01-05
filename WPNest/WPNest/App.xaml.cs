@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
@@ -16,6 +17,12 @@ namespace WPNest {
 
 		public App() {
 			UnhandledException += OnUnhandledException;
+
+			if(Environment.OSVersion.Version.Major > 7) {
+				WebRequest.RegisterPrefix("http://", SharpGIS.WebRequestCreator.GZip);
+				WebRequest.RegisterPrefix("https://", SharpGIS.WebRequestCreator.GZip);
+			}
+
 			InitializeComponent();
 			InitializeServices();
 			InitializePhoneApplication();

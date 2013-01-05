@@ -16,7 +16,12 @@ namespace WPNest {
 
 			ResetZoom.Completed += ResetZoomOnCompleted;
 			Loaded += OnLoaded;
+			Unloaded += OnUnloaded;
 			GoToDefaultVisualState(false);
+		}
+
+		private void OnUnloaded(object sender, RoutedEventArgs args) {
+			ViewModel.Teardown();
 		}
 
 		public static readonly DependencyProperty IsLoggedInProperty =
