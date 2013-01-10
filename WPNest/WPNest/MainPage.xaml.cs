@@ -2,15 +2,19 @@
 using System.Windows;
 using System.Windows.Data;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using Microsoft.Phone.Testing;
 
 namespace WPNest {
 
 	public partial class MainPage : PhoneApplicationPage {
 
+		private bool isSettingsOpen;
+
 		public MainPage() {
 			InitializeComponent();
 
+			SetValue(SystemTray.IsVisibleProperty, true);
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
 
@@ -89,6 +93,26 @@ namespace WPNest {
 
 		private void GoToDefaultVisualState(bool useTransition = true) {
 			VisualStateManager.GoToState(this, "Default", useTransition);
+		}
+
+		protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e) {
+			base.OnBackKeyPress(e);
+			if (isSettingsOpen) {
+				e.Cancel = true;
+				isSettingsOpen = false;
+				VisualStateManager.GoToState(this, "SettingsClosed", true);
+			}
+		}
+
+		private void OnSettingsButtonPress(object sender, RoutedEventArgs e) {
+			isSettingsOpen = true;
+			VisualStateManager.GoToState(this, "SettingsOpen", true);
+		}
+
+		private void settingsInputBlocker_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+				isSettingsOpen = false;
+				VisualStateManager.GoToState(this, "SettingsClosed", true);
 		}
 	}
 }
