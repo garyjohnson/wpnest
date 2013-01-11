@@ -18,7 +18,7 @@ namespace WPNest {
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
 
-			ResetZoom.Completed += ResetZoomOnCompleted;
+			ResetZoom.Completed += OnResetZoomCompleted;
 			Loaded += OnLoaded;
 			Unloaded += OnUnloaded;
 			GoToDefaultVisualState(false);
@@ -48,7 +48,7 @@ namespace WPNest {
 			get { return DataContext as NestViewModel; }
 		}
 
-		private void ResetZoomOnCompleted(object sender, EventArgs eventArgs) {
+		private void OnResetZoomCompleted(object sender, EventArgs eventArgs) {
 			ZoomIn.Begin();
 		}
 
@@ -99,20 +99,28 @@ namespace WPNest {
 			base.OnBackKeyPress(e);
 			if (isSettingsOpen) {
 				e.Cancel = true;
-				isSettingsOpen = false;
-				VisualStateManager.GoToState(this, "SettingsClosed", true);
+				CloseSettingsPanel();
 			}
 		}
 
 		private void OnSettingsButtonPress(object sender, RoutedEventArgs e) {
+			OpenSettingsPanel();
+		}
+
+		private void OpenSettingsPanel() {
 			isSettingsOpen = true;
+			MoveThermostatToBackground.Begin();
 			VisualStateManager.GoToState(this, "SettingsOpen", true);
 		}
 
-		private void settingsInputBlocker_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-				isSettingsOpen = false;
-				VisualStateManager.GoToState(this, "SettingsClosed", true);
+		private void OnClickedOutsideOfSettings(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+			CloseSettingsPanel();
+		}
+
+		private void CloseSettingsPanel() {
+			isSettingsOpen = false;
+			MoveThermostatToForeground.Begin();
+			VisualStateManager.GoToState(this, "SettingsClosed", true);
 		}
 	}
 }
