@@ -520,7 +520,6 @@
 
 		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed" Grid.RowSpan="2" Grid.Row="1" />
 
-		<WPNest:HvacControl Visibility="Collapsed" Grid.RowSpan="2" Grid.Row="1" />
 		<Button x:Name="settingsButton" VerticalAlignment="Bottom" Style="{StaticResource SettingsButton}" RenderTransformOrigin="0.5,0.5" Click="OnSettingsButtonPress" Padding="10,3,10,5" Grid.Row="1">
 			<Button.RenderTransform>
 				<CompositeTransform />
