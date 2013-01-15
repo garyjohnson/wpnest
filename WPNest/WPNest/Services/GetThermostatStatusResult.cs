@@ -20,5 +20,9 @@ namespace WPNest.Services {
 		public bool IsCooling { get; private set; }
 		public double TargetTemperature { get; private set; }
 		public double CurrentTemperature { get; private set; }
+
+		public FanMode FanMode { get; private set; }
+		public HvacMode HvacMode { get; private set; }
+		public bool IsAway { get; private set; }
 	}
 }

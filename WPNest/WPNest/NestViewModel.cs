@@ -92,6 +92,33 @@ namespace WPNest {
 			}
 		}
 
+		private HvacMode _hvacMode;
+		public HvacMode HvacMode {
+			get { return _hvacMode; }
+			set {
+				_hvacMode = value;
+				OnPropertyChanged("HvacMode");
+			}
+		}
+
+		private FanMode _fanMode;
+		public FanMode FanMode {
+			get { return _fanMode; }
+			set {
+				_fanMode = value;
+				OnPropertyChanged("FanMode");
+			}
+		}
+
+		private bool _isAway;
+		public bool IsAway {
+			get { return _isAway; }
+			set {
+				_isAway = value;
+				OnPropertyChanged("IsAway");
+			}
+		}
+
 		private WebServiceError _currentError = WebServiceError.None;
 		public WebServiceError CurrentError {
 			get { return _currentError; }

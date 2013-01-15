@@ -59,18 +59,15 @@ namespace WPNest.Services {
 			return new GetStatusResult(error, exception);
 		}
 
-		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
+		private async Task<WebServiceResult> SendPutRequestAsync(string url, string requestJson) {
 			if (_sessionProvider.IsSessionExpired)
 				return new GetStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
-			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
 			WebRequest request = GetPostJsonRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
-			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
-			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
-			await request.SetRequestStringAsync(requestString);
+			await request.SetRequestStringAsync(requestJson);
 			Exception exception = null;
 
 			try {
@@ -83,6 +80,63 @@ namespace WPNest.Services {
 
 			var error = await ParseWebServiceErrorAsync(exception);
 			return new WebServiceResult(error, exception);
+		}
+
+		public async Task<WebServiceResult> SetAwayModeAsync(Structure structure, bool isAway) {
+			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
+			var timestamp = GetCurrentTimeAsEpoch();
+			string requestString = string.Format("{{\"away_timestamp\":{0},\"away\":{1},\"away_setter\":0}}", timestamp, isAway);
+
+			return await SendPutRequestAsync(url, requestString);
+		}
+
+		private static double GetCurrentTimeAsEpoch() {
+			var unixTime = DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			double timestamp = Math.Floor(unixTime.TotalSeconds);
+			return timestamp;
+		}
+
+		public async Task<WebServiceResult> SetFanModeAsync(Thermostat thermostat, FanMode fanMode) {
+			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+			string fanModeString = GetFanModeString(fanMode);
+			string requestString = string.Format("{{\"fan_mode\":\"{0}\"}}", fanModeString);
+			return await SendPutRequestAsync(url, requestString);
+		}
+
+		public async Task<WebServiceResult> SetHvacModeAsync(Thermostat thermostat, HvacMode hvacMode) {
+			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+			string hvacModeString = GetHvacModeString(hvacMode);
+			string requestString = string.Format("{{\"target_temperature_type\":\"{0}\"}}", hvacModeString);
+			return await SendPutRequestAsync(url, requestString);
+		}
+
+		private string GetHvacModeString(HvacMode hvacMode) {
+			if (hvacMode == HvacMode.Off)
+				return "off";
+			if (hvacMode == HvacMode.HeatOnly)
+				return "heat";
+			if (hvacMode == HvacMode.CoolOnly)
+				return "cool";
+			if (hvacMode == HvacMode.HeatAndCool)
+				return "range";
+
+			throw new InvalidOperationException();
+		}
+
+		private string GetFanModeString(FanMode fanMode) {
+			if (fanMode == FanMode.Auto)
+				return "auto";
+			if(fanMode == FanMode.Off)
+				return "off";
+
+			throw new InvalidOperationException();
+		}
+
+		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
+			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
+			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
+			return await SendPutRequestAsync(url, requestString);
 		}
 
 		public async Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat) {

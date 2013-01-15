@@ -125,9 +125,14 @@
     <Compile Include="Error\ErrorPage.xaml.cs">
       <DependentUpon>ErrorPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HVACControl.xaml.cs">
-      <DependentUpon>HVACControl.xaml</DependentUpon>
+    <Compile Include="FanMode.cs" />
+    <Compile Include="HvacMode.cs" />
+    <Compile Include="HvacModeControl.xaml.cs">
+      <DependentUpon>HvacModeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HvacModeToIsCoolEnabledConverter.cs" />
+    <Compile Include="HvacModeToIsHeatEnabledConverter.cs" />
+    <Compile Include="HvacModeToLabelConverter.cs" />
     <Compile Include="Login\LoginMessageConverter.cs" />
     <Compile Include="NestSampleViewModel.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -175,9 +180,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="HVACControl.xaml">
+    <Page Include="HvacModeControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Login\LoginControl.xaml">
       <SubType>Designer</SubType>

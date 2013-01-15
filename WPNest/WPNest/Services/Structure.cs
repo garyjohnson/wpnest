@@ -9,6 +9,7 @@ namespace WPNest.Services {
 		}
 
 		public string ID { get; private set; }
+		public bool IsAway { get; private set; }
 
 		private readonly List<Thermostat> thermostats = new List<Thermostat>();
 		public List<Thermostat> Thermostats {

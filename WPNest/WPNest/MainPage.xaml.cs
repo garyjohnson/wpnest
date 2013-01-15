@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Testing;
@@ -24,10 +25,6 @@ namespace WPNest {
 			GoToDefaultVisualState(false);
 		}
 
-		private void OnUnloaded(object sender, RoutedEventArgs args) {
-			ViewModel.Teardown();
-		}
-
 		public static readonly DependencyProperty IsLoggedInProperty =
 			DependencyProperty.Register("IsLoggedIn", typeof(bool), typeof(MainPage), new PropertyMetadata(false, OnIsLoggedInChanged));
 
@@ -46,6 +43,10 @@ namespace WPNest {
 
 		private NestViewModel ViewModel {
 			get { return DataContext as NestViewModel; }
+		}
+
+		private void OnUnloaded(object sender, RoutedEventArgs args) {
+			ViewModel.Teardown();
 		}
 
 		private void OnResetZoomCompleted(object sender, EventArgs eventArgs) {
@@ -107,14 +108,14 @@ namespace WPNest {
 			OpenSettingsPanel();
 		}
 
+		private void OnClickedOutsideOfSettings(object sender, MouseButtonEventArgs e) {
+			CloseSettingsPanel();
+		}
+
 		private void OpenSettingsPanel() {
 			isSettingsOpen = true;
 			MoveThermostatToBackground.Begin();
 			VisualStateManager.GoToState(this, "SettingsOpen", true);
-		}
-
-		private void OnClickedOutsideOfSettings(object sender, System.Windows.Input.MouseButtonEventArgs e) {
-			CloseSettingsPanel();
 		}
 
 		private void CloseSettingsPanel() {
