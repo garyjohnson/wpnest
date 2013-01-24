@@ -126,6 +126,8 @@
       <DependentUpon>ErrorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="FanMode.cs" />
+    <Compile Include="FanModeToBoolConverter.cs" />
+    <Compile Include="FanModeToLabelConverter.cs" />
     <Compile Include="HvacMode.cs" />
     <Compile Include="HvacModeControl.xaml.cs">
       <DependentUpon>HvacModeControl.xaml</DependentUpon>
@@ -133,6 +135,7 @@
     <Compile Include="HvacModeToIsCoolEnabledConverter.cs" />
     <Compile Include="HvacModeToIsHeatEnabledConverter.cs" />
     <Compile Include="HvacModeToLabelConverter.cs" />
+    <Compile Include="IsAwayToLabelConverter.cs" />
     <Compile Include="Login\LoginMessageConverter.cs" />
     <Compile Include="NestSampleViewModel.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="Services\ThermostatStatusEventArgs.cs" />
     <Compile Include="Services\WebServiceError.cs" />
     <Compile Include="Services\WebServiceResult.cs" />
+    <Compile Include="TestValueConverter.cs" />
     <Compile Include="ThermostatControl.xaml.cs">
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>
@@ -223,6 +227,9 @@
     </Content>
     <Content Include="settingspage.png" />
     <Content Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

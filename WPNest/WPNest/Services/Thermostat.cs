@@ -11,7 +11,7 @@
 		public double CurrentTemperature { get; set; }
 		public bool IsHeating { get; set; }
 		public bool IsCooling { get; set; }
-		public FanMode FanMode { get; private set; }
-		public HvacMode HvacMode { get; private set; }
+		public FanMode FanMode { get; set; }
+		public HvacMode HvacMode { get; set; }
 	}
 }

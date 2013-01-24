@@ -15,9 +15,15 @@ namespace WPNest {
 		public MainPage() {
 			InitializeComponent();
 
+			if (App.IsTest) {
+				Content = UnitTestSystem.CreateTestPage();
+				return;
+			}
+
 			SetValue(SystemTray.IsVisibleProperty, true);
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
+//			SetBinding(SelectedHvacModeProperty, new Binding("SelectedHvacMode"));
 
 			ResetZoom.Completed += OnResetZoomCompleted;
 			Loaded += OnLoaded;
@@ -40,6 +46,14 @@ namespace WPNest {
 			get { return (bool)GetValue(IsLoggingInProperty); }
 			set { SetValue(IsLoggingInProperty, value); }
 		}
+
+//		public static readonly DependencyProperty SelectedHvacModeProperty =
+//			DependencyProperty.Register("SelectedHvacMode", typeof(HvacMode), typeof(MainPage), new PropertyMetadata(HvacMode.Off, OnSelectedHvacModeChanged));
+//
+//		public HvacMode SelectedHvacMode {
+//			get { return (HvacMode)GetValue(SelectedHvacModeProperty); }
+//			set { SetValue(SelectedHvacModeProperty, value); }
+//		}
 
 		private NestViewModel ViewModel {
 			get { return DataContext as NestViewModel; }
@@ -123,5 +137,25 @@ namespace WPNest {
 			MoveThermostatToForeground.Begin();
 			VisualStateManager.GoToState(this, "SettingsClosed", true);
 		}
+
+//		private void OnHvacModeSelectionChanged(object sender, SelectionChangedEventArgs e) {
+//			if (e.AddedItems.Count == 0)
+//				return;
+//
+//			var hvacModeControl = (HvacModeControl)e.AddedItems[0];
+//			ViewModel.SelectedHvacMode = hvacModeControl.HvacMode;
+//		}
+
+//		private static void OnSelectedHvacModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+//			var self = (MainPage)sender;
+//			var hvacMode = (HvacMode)args.NewValue;
+//			self.SelectHvacMode(hvacMode);
+//		}
+//
+//		private void SelectHvacMode(HvacMode hvacMode) {
+//			foreach (HvacModeControl hvacControl in hvacModePicker.Items)
+//				if (hvacControl.HvacMode == hvacMode)
+//					hvacModePicker.SelectedItem = hvacControl;
+//		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace WPNest {
 
@@ -64,15 +65,6 @@ namespace WPNest {
 			}
 		}
 
-		private HvacMode _hvacMode;
-		public HvacMode HvacMode {
-			get { return _hvacMode; }
-			set {
-				_hvacMode = value;
-				OnPropertyChanged("HvacMode");
-			}
-		}
-
 		private FanMode _fanMode;
 		public FanMode FanMode {
 			get { return _fanMode; }
@@ -90,6 +82,16 @@ namespace WPNest {
 				OnPropertyChanged("IsAway");
 			}
 		}
+
+		private HvacMode _selectedHvacMode = HvacMode.Off;
+		public HvacMode SelectedHvacMode {
+			get { return _selectedHvacMode; }
+			set {
+				_selectedHvacMode = value;
+				OnPropertyChanged("SelectedHvacMode");
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		protected virtual void OnPropertyChanged(string propertyName) {

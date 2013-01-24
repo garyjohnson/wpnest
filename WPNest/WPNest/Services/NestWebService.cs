@@ -82,52 +82,74 @@ namespace WPNest.Services {
 			return new WebServiceResult(error, exception);
 		}
 
-		public async Task<WebServiceResult> SetAwayModeAsync(Structure structure, bool isAway) {
-			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
-			var timestamp = GetCurrentTimeAsEpoch();
-			string requestString = string.Format("{{\"away_timestamp\":{0},\"away\":{1},\"away_setter\":0}}", timestamp, isAway);
+//		public async Task<WebServiceResult> SetAwayModeAsync(Structure structure, bool isAway) {
+//			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
+//			var timestamp = GetCurrentTimeAsEpoch();
+//			string requestString = string.Format("{{\"away_timestamp\":{0},\"away\":{1},\"away_setter\":0}}", timestamp, isAway);
+//
+//			return await SendPutRequestAsync(url, requestString);
+//		}
 
-			return await SendPutRequestAsync(url, requestString);
-		}
-
-		private static double GetCurrentTimeAsEpoch() {
-			var unixTime = DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-			double timestamp = Math.Floor(unixTime.TotalSeconds);
-			return timestamp;
-		}
+//		private static double GetCurrentTimeAsEpoch() {
+//			var unixTime = DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+//			double timestamp = Math.Floor(unixTime.TotalSeconds);
+//			return timestamp;
+//		}
 
 		public async Task<WebServiceResult> SetFanModeAsync(Thermostat thermostat, FanMode fanMode) {
-			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+			string url = string.Format(@"{0}/v2/put/device.{1}", _sessionProvider.TransportUrl, thermostat.ID);
 			string fanModeString = GetFanModeString(fanMode);
 			string requestString = string.Format("{{\"fan_mode\":\"{0}\"}}", fanModeString);
 			return await SendPutRequestAsync(url, requestString);
 		}
 
-		public async Task<WebServiceResult> SetHvacModeAsync(Thermostat thermostat, HvacMode hvacMode) {
-			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
-			string hvacModeString = GetHvacModeString(hvacMode);
-			string requestString = string.Format("{{\"target_temperature_type\":\"{0}\"}}", hvacModeString);
-			return await SendPutRequestAsync(url, requestString);
-		}
+//		public async Task<WebServiceResult> SetHvacModeAsync(Thermostat thermostat, HvacMode hvacMode) {
+//			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+//			string hvacModeString = GetHvacModeString(hvacMode);
+//			string requestString = string.Format("{{\"target_temperature_type\":\"{0}\"}}", hvacModeString);
+//			return await SendPutRequestAsync(url, requestString);
+//		}
 
-		private string GetHvacModeString(HvacMode hvacMode) {
-			if (hvacMode == HvacMode.Off)
-				return "off";
-			if (hvacMode == HvacMode.HeatOnly)
-				return "heat";
-			if (hvacMode == HvacMode.CoolOnly)
-				return "cool";
-			if (hvacMode == HvacMode.HeatAndCool)
-				return "range";
+//		private static HvacMode GetHvacModeFromString(string hvacMode) {
+//			if (hvacMode == "off")
+//				return HvacMode.Off;
+//			if (hvacMode == "heat")
+//				return HvacMode.HeatOnly;
+//			if (hvacMode == "cool")
+//				return HvacMode.CoolOnly;
+//			if (hvacMode == "range")
+//				return HvacMode.HeatAndCool;
+//
+//			throw new InvalidOperationException();
+//		}
+//
+//		private static string GetHvacModeString(HvacMode hvacMode) {
+//			if (hvacMode == HvacMode.Off)
+//				return "off";
+//			if (hvacMode == HvacMode.HeatOnly)
+//				return "heat";
+//			if (hvacMode == HvacMode.CoolOnly)
+//				return "cool";
+//			if (hvacMode == HvacMode.HeatAndCool)
+//				return "range";
+//
+//			throw new InvalidOperationException();
+//		}
+
+		private static FanMode GetFanModeFromString(string fanMode) {
+			if (fanMode == "auto")
+				return FanMode.Auto;
+			if (fanMode == "on")
+				return FanMode.On;
 
 			throw new InvalidOperationException();
 		}
 
-		private string GetFanModeString(FanMode fanMode) {
+		private static string GetFanModeString(FanMode fanMode) {
 			if (fanMode == FanMode.Auto)
 				return "auto";
-			if(fanMode == FanMode.Off)
-				return "off";
+			if (fanMode == FanMode.On)
+				return "on";
 
 			throw new InvalidOperationException();
 		}
@@ -143,15 +165,47 @@ namespace WPNest.Services {
 			if (_sessionProvider.IsSessionExpired)
 				return new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
+			GetThermostatStatusResult result = await GetSharedThermostatPropertiesAsync(thermostat);
+			if (result.Exception == null) {
+				result = await GetDeviceThermostatPropertiesAsync(thermostat, result);
+			}
+
+			return result;
+		}
+
+		private async Task<GetThermostatStatusResult> GetDeviceThermostatPropertiesAsync(Thermostat thermostat, GetThermostatStatusResult result) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			WebRequest request = GetPostJsonRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
+			string requestString = string.Format("{{\"keys\":[{{\"key\":\"device.{0}\"}}]}}", thermostat.ID);
+			await request.SetRequestStringAsync(requestString);
 
+			Exception exception;
+			try {
+				WebResponse response = await request.GetResponseAsync();
+				string strContent = await response.GetResponseStringAsync();
+				var values = JObject.Parse(strContent);
+				result.FanMode = GetFanModeFromString(values["fan_mode"].Value<string>());
+				return result;
+			}
+			catch (Exception ex) {
+				exception = ex;
+			}
+
+			var error = await ParseWebServiceErrorAsync(exception);
+			return new GetThermostatStatusResult(error, exception);
+		}
+
+		private async Task<GetThermostatStatusResult> GetSharedThermostatPropertiesAsync(Thermostat thermostat) {
+			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
+			WebRequest request = GetPostJsonRequest(url);
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
 			await request.SetRequestStringAsync(requestString);
-			Exception exception;
 
+			Exception exception;
 			try {
 				WebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
@@ -172,7 +226,7 @@ namespace WPNest.Services {
 				error = WebServiceError.InvalidCredentials;
 			else if (IsSessionTokenExpiredError(exception))
 				error = WebServiceError.SessionTokenExpired;
-			else if(IsNotFoundError(exception))
+			else if (IsNotFoundError(exception))
 				error = WebServiceError.ServerNotFound;
 
 			return error;
@@ -218,12 +272,17 @@ namespace WPNest.Services {
 		private static GetThermostatStatusResult ParseGetTemperatureResult(string strContent) {
 			var values = JObject.Parse(strContent);
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
-			double temperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
 			double currentTemperatureCelcius = double.Parse(values["current_temperature"].Value<string>());
-			double currentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
-			bool isHeating = values["hvac_heater_state"].Value<bool>();
-			bool isCooling = values["hvac_ac_state"].Value<bool>();
-			return new GetThermostatStatusResult(temperature, currentTemperature, isHeating, isCooling);
+
+			var result = new GetThermostatStatusResult();
+			result.TargetTemperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
+			result.CurrentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
+			result.IsHeating = values["hvac_heater_state"].Value<bool>();
+			result.IsCooling = values["hvac_ac_state"].Value<bool>();
+//			result.HvacMode = GetHvacModeFromString(values["target_temperature_type"].Value<string>());
+
+
+			return result;
 		}
 
 		private GetStatusResult ParseGetStatusResult(string responseString, string userId) {
@@ -233,12 +292,15 @@ namespace WPNest.Services {
 			var structures = values["user"][userId]["structures"];
 			foreach (var structure in structures) {
 				string structureId = structure.Value<string>().Replace("structure.", "");
-				structureResults.Add(new Structure(structureId));
+				var structureModel = new Structure(structureId);
+				structureResults.Add(structureModel);
 			}
 
 
 			int deviceCount = 0;
 			foreach (var structureResult in structureResults) {
+				var structure = values["structure"][structureResult.ID];
+//				structureResult.IsAway = structure["away"].Value<bool>();
 				var devices = values["structure"][structureResult.ID]["devices"];
 				foreach (var device in devices) {
 					deviceCount++;
@@ -257,6 +319,9 @@ namespace WPNest.Services {
 					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
+//					thermostat.HvacMode = GetHvacModeFromString(thermostatValues["target_temperature_type"].Value<string>());
+					thermostatValues = values["device"][thermostat.ID];
+					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
 				}
 			}
 

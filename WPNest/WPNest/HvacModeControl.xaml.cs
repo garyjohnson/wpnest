@@ -10,7 +10,7 @@ namespace WPNest {
 		public HvacModeControl() {
 			DataContext = this;
 			InitializeComponent();
-			Loaded += (sender, args) => RefreshFromHvacMode();
+			Loaded += (sender, args) => RefreshFromHvacMode(HvacMode);
 		}
 
 		public static readonly DependencyProperty HvacModeProperty =
@@ -18,29 +18,30 @@ namespace WPNest {
 
 		private static void OnHvacModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var self = (HvacModeControl) sender;
-			self.RefreshFromHvacMode();
+			var hvacMode = (HvacMode) args.NewValue;
+			self.RefreshFromHvacMode(hvacMode);
 		}
 
-		private void RefreshFromHvacMode() {
-			bool isHeatEnabled = HvacMode == HvacMode.HeatAndCool || HvacMode == HvacMode.HeatOnly;
+		private void RefreshFromHvacMode(HvacMode hvacMode) {
+			bool isHeatEnabled = hvacMode == HvacMode.HeatAndCool || hvacMode == HvacMode.HeatOnly;
 			if (isHeatEnabled)
 				HeatDotBrush = (Brush) Resources["HeatDotBrush"];
 			else
 				HeatDotBrush = (Brush) Resources["DisabledDotBrush"];
 
-			bool isCoolEnabled = HvacMode == HvacMode.HeatAndCool || HvacMode == HvacMode.CoolOnly;
+			bool isCoolEnabled = hvacMode == HvacMode.HeatAndCool || hvacMode == HvacMode.CoolOnly;
 			if (isCoolEnabled)
 				CoolDotBrush = (Brush) Resources["CoolDotBrush"];
 			else
 				CoolDotBrush = (Brush) Resources["DisabledDotBrush"];
 
-			if (HvacMode == HvacMode.Off)
+			if (hvacMode == HvacMode.Off)
 				Label = "OFF";
-			if (HvacMode == HvacMode.HeatOnly)
+			if (hvacMode == HvacMode.HeatOnly)
 				Label = "HEAT ONLY";
-			if (HvacMode == HvacMode.CoolOnly)
+			if (hvacMode == HvacMode.CoolOnly)
 				Label = "COOL ONLY";
-			if (HvacMode == HvacMode.HeatAndCool)
+			if (hvacMode == HvacMode.HeatAndCool)
 				Label = "HEAT + COOL";
 
 		}

@@ -92,32 +92,31 @@ namespace WPNest {
 			}
 		}
 
-		private HvacMode _hvacMode;
-		public HvacMode HvacMode {
-			get { return _hvacMode; }
-			set {
-				_hvacMode = value;
-				OnPropertyChanged("HvacMode");
-			}
-		}
-
 		private FanMode _fanMode;
 		public FanMode FanMode {
 			get { return _fanMode; }
 			set {
-				_fanMode = value;
-				OnPropertyChanged("FanMode");
+				if (value != _fanMode) {
+					_fanMode = value;
+					OnPropertyChanged("FanMode");
+					if(IsLoggedIn)
+						SetFanModeAsync(_fanMode);
+				}
 			}
 		}
 
-		private bool _isAway;
-		public bool IsAway {
-			get { return _isAway; }
-			set {
-				_isAway = value;
-				OnPropertyChanged("IsAway");
-			}
-		}
+//		private bool _isAway;
+//		public bool IsAway {
+//			get { return _isAway; }
+//			set {
+//				if (value != _isAway) {
+//					_isAway = value;
+//					OnPropertyChanged("IsAway");
+//					if(IsLoggedIn)
+//						SetAwayModeAsync(_isAway);
+//				}
+//			}
+//		}
 
 		private WebServiceError _currentError = WebServiceError.None;
 		public WebServiceError CurrentError {
@@ -128,7 +127,23 @@ namespace WPNest {
 			}
 		}
 
+//		private HvacMode _selectedHvacMode = HvacMode.Off;
+//		public HvacMode SelectedHvacMode {
+//			get { return _selectedHvacMode; }
+//			set {
+//				if (value != _selectedHvacMode) {
+//					_selectedHvacMode = value;
+//					OnPropertyChanged("SelectedHvacMode");
+//					if(IsLoggedIn)
+//						SetHvacModeAsync(_selectedHvacMode);
+//				}
+//			}
+//		}
+
 		public NestViewModel() {
+			if (DesignerProperties.IsInDesignTool)
+				return;
+
 			_statusProvider = ServiceContainer.GetService<IStatusProvider>();
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			_nestWebService = ServiceContainer.GetService<INestWebService>();
@@ -145,6 +160,8 @@ namespace WPNest {
 			CurrentTemperature = e.ThermostatStatus.CurrentTemperature;
 			IsHeating = e.ThermostatStatus.IsHeating;
 			IsCooling = e.ThermostatStatus.IsCooling;
+//			SelectedHvacMode = e.ThermostatStatus.HvacMode;
+			FanMode = e.ThermostatStatus.FanMode;
 		}
 
 		public async Task InitializeAsync() {
@@ -189,11 +206,13 @@ namespace WPNest {
 
 			IsLoggedIn = true;
 
+//			var structure = GetFirstStructure();
 			var thermostat = GetFirstThermostat();
 			TargetTemperature = thermostat.TargetTemperature;
 			CurrentTemperature = thermostat.CurrentTemperature;
 			IsHeating = thermostat.IsHeating;
 			IsCooling = thermostat.IsCooling;
+//			SelectedHvacMode = thermostat.HvacMode;
 
 			_statusUpdater.CurrentThermostat = thermostat;
 			_statusUpdater.Start();
@@ -221,6 +240,51 @@ namespace WPNest {
 			await _statusUpdater.UpdateStatusAsync();
 		}
 
+		private async void SetFanModeAsync(FanMode fanMode) {
+			var thermostat = GetFirstThermostat();
+			if (thermostat.FanMode == fanMode)
+				return;
+
+			_statusProvider.Reset();
+
+			thermostat.FanMode = fanMode;
+			FanMode = fanMode;
+			var result = await _nestWebService.SetFanModeAsync(thermostat, fanMode);
+			if (IsErrorHandled(result.Error, result.Exception))
+				return;
+
+			await _statusUpdater.UpdateStatusAsync();
+		}
+
+//		private async void SetAwayModeAsync(bool isAway) {
+//			var structure = GetFirstStructure();
+//			if (structure.IsAway == isAway)
+//				return;
+//
+//			_statusProvider.Reset();
+//
+//			var result = await _nestWebService.SetAwayModeAsync(structure, isAway);
+//			if (IsErrorHandled(result.Error, result.Exception))
+//				return;
+//
+//			await _statusUpdater.UpdateStatusAsync();
+//		}
+
+//		private async void SetHvacModeAsync(HvacMode hvacMode) {
+//			var thermostat = GetFirstThermostat();
+//			if (thermostat.HvacMode == hvacMode)
+//				return;
+//
+//			_statusProvider.Reset();
+//
+//			thermostat.HvacMode = hvacMode;
+//			var result = await _nestWebService.SetHvacModeAsync(thermostat, hvacMode);
+//			if (IsErrorHandled(result.Error, result.Exception))
+//				return;
+//
+//			await _statusUpdater.UpdateStatusAsync();
+//		}
+
 		public async Task LowerTemperatureAsync() {
 			if (TargetTemperature <= MinTemperature)
 				return;
@@ -238,6 +302,10 @@ namespace WPNest {
 			await _statusUpdater.UpdateStatusAsync();
 		}
 
+		private Structure GetFirstStructure() {
+			return _getStatusResult.Structures.ElementAt(0);
+		}
+
 		private Thermostat GetFirstThermostat() {
 			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
 		}
@@ -246,12 +314,12 @@ namespace WPNest {
 			if (error == WebServiceError.InvalidCredentials ||
 				error == WebServiceError.SessionTokenExpired)
 				HandleLoginException(error);
-			else if(error == WebServiceError.ServerNotFound)
+			else if (error == WebServiceError.ServerNotFound)
 				HandleException("Server was not found. Please check your network connection and press OK to retry.");
 			else if (exception != null)
 				HandleException("An unknown error occurred. Press OK to retry.");
 
-			if(exception != null)
+			if (exception != null)
 				_analyticsService.LogError(exception);
 
 			return exception != null;
