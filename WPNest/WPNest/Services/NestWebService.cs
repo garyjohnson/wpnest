@@ -82,59 +82,12 @@ namespace WPNest.Services {
 			return new WebServiceResult(error, exception);
 		}
 
-//		public async Task<WebServiceResult> SetAwayModeAsync(Structure structure, bool isAway) {
-//			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
-//			var timestamp = GetCurrentTimeAsEpoch();
-//			string requestString = string.Format("{{\"away_timestamp\":{0},\"away\":{1},\"away_setter\":0}}", timestamp, isAway);
-//
-//			return await SendPutRequestAsync(url, requestString);
-//		}
-
-//		private static double GetCurrentTimeAsEpoch() {
-//			var unixTime = DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-//			double timestamp = Math.Floor(unixTime.TotalSeconds);
-//			return timestamp;
-//		}
-
 		public async Task<WebServiceResult> SetFanModeAsync(Thermostat thermostat, FanMode fanMode) {
 			string url = string.Format(@"{0}/v2/put/device.{1}", _sessionProvider.TransportUrl, thermostat.ID);
 			string fanModeString = GetFanModeString(fanMode);
 			string requestString = string.Format("{{\"fan_mode\":\"{0}\"}}", fanModeString);
 			return await SendPutRequestAsync(url, requestString);
 		}
-
-//		public async Task<WebServiceResult> SetHvacModeAsync(Thermostat thermostat, HvacMode hvacMode) {
-//			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
-//			string hvacModeString = GetHvacModeString(hvacMode);
-//			string requestString = string.Format("{{\"target_temperature_type\":\"{0}\"}}", hvacModeString);
-//			return await SendPutRequestAsync(url, requestString);
-//		}
-
-//		private static HvacMode GetHvacModeFromString(string hvacMode) {
-//			if (hvacMode == "off")
-//				return HvacMode.Off;
-//			if (hvacMode == "heat")
-//				return HvacMode.HeatOnly;
-//			if (hvacMode == "cool")
-//				return HvacMode.CoolOnly;
-//			if (hvacMode == "range")
-//				return HvacMode.HeatAndCool;
-//
-//			throw new InvalidOperationException();
-//		}
-//
-//		private static string GetHvacModeString(HvacMode hvacMode) {
-//			if (hvacMode == HvacMode.Off)
-//				return "off";
-//			if (hvacMode == HvacMode.HeatOnly)
-//				return "heat";
-//			if (hvacMode == HvacMode.CoolOnly)
-//				return "cool";
-//			if (hvacMode == HvacMode.HeatAndCool)
-//				return "range";
-//
-//			throw new InvalidOperationException();
-//		}
 
 		private static FanMode GetFanModeFromString(string fanMode) {
 			if (fanMode == "auto")
@@ -279,7 +232,6 @@ namespace WPNest.Services {
 			result.CurrentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
 			result.IsHeating = values["hvac_heater_state"].Value<bool>();
 			result.IsCooling = values["hvac_ac_state"].Value<bool>();
-//			result.HvacMode = GetHvacModeFromString(values["target_temperature_type"].Value<string>());
 
 
 			return result;
@@ -319,7 +271,6 @@ namespace WPNest.Services {
 					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
-//					thermostat.HvacMode = GetHvacModeFromString(thermostatValues["target_temperature_type"].Value<string>());
 					thermostatValues = values["device"][thermostat.ID];
 					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
 				}

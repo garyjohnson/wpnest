@@ -531,17 +531,8 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
-<!--			<TextBlock x:Name="awayLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Away Mode" VerticalAlignment="Top" Grid.Row="1" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />-->
-<!--			<toolkit:ToggleSwitch x:Name="awaySwitch" VerticalAlignment="Top" Grid.Row="1" Margin="20,10,0,0" Content="{Binding IsAway, Converter={StaticResource IsAwayToLabelConverter}}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" IsChecked="{Binding IsAway, Mode=TwoWay}" />-->
 			<TextBlock x:Name="fanLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Fan" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
 			<toolkit:ToggleSwitch x:Name="fanSwitch" VerticalAlignment="Top" Grid.Row="2" Margin="20,10,0,0" Content="{Binding FanMode, Converter={StaticResource FanModeToLabelConverter}}" IsChecked="{Binding FanMode, Converter={StaticResource FanModeToBoolConverter}, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
-<!--			<TextBlock x:Name="hvacLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Fan" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDCBCBCB" />-->
-<!--			<toolkit:ListPicker x:Name="hvacModePicker" Margin="30,0,30,30" VerticalAlignment="Bottom" Grid.Row="3" Background="#BFFFFFFF" BorderBrush="#BFFFFFFF" Foreground="Black" Template="{StaticResource ListPickerControlDarkTemplate}" ItemTemplate="{StaticResource HvacModeControlTemplate}" SelectionChanged="OnHvacModeSelectionChanged">-->
-<!--				<WPNest:HvacModeControl HorizontalAlignment="Left" Width="398" HvacMode="HeatOnly"/>-->
-<!--				<WPNest:HvacModeControl HorizontalAlignment="Left" Width="398" HvacMode="CoolOnly"/>-->
-<!--				<WPNest:HvacModeControl HorizontalAlignment="Left" Width="398" HvacMode="HeatAndCool"/>-->
-<!--				<WPNest:HvacModeControl HorizontalAlignment="Left" Width="398"/>-->
-<!--			</toolkit:ListPicker>-->
 		</Grid>
 
 	</Grid>

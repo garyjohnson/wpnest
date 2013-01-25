@@ -105,19 +105,6 @@ namespace WPNest {
 			}
 		}
 
-//		private bool _isAway;
-//		public bool IsAway {
-//			get { return _isAway; }
-//			set {
-//				if (value != _isAway) {
-//					_isAway = value;
-//					OnPropertyChanged("IsAway");
-//					if(IsLoggedIn)
-//						SetAwayModeAsync(_isAway);
-//				}
-//			}
-//		}
-
 		private WebServiceError _currentError = WebServiceError.None;
 		public WebServiceError CurrentError {
 			get { return _currentError; }
@@ -126,19 +113,6 @@ namespace WPNest {
 				OnPropertyChanged("CurrentError");
 			}
 		}
-
-//		private HvacMode _selectedHvacMode = HvacMode.Off;
-//		public HvacMode SelectedHvacMode {
-//			get { return _selectedHvacMode; }
-//			set {
-//				if (value != _selectedHvacMode) {
-//					_selectedHvacMode = value;
-//					OnPropertyChanged("SelectedHvacMode");
-//					if(IsLoggedIn)
-//						SetHvacModeAsync(_selectedHvacMode);
-//				}
-//			}
-//		}
 
 		public NestViewModel() {
 			if (DesignerProperties.IsInDesignTool)
@@ -160,7 +134,6 @@ namespace WPNest {
 			CurrentTemperature = e.ThermostatStatus.CurrentTemperature;
 			IsHeating = e.ThermostatStatus.IsHeating;
 			IsCooling = e.ThermostatStatus.IsCooling;
-//			SelectedHvacMode = e.ThermostatStatus.HvacMode;
 			FanMode = e.ThermostatStatus.FanMode;
 		}
 
@@ -206,13 +179,11 @@ namespace WPNest {
 
 			IsLoggedIn = true;
 
-//			var structure = GetFirstStructure();
 			var thermostat = GetFirstThermostat();
 			TargetTemperature = thermostat.TargetTemperature;
 			CurrentTemperature = thermostat.CurrentTemperature;
 			IsHeating = thermostat.IsHeating;
 			IsCooling = thermostat.IsCooling;
-//			SelectedHvacMode = thermostat.HvacMode;
 
 			_statusUpdater.CurrentThermostat = thermostat;
 			_statusUpdater.Start();
@@ -255,35 +226,6 @@ namespace WPNest {
 
 			await _statusUpdater.UpdateStatusAsync();
 		}
-
-//		private async void SetAwayModeAsync(bool isAway) {
-//			var structure = GetFirstStructure();
-//			if (structure.IsAway == isAway)
-//				return;
-//
-//			_statusProvider.Reset();
-//
-//			var result = await _nestWebService.SetAwayModeAsync(structure, isAway);
-//			if (IsErrorHandled(result.Error, result.Exception))
-//				return;
-//
-//			await _statusUpdater.UpdateStatusAsync();
-//		}
-
-//		private async void SetHvacModeAsync(HvacMode hvacMode) {
-//			var thermostat = GetFirstThermostat();
-//			if (thermostat.HvacMode == hvacMode)
-//				return;
-//
-//			_statusProvider.Reset();
-//
-//			thermostat.HvacMode = hvacMode;
-//			var result = await _nestWebService.SetHvacModeAsync(thermostat, hvacMode);
-//			if (IsErrorHandled(result.Error, result.Exception))
-//				return;
-//
-//			await _statusUpdater.UpdateStatusAsync();
-//		}
 
 		public async Task LowerTemperatureAsync() {
 			if (TargetTemperature <= MinTemperature)
