@@ -57,6 +57,14 @@ namespace WPNest.Services {
 			LoadSettings();
 		}
 
+		public void UpdateTransportUrl(string transportUrl) {
+			var settings = ServiceContainer.GetService<ISettingsProvider>();
+			settings[SettingTransportUrl] = transportUrl;
+			settings.Save();
+
+			LoadSettings();
+		}
+
 		public void ClearSession() {
 			TransportUrl = null;
 			AccessToken = null;

@@ -89,6 +89,27 @@ namespace WPNest.Services {
 			return await SendPutRequestAsync(url, requestString);
 		}
 
+		public async Task<WebServiceResult> UpdateTransportUrlAsync() {
+			WebRequest request = GetPostJsonRequest("https://home.nest.com/user/service_urls");
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+
+			Exception exception = null;
+			try {
+				WebResponse response = await request.GetResponseAsync();
+				string strContent = await response.GetResponseStringAsync();
+				var jsonResult = ParseAsJsonOrNull(strContent);
+				var transportUrl = jsonResult["urls"]["transport_url"].Value<string>();
+				_sessionProvider.UpdateTransportUrl(transportUrl);
+				return new WebServiceResult();
+			}
+			catch (Exception ex) {
+				exception = ex;
+			}
+
+			var error = await ParseWebServiceErrorAsync(exception);
+			return new WebServiceResult(error, exception);
+		}
+
 		private static FanMode GetFanModeFromString(string fanMode) {
 			if (fanMode == "auto")
 				return FanMode.Auto;

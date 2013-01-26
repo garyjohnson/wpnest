@@ -6,6 +6,7 @@ namespace WPNest.Services {
 
 		bool IsSessionExpired { get; }
 		void SetSession(string transportUrl, string userId, string accessToken, DateTime accessTokenExpirationDate);
+		void UpdateTransportUrl(string transportUrl);
 		void ClearSession();
 
 		string TransportUrl { get; }

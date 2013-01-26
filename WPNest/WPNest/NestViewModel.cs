@@ -173,6 +173,10 @@ namespace WPNest {
 		private async Task OnLoggedIn() {
 			IsLoggingIn = false;
 
+			var result = await _nestWebService.UpdateTransportUrlAsync();	
+			if (IsErrorHandled(result.Error, result.Exception))
+				return;
+
 			_getStatusResult = await _nestWebService.GetStatusAsync();
 			if (IsErrorHandled(_getStatusResult.Error, _getStatusResult.Exception))
 				return;
