@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -7,6 +8,31 @@ using System.Threading.Tasks;
 namespace WPNest {
 
 	public static class ExtensionMethods {
+
+		public static void SetRequestStringAndThenExecute(this WebRequest request, string requestString, object userState, Action<WebRequest, object> onCompleted) {
+			var state = new Dictionary<string, object> {
+				            {"request", request},
+				            {"userState", userState},
+				            {"onCompleted", onCompleted},
+							{"requestString", requestString}};
+
+			request.BeginGetRequestStream(ContinueSetRequestString, state);
+		}
+
+		private static void ContinueSetRequestString(IAsyncResult result) {
+			var state = (Dictionary<string, object>)result.AsyncState;
+			var request = (WebRequest)state["request"];
+			var userState = state["userState"];
+			var onCompleted = (Action<WebRequest, object>)state["onCompleted"];
+			var requestString = (string)state["requestString"];
+
+			using (Stream stream = request.EndGetRequestStream(result)) {
+				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
+				stream.Write(encodedRequestString, 0, encodedRequestString.Length);
+			}
+
+			onCompleted(request, userState);
+		}
 
 		public static async Task SetRequestStringAsync(this WebRequest request, string requestString) {
 			using (Stream stream = await request.GetRequestStreamAsync()) {
@@ -23,6 +49,16 @@ namespace WPNest {
 			}
 		}
 
+		public static string GetResponseString(this WebResponse response) {
+			Stream responseStream = response.GetResponseStream();
+			string strContent = "";
+			using (var sr = new StreamReader(responseStream)) {
+				strContent = sr.ReadToEnd();
+			}
+
+			return strContent;
+		}
+
 		public static async Task<string> GetResponseStringAsync(this WebResponse response) {
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
@@ -35,6 +71,7 @@ namespace WPNest {
 //					builder.Append(buffer);
 //					buffer = new char[128];
 //				}
+					
 				strContent = await sr.ReadToEndAsync();
 //				strContent = builder.ToString();
 			}

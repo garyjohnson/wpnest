@@ -188,6 +188,7 @@ namespace WPNest {
 			CurrentTemperature = thermostat.CurrentTemperature;
 			IsHeating = thermostat.IsHeating;
 			IsCooling = thermostat.IsCooling;
+			FanMode = thermostat.FanMode;
 
 			_statusUpdater.CurrentThermostat = thermostat;
 			_statusUpdater.Start();

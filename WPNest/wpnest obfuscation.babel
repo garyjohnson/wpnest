@@ -7,7 +7,7 @@
   <UsingTask TaskName="Babel" AssemblyName="Babel.Build, Version=6.1.0.0, Culture=neutral, PublicKeyToken=138d17b5bd621ab7" />
   <Target Name="WPNest">
     <PropertyGroup>
-      <BabelInputFile>Builds\1.1\Release\WPNest.xap</BabelInputFile>
+      <BabelInputFile>Builds\1.2\Release\WPNest.xap</BabelInputFile>
       <CleanAttributes>[mscorlib]System.Runtime.CompilerServices.CompilerGeneratedAttribute;[mscorlib]System.Diagnostics.DebuggerDisplayAttribute;[mscorlib]System.Diagnostics.DebuggerBrowsableAttribute;[mscorlib]System.Diagnostics.DebuggerNonUserCodeAttribute;[mscorlib]System.Diagnostics.DebuggerHiddenAttribute;[mscorlib]System.Diagnostics.DebuggerStepThroughAttribute;False</CleanAttributes>
       <ConstRemoval>false</ConstRemoval>
       <ControlFlowObfuscation>true;goto=true;switch=true;case=true;if=true;call=true;value=true;token=false;underflow=false</ControlFlowObfuscation>

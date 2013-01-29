@@ -273,7 +273,6 @@ namespace WPNest.Services {
 			int deviceCount = 0;
 			foreach (var structureResult in structureResults) {
 				var structure = values["structure"][structureResult.ID];
-//				structureResult.IsAway = structure["away"].Value<bool>();
 				var devices = values["structure"][structureResult.ID]["devices"];
 				foreach (var device in devices) {
 					deviceCount++;
