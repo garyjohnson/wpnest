@@ -9,15 +9,6 @@ namespace WPNest.Test.UnitTests {
 	public class NestViewModelTest {
 
 		[TestMethod]
-		public void Should() {
-			Assert.Fail();
-		}
-
-		[TestMethod]
-		public void ShouldNot() {
-		}
-
-		[TestMethod]
 		public async Task ShouldBlah() {
 			var webService = new MockNestWebService();
 			var result = await webService.GetStatusAsync();
