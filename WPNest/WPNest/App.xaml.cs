@@ -11,12 +11,6 @@ namespace WPNest {
 
 	public partial class App : Application {
 
-#if TEST
-		public const bool IsTest = true;
-#else
-		public const bool IsTest = false;
-#endif
-
 		private bool _isInitialized;
 		private readonly IAnalyticsService _analyticsService = new AnalyticsService();
 		public PhoneApplicationFrame RootFrame { get; private set; }
@@ -44,7 +38,6 @@ namespace WPNest {
 			ServiceContainer.RegisterService<ISettingsProvider>(new SettingsProvider());
 			ServiceContainer.RegisterService<ISessionProvider>(new SessionProvider());
 			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
-			ServiceContainer.RegisterService<INestWebService2>(new NestWebService2());
 			ServiceContainer.RegisterService<IStatusProvider>(new DelayedStatusProvider());
 			ServiceContainer.RegisterService<StatusUpdaterService>(new StatusUpdaterService());
 		}

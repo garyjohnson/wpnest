@@ -1,4 +1,13 @@
-﻿<phone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:WPNest="clr-namespace:WPNest" xmlns:Login="clr-namespace:WPNest.Login" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:edc="clr-namespace:Microsoft.Expression.Controls;assembly=Microsoft.Expression.Drawing" xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit" x:Class="WPNest.MainPage" mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768" SupportedOrientations="Portrait" Orientation="Portrait" shell:SystemTray.BackgroundColor="Transparent" shell:SystemTray.ForegroundColor="#444444" shell:SystemTray.Opacity="0" shell:SystemTray.IsVisible="False">
+﻿<phone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+							xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+							xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" 
+							xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone" 
+							xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+							xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+							xmlns:WPNest="clr-namespace:WPNest" 
+							xmlns:Login="clr-namespace:WPNest.Login" 
+							xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
+							xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit" x:Class="WPNest.MainPage" mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768" SupportedOrientations="Portrait" Orientation="Portrait" shell:SystemTray.BackgroundColor="Transparent" shell:SystemTray.ForegroundColor="#444444" shell:SystemTray.Opacity="0" shell:SystemTray.IsVisible="False">
 
 	<phone:PhoneApplicationPage.Resources>
 		<WPNest:FanModeToBoolConverter x:Key="FanModeToBoolConverter"/>
@@ -351,7 +360,7 @@
 
 	<Grid x:Name="LayoutRoot" Background="{StaticResource BackgroundBrush}" Margin="0">
 		<VisualStateManager.VisualStateGroups>
-			<VisualStateGroup x:Name="LogInState" ec:ExtendedVisualStateManager.UseFluidLayout="True">
+			<VisualStateGroup x:Name="LogInState" >
 				<VisualStateGroup.Transitions>
 					<VisualTransition GeneratedDuration="0:0:0.3">
 						<VisualTransition.GeneratedEasingFunction>
@@ -494,10 +503,6 @@
 			<RowDefinition Height="32" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-
-		<VisualStateManager.CustomVisualStateManager>
-			<ec:ExtendedVisualStateManager />
-		</VisualStateManager.CustomVisualStateManager>
 
 		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="True" Margin="0,352,0,330" Grid.Row="1">
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="wpnest" VerticalAlignment="Center" FontSize="48" FontFamily="Segoe WP SemiLight" Foreground="{StaticResource logoBrush}" Margin="0" />
