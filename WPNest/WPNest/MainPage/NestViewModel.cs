@@ -99,7 +99,7 @@ namespace WPNest {
 				if (value != _fanMode) {
 					_fanMode = value;
 					OnPropertyChanged("FanMode");
-					if(IsLoggedIn)
+					if (IsLoggedIn)
 						SetFanModeAsync(_fanMode);
 				}
 			}
@@ -173,7 +173,7 @@ namespace WPNest {
 		private async Task OnLoggedIn() {
 			IsLoggingIn = false;
 
-			var result = await _nestWebService.UpdateTransportUrlAsync();	
+			var result = await _nestWebService.UpdateTransportUrlAsync();
 			if (IsErrorHandled(result.Error, result.Exception))
 				return;
 
