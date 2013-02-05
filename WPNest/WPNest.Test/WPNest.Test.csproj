@@ -144,6 +144,9 @@
     <Compile Include="..\WPNest\Services\DelayedStatusProvider.cs">
       <Link>Services\DelayedStatusProvider.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\DialogProvider.cs">
+      <Link>Services\DialogProvider.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\GetStatusResult.cs">
       <Link>Services\GetStatusResult.cs</Link>
     </Compile>
@@ -152,6 +155,9 @@
     </Compile>
     <Compile Include="..\WPNest\Services\IAnalyticsService.cs">
       <Link>Services\IAnalyticsService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\IDialogProvider.cs">
+      <Link>Services\IDialogProvider.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\Services\INestWebService.cs">
       <Link>Services\INestWebService.cs</Link>

@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using WPNest.Services;
 
 namespace WPNest {
@@ -17,6 +16,7 @@ namespace WPNest {
 		private readonly INestWebService _nestWebService;
 		private readonly StatusUpdaterService _statusUpdater;
 		private readonly IAnalyticsService _analyticsService;
+		private readonly IDialogProvider _dialogProvider;
 		private GetStatusResult _getStatusResult;
 
 		private double _targetTemperature;
@@ -123,6 +123,7 @@ namespace WPNest {
 			_nestWebService = ServiceContainer.GetService<INestWebService>();
 			_statusUpdater = ServiceContainer.GetService<StatusUpdaterService>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
+			_dialogProvider = ServiceContainer.GetService<IDialogProvider>();
 			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;
 		}
 
@@ -249,10 +250,6 @@ namespace WPNest {
 			await _statusUpdater.UpdateStatusAsync();
 		}
 
-		private Structure GetFirstStructure() {
-			return _getStatusResult.Structures.ElementAt(0);
-		}
-
 		private Thermostat GetFirstThermostat() {
 			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
 		}
@@ -274,7 +271,7 @@ namespace WPNest {
 
 		private void HandleException(string message) {
 			IsLoggingIn = false;
-			MessageBox.Show(message);
+			_dialogProvider.ShowMessageBox(message);
 			OnLoggedIn();
 		}
 

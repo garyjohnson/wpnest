@@ -18,7 +18,7 @@ namespace WPNest {
 		public App() {
 			UnhandledException += OnUnhandledException;
 
-			if(Environment.OSVersion.Version.Major > 7) {
+			if (Environment.OSVersion.Version.Major > 7) {
 				WebRequest.RegisterPrefix("http://", SharpGIS.WebRequestCreator.GZip);
 				WebRequest.RegisterPrefix("https://", SharpGIS.WebRequestCreator.GZip);
 			}
@@ -40,6 +40,7 @@ namespace WPNest {
 			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
 			ServiceContainer.RegisterService<IStatusProvider>(new DelayedStatusProvider());
 			ServiceContainer.RegisterService<StatusUpdaterService>(new StatusUpdaterService());
+			ServiceContainer.RegisterService<IDialogProvider>(new DialogProvider());
 		}
 
 		private void InitializePhoneApplication() {

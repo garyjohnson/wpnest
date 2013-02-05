@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+﻿using System;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Moq;
 using WPNest.Services;
 
@@ -8,18 +9,27 @@ namespace WPNest.Test.UnitTests {
 	public class NestViewModelTest {
 
 		private static Mock<IStatusProvider> statusProvider;
+		private static Mock<ISessionProvider> sessionProvider;
+		private static Mock<IAnalyticsService> analyticsService;
 		private static NestViewModel viewModel;
 
-		[TestInitialize]
-		public void SetUp() {
+		private static void TestInitialize() {
 			statusProvider = new Mock<IStatusProvider>();
-
+			sessionProvider = new Mock<ISessionProvider>();
+			analyticsService = new Mock<IAnalyticsService>();
 			ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
+			ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
+			ServiceContainer.RegisterService<IAnalyticsService>(analyticsService.Object);
 			viewModel = new NestViewModel();
 		}
 
 		[TestClass]
 		public class WhenStatusIsUpdated {
+
+			[TestInitialize]
+			public void SetUp() {
+				TestInitialize();
+			}
 
 			[TestMethod]
 			public void ShouldUpdateProperties() {
@@ -37,6 +47,37 @@ namespace WPNest.Test.UnitTests {
 				Assert.AreEqual(expectedStatus.FanMode, viewModel.FanMode, "Expected FanMode to update from status change.");
 				Assert.AreEqual(expectedStatus.IsCooling, viewModel.IsCooling, "Expected IsCooling to update from status change.");
 				Assert.AreEqual(expectedStatus.IsHeating, viewModel.IsHeating, "Expected IsHeating to update from status change.");
+			}
+
+			[TestMethod]
+			public void ShouldNotBeLoggedInOnInvalidCredentialsException() {
+				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.IsFalse(viewModel.IsLoggedIn);
+			}
+
+			[TestMethod]
+			public void ShouldBeIsLoggingInOnInvalidCredentialsException() {
+				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.IsTrue(viewModel.IsLoggingIn);
+			}
+
+			[TestMethod]
+			public void ShouldSetCurrentErrorToErrorOnInvalidCredentialsException() {
+				var expectedError = WebServiceError.InvalidCredentials;
+				var result = new GetThermostatStatusResult(expectedError, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.AreEqual(expectedError, viewModel.CurrentError);
 			}
 		}
 
