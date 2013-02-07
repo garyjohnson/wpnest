@@ -167,7 +167,36 @@ namespace WPNest.Test.UnitTests {
 
 				analyticsService.Verify(analytics=>analytics.LogError(expectedException));
 			}
-		}
 
+			[TestMethod]
+			public void ShouldNotBeLoggingInOnServerNotFoundException() {
+				var result = new GetThermostatStatusResult(WebServiceError.ServerNotFound, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.IsFalse(viewModel.IsLoggingIn);
+			}
+
+			[TestMethod]
+			public void ShouldShowMessageOnServerNotFoundException() {
+				var result = new GetThermostatStatusResult(WebServiceError.ServerNotFound, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				dialogProvider.Verify(provider=>provider.ShowMessageBox(It.IsRegex("Server was not found.")));
+			}
+
+			[TestMethod]
+			public void ShouldShowMessageOnAnyOtherException() {
+				var result = new GetThermostatStatusResult(WebServiceError.Unknown, new InvalidCastException());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				dialogProvider.Verify(provider=>provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
+			}
+		}
 	}
 }
