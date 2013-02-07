@@ -11,15 +11,19 @@ namespace WPNest.Test.UnitTests {
 		private static Mock<IStatusProvider> statusProvider;
 		private static Mock<ISessionProvider> sessionProvider;
 		private static Mock<IAnalyticsService> analyticsService;
+		private static Mock<IDialogProvider> dialogProvider;
 		private static NestViewModel viewModel;
 
 		private static void TestInitialize() {
 			statusProvider = new Mock<IStatusProvider>();
 			sessionProvider = new Mock<ISessionProvider>();
 			analyticsService = new Mock<IAnalyticsService>();
+			dialogProvider = new Mock<IDialogProvider>();
+
 			ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
 			ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
 			ServiceContainer.RegisterService<IAnalyticsService>(analyticsService.Object);
+			ServiceContainer.RegisterService<IDialogProvider>(dialogProvider.Object);
 			viewModel = new NestViewModel();
 		}
 
@@ -142,6 +146,27 @@ namespace WPNest.Test.UnitTests {
 				Assert.IsTrue(viewModel.IsLoggingIn);
 			}
 
+			[TestMethod]
+			public void ShouldSetCurrentErrorToErrorOnSessionTokenExpiredException() {
+				var expectedError = WebServiceError.SessionTokenExpired;
+				var result = new GetThermostatStatusResult(expectedError, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.AreEqual(expectedError, viewModel.CurrentError);
+			}
+
+			[TestMethod]
+			public void ShouldLogToAnalyticsOnException() {
+				var expectedException = new Exception();
+				var result = new GetThermostatStatusResult(WebServiceError.Unknown, expectedException);
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				analyticsService.Verify(analytics=>analytics.LogError(expectedException));
+			}
 		}
 
 	}
