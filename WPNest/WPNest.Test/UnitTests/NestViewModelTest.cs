@@ -32,20 +32,52 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public void ShouldUpdateProperties() {
+			public void ShouldUpdateTargetTemperature() {
 				var expectedStatus = new GetThermostatStatusResult();
 				expectedStatus.TargetTemperature = 48d;
-				expectedStatus.CurrentTemperature = 37d;
-				expectedStatus.FanMode = FanMode.On;
-				expectedStatus.IsCooling = true;
-				expectedStatus.IsHeating = true;
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
 
 				Assert.AreEqual(expectedStatus.TargetTemperature, viewModel.TargetTemperature, "Expected TargetTemperature to update from status change.");
+			}
+
+			[TestMethod]
+			public void ShouldUpdateCurrentTemperature() {
+				var expectedStatus = new GetThermostatStatusResult();
+				expectedStatus.CurrentTemperature = 37d;
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+
 				Assert.AreEqual(expectedStatus.CurrentTemperature, viewModel.CurrentTemperature, "Expected CurrentTemperature to update from status change.");
+			}
+
+			[TestMethod]
+			public void ShouldUpdateFanMode() {
+				var expectedStatus = new GetThermostatStatusResult();
+				expectedStatus.FanMode = FanMode.On;
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+
 				Assert.AreEqual(expectedStatus.FanMode, viewModel.FanMode, "Expected FanMode to update from status change.");
+			}
+
+			[TestMethod]
+			public void ShouldUpdateIsCooling() {
+				var expectedStatus = new GetThermostatStatusResult();
+				expectedStatus.IsCooling = true;
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+
 				Assert.AreEqual(expectedStatus.IsCooling, viewModel.IsCooling, "Expected IsCooling to update from status change.");
+			}
+
+			[TestMethod]
+			public void ShouldUpdateIsHeating() {
+				var expectedStatus = new GetThermostatStatusResult();
+				expectedStatus.IsHeating = true;
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+
 				Assert.AreEqual(expectedStatus.IsHeating, viewModel.IsHeating, "Expected IsHeating to update from status change.");
 			}
 
