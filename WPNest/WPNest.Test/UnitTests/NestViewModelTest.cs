@@ -92,7 +92,7 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public void ShouldBeIsLoggingInOnInvalidCredentialsException() {
+			public void ShouldBeLoggingInOnInvalidCredentialsException() {
 				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
 				var args = new ThermostatStatusEventArgs(result);
 
@@ -121,6 +121,27 @@ namespace WPNest.Test.UnitTests {
 
 				sessionProvider.Verify(provider => provider.ClearSession(), "Expected session to be cleared when an InvalidCredentials exception occurs.");
 			}
+
+			[TestMethod]
+			public void ShouldNotBeLoggedInOnSessionTokenExpiredException() {
+				var result = new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.IsFalse(viewModel.IsLoggedIn);
+			}
+
+			[TestMethod]
+			public void ShouldBeLoggingInOnSessionTokenExpiredException() {
+				var result = new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				Assert.IsTrue(viewModel.IsLoggingIn);
+			}
+
 		}
 
 	}

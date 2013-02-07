@@ -277,6 +277,8 @@ namespace WPNest {
 
 		private void HandleLoginException(WebServiceError error) {
 			IsLoggedIn = false;
+			// Missing test coverage. Set to false before true so UI updates. 
+			// How to test this? Or refactor out so not needed?
 			IsLoggingIn = false;
 			_sessionProvider.ClearSession();
 			CurrentError = error;
