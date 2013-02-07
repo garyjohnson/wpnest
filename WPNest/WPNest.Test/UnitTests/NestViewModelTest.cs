@@ -111,6 +111,16 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(expectedError, viewModel.CurrentError);
 			}
+
+			[TestMethod]
+			public void ShouldClearSessionOnInvalidCredentialsException() {
+				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
+				var args = new ThermostatStatusEventArgs(result);
+
+				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+
+				sessionProvider.Verify(provider => provider.ClearSession(), "Expected session to be cleared when an InvalidCredentials exception occurs.");
+			}
 		}
 
 	}
