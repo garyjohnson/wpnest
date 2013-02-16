@@ -17,6 +17,9 @@ namespace WPNest.Test.UnitTests {
 		private static Mock<INestWebService> nestWebService;
 		private static Mock<IStatusUpdaterService> statusUpdaterService;
 		private static NestViewModel viewModel;
+		private static Structure structure;
+		private static Thermostat firstThermostat;
+		private static Thermostat secondThermostat;
 
 		private static void TestInitialize() {
 			statusProvider = new Mock<IStatusProvider>();
@@ -26,9 +29,12 @@ namespace WPNest.Test.UnitTests {
 			nestWebService = new Mock<INestWebService>();
 			statusUpdaterService = new Mock<IStatusUpdaterService>();
 
-			var structure = new Structure("1");
-			structure.Thermostats.Add(new Thermostat("1"));
-			var structures = new List<Structure> {structure};
+			structure = new Structure("1");
+			firstThermostat = new Thermostat("1");
+			secondThermostat = new Thermostat("1");
+			structure.Thermostats.Add(firstThermostat);
+			structure.Thermostats.Add(secondThermostat);
+			var structures = new List<Structure> { structure };
 
 			nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
 			nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
@@ -181,7 +187,7 @@ namespace WPNest.Test.UnitTests {
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
 
-				analyticsService.Verify(analytics=>analytics.LogError(expectedException));
+				analyticsService.Verify(analytics => analytics.LogError(expectedException));
 			}
 
 			[TestMethod]
@@ -201,7 +207,7 @@ namespace WPNest.Test.UnitTests {
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
 
-				dialogProvider.Verify(provider=>provider.ShowMessageBox(It.IsRegex("Server was not found.")));
+				dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("Server was not found.")));
 			}
 
 			[TestMethod]
@@ -211,7 +217,7 @@ namespace WPNest.Test.UnitTests {
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
 
-				dialogProvider.Verify(provider=>provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
+				dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
 			}
 		}
 
@@ -255,33 +261,47 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Verify(n => n.LoginAsync(expectedUserName, expectedPassword));
 			}
+		}
+
+		[TestClass]
+		public class WhenLoggedIn {
 
 			[TestMethod]
-			public async Task ShouldNotBeLoggingInAfterLogin() {
+			public async Task ShouldNotBeLoggingIn() {
 				await viewModel.LoginAsync();
 
 				Assert.IsFalse(viewModel.IsLoggingIn);
 			}
 
 			[TestMethod]
-			public async Task ShouldUpdateTransportUrlsAfterLogin() {
+			public async Task ShouldUpdateTransportUrls() {
 				await viewModel.LoginAsync();
 
-				nestWebService.Verify(n=>n.UpdateTransportUrlAsync());
+				nestWebService.Verify(n => n.UpdateTransportUrlAsync());
 			}
 
 			[TestMethod]
-			public async Task ShouldGetStatusAfterLogin() {
+			public async Task ShouldGetStatus() {
 				await viewModel.LoginAsync();
 
-				nestWebService.Verify(n=>n.GetStatusAsync());
+				nestWebService.Verify(n => n.GetStatusAsync());
 			}
 
 			[TestMethod]
-			public async Task ShouldBeLoggedInAfterLogin() {
+			public async Task ShouldBeLoggedIn() {
 				await viewModel.LoginAsync();
 
 				Assert.IsTrue(viewModel.IsLoggedIn);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetTargetTemperatureToFirstThermostatTargetTemperature() {
+				double expectedTargetTemperature = 12.3d;
+				firstThermostat.TargetTemperature = expectedTargetTemperature;
+
+				await viewModel.LoginAsync();
+
+				Assert.AreEqual(expectedTargetTemperature, viewModel.TargetTemperature);
 			}
 		}
 	}
