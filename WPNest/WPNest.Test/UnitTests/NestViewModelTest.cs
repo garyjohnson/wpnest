@@ -389,6 +389,16 @@ namespace WPNest.Test.UnitTests {
 
 				statusProvider.Verify(s=>s.Reset());
 			}
+
+			[TestMethod]
+			public async Task ShouldIncrementTargetTemperature() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = 31.0d;
+				double expectedTemperature = viewModel.TargetTemperature + 1;
+				await viewModel.RaiseTemperatureAsync();
+
+				Assert.AreEqual(expectedTemperature, viewModel.TargetTemperature);
+			}
 		}
 	}
 }
