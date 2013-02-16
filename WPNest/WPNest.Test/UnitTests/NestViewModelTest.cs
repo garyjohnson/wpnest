@@ -230,6 +230,17 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(WebServiceError.None, viewModel.CurrentError);
 			}
+
+			[TestMethod]
+			public async Task ShouldClearLoginFields() {
+				viewModel.UserName = "Bob";
+				viewModel.Password = "Bob's Password";
+
+				await viewModel.LoginAsync();
+
+				Assert.AreEqual(string.Empty, viewModel.UserName);
+				Assert.AreEqual(string.Empty, viewModel.Password);
+			}
 		}
 	}
 }
