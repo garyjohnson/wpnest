@@ -41,6 +41,8 @@ namespace WPNest.Test.UnitTests {
 				nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
 				nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
 				nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
+				nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
+				statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
 
 				ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
 				ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
@@ -374,6 +376,18 @@ namespace WPNest.Test.UnitTests {
 				await viewModel.LoginAsync();
 
 				statusUpdaterService.Verify(s => s.Start());
+			}
+		}
+
+		[TestClass]
+		public class WhenRaisingTemperature : NestViewModelTestBase {
+			
+			[TestMethod]
+			public async Task ShouldResetStatusProvider() {
+				await viewModel.LoginAsync();
+				await viewModel.RaiseTemperatureAsync();
+
+				statusProvider.Verify(s=>s.Reset());
 			}
 		}
 	}
