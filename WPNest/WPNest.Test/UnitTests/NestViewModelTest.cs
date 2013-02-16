@@ -10,52 +10,64 @@ namespace WPNest.Test.UnitTests {
 	[TestClass]
 	public class NestViewModelTest {
 
-		private static Mock<IStatusProvider> statusProvider;
-		private static Mock<ISessionProvider> sessionProvider;
-		private static Mock<IAnalyticsService> analyticsService;
-		private static Mock<IDialogProvider> dialogProvider;
-		private static Mock<INestWebService> nestWebService;
-		private static Mock<IStatusUpdaterService> statusUpdaterService;
-		private static NestViewModel viewModel;
-		private static Structure structure;
-		private static Thermostat firstThermostat;
-		private static Thermostat secondThermostat;
-
-		private static void TestInitialize() {
-			statusProvider = new Mock<IStatusProvider>();
-			sessionProvider = new Mock<ISessionProvider>();
-			analyticsService = new Mock<IAnalyticsService>();
-			dialogProvider = new Mock<IDialogProvider>();
-			nestWebService = new Mock<INestWebService>();
-			statusUpdaterService = new Mock<IStatusUpdaterService>();
-
-			structure = new Structure("1");
-			firstThermostat = new Thermostat("1");
-			secondThermostat = new Thermostat("1");
-			structure.Thermostats.Add(firstThermostat);
-			structure.Thermostats.Add(secondThermostat);
-			var structures = new List<Structure> { structure };
-
-			nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
-			nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
-			nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
-
-			ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
-			ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
-			ServiceContainer.RegisterService<IAnalyticsService>(analyticsService.Object);
-			ServiceContainer.RegisterService<IDialogProvider>(dialogProvider.Object);
-			ServiceContainer.RegisterService<INestWebService>(nestWebService.Object);
-			ServiceContainer.RegisterService<IStatusUpdaterService>(statusUpdaterService.Object);
-			viewModel = new NestViewModel();
-		}
-
-		[TestClass]
-		public class WhenStatusIsUpdated {
+		public abstract class NestViewModelTestBase {
+			protected Mock<IStatusProvider> statusProvider;
+			protected Mock<ISessionProvider> sessionProvider;
+			protected Mock<IAnalyticsService> analyticsService;
+			protected Mock<IDialogProvider> dialogProvider;
+			protected Mock<INestWebService> nestWebService;
+			protected Mock<IStatusUpdaterService> statusUpdaterService;
+			protected NestViewModel viewModel;
+			protected Structure structure;
+			protected Thermostat firstThermostat;
+			protected Thermostat secondThermostat;
 
 			[TestInitialize]
 			public void SetUp() {
-				TestInitialize();
+				statusProvider = new Mock<IStatusProvider>();
+				sessionProvider = new Mock<ISessionProvider>();
+				analyticsService = new Mock<IAnalyticsService>();
+				dialogProvider = new Mock<IDialogProvider>();
+				nestWebService = new Mock<INestWebService>();
+				statusUpdaterService = new Mock<IStatusUpdaterService>();
+
+				structure = new Structure("1");
+				firstThermostat = new Thermostat("1");
+				secondThermostat = new Thermostat("1");
+				structure.Thermostats.Add(firstThermostat);
+				structure.Thermostats.Add(secondThermostat);
+				var structures = new List<Structure> { structure };
+
+				nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
+				nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
+				nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
+
+				ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
+				ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
+				ServiceContainer.RegisterService<IAnalyticsService>(analyticsService.Object);
+				ServiceContainer.RegisterService<IDialogProvider>(dialogProvider.Object);
+				ServiceContainer.RegisterService<INestWebService>(nestWebService.Object);
+				ServiceContainer.RegisterService<IStatusUpdaterService>(statusUpdaterService.Object);
+				viewModel = new NestViewModel();
 			}
+
+			[TestCleanup]
+			public void TearDown() {
+				statusProvider = null;
+				sessionProvider = null;
+				analyticsService = null;
+				dialogProvider = null;
+				nestWebService = null;
+				statusUpdaterService = null;
+				viewModel = null;
+				structure = null;
+				firstThermostat = null;
+				secondThermostat = null;
+			}
+		}
+
+		[TestClass]
+		public class WhenStatusIsUpdated : NestViewModelTestBase {
 
 			[TestMethod]
 			public void ShouldUpdateTargetTemperature() {
@@ -222,12 +234,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenLoggingIn {
-
-			[TestInitialize]
-			public void SetUp() {
-				TestInitialize();
-			}
+		public class WhenLoggingIn : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldResetCurrentError() {
@@ -264,7 +271,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenLoggedIn {
+		public class WhenLoggedIn : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldNotBeLoggingIn() {
@@ -311,7 +318,7 @@ namespace WPNest.Test.UnitTests {
 
 				await viewModel.LoginAsync();
 
-				Assert.AreEqual(expectedCurrentTemperature, viewModel.TargetTemperature);
+				Assert.AreEqual(expectedCurrentTemperature, viewModel.CurrentTemperature);
 			}
 
 			[TestMethod]
@@ -355,7 +362,18 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldStartStatusUpdater() {
 				await viewModel.LoginAsync();
 
-				statusUpdaterService.Verify(s=>s.Start());
+				statusUpdaterService.Verify(s => s.Start());
+			}
+		}
+
+		[TestClass]
+		public class WhenTearingDown : NestViewModelTestBase {
+
+			[TestMethod]
+			public async Task ShouldStartStatusUpdater() {
+				await viewModel.LoginAsync();
+
+				statusUpdaterService.Verify(s => s.Start());
 			}
 		}
 	}
