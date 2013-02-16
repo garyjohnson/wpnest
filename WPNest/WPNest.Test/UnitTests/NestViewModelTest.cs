@@ -381,13 +381,13 @@ namespace WPNest.Test.UnitTests {
 
 		[TestClass]
 		public class WhenRaisingTemperature : NestViewModelTestBase {
-			
+
 			[TestMethod]
 			public async Task ShouldResetStatusProvider() {
 				await viewModel.LoginAsync();
 				await viewModel.RaiseTemperatureAsync();
 
-				statusProvider.Verify(s=>s.Reset());
+				statusProvider.Verify(s => s.Reset());
 			}
 
 			[TestMethod]
@@ -398,6 +398,16 @@ namespace WPNest.Test.UnitTests {
 				await viewModel.RaiseTemperatureAsync();
 
 				Assert.AreEqual(expectedTemperature, viewModel.TargetTemperature);
+			}
+
+			[TestMethod]
+			public async Task ShouldChangedTemperatureOnFirstThermostatToIncrementedTemp() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = 31.0d;
+				double expectedTemperature = viewModel.TargetTemperature + 1;
+				await viewModel.RaiseTemperatureAsync();
+
+				nestWebService.Verify(n => n.ChangeTemperatureAsync(firstThermostat, expectedTemperature));
 			}
 		}
 	}
