@@ -30,6 +30,7 @@ namespace WPNest.Test.UnitTests {
 			structure.Thermostats.Add(new Thermostat("1"));
 			var structures = new List<Structure> {structure};
 
+			nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
 			nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
 			nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
 
@@ -240,6 +241,19 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(string.Empty, viewModel.UserName);
 				Assert.AreEqual(string.Empty, viewModel.Password);
+			}
+
+			[TestMethod]
+			public async Task ShouldLoginWithCredentialsIfSessionExpired() {
+				string expectedUserName = "Bob";
+				string expectedPassword = "Bob's Password";
+				sessionProvider.SetupGet(s => s.IsSessionExpired).Returns(true);
+				viewModel.UserName = expectedUserName;
+				viewModel.Password = expectedPassword;
+
+				await viewModel.LoginAsync();
+
+				nestWebService.Verify(n => n.LoginAsync(expectedUserName, expectedPassword));
 			}
 		}
 	}
