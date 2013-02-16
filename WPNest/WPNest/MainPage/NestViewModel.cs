@@ -8,8 +8,8 @@ namespace WPNest {
 
 	public class NestViewModel : INotifyPropertyChanged {
 
-		private const double MinTemperature = 50.0d;
-		private const double MaxTemperature = 90.0d;
+		internal const double MinTemperature = 50.0d;
+		internal const double MaxTemperature = 90.0d;
 
 		private readonly IStatusProvider _statusProvider;
 		private readonly ISessionProvider _sessionProvider;

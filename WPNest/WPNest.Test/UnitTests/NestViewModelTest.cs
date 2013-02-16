@@ -409,6 +409,36 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Verify(n => n.ChangeTemperatureAsync(firstThermostat, expectedTemperature));
 			}
+
+			[TestMethod]
+			public async Task ShouldNotChangeTemperatureIfTargetTemperatureIsAtMaxiumum() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await viewModel.RaiseTemperatureAsync();
+
+				nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()), 
+					Times.Never(), "Expected ChangeTemperature to not be called.");
+			}
+
+			[TestMethod]
+			public async Task ShouldUpdateStatus() {
+				await viewModel.LoginAsync();
+				await viewModel.RaiseTemperatureAsync();
+
+				statusUpdaterService.Verify(s=>s.UpdateStatusAsync());
+			}
+
+			[TestMethod]
+			public async Task ShouldNotUpdateStatusIfChangeTemperatureFails() {
+				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
+				nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
+					.Returns(Task.FromResult(result));
+				await viewModel.LoginAsync();
+
+				await viewModel.RaiseTemperatureAsync();
+
+				statusUpdaterService.Verify(s=>s.UpdateStatusAsync(), Times.Never());
+			}
 		}
 	}
 }
