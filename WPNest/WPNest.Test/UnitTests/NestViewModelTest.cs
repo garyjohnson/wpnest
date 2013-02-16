@@ -313,6 +313,16 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(expectedCurrentTemperature, viewModel.TargetTemperature);
 			}
+
+			[TestMethod]
+			public async Task ShouldSetIsHeatingToFirstThermostatIsHeating() {
+				bool expectedIsHeating = true;
+				firstThermostat.IsHeating = expectedIsHeating;
+
+				await viewModel.LoginAsync();
+
+				Assert.AreEqual(expectedIsHeating, viewModel.IsHeating);
+			}
 		}
 	}
 }
