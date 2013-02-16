@@ -343,6 +343,13 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(expectedFanMode, viewModel.FanMode);
 			}
+
+			[TestMethod]
+			public async Task ShouldSetStatusUpdaterCurrentThermostatToFirstThermostat() {
+				await viewModel.LoginAsync();
+
+				statusUpdaterService.VerifySet(s => s.CurrentThermostat = firstThermostat);
+			}
 		}
 	}
 }
