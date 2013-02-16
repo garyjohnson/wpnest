@@ -350,6 +350,13 @@ namespace WPNest.Test.UnitTests {
 
 				statusUpdaterService.VerifySet(s => s.CurrentThermostat = firstThermostat);
 			}
+
+			[TestMethod]
+			public async Task ShouldStartStatusUpdater() {
+				await viewModel.LoginAsync();
+
+				statusUpdaterService.Verify(s=>s.Start());
+			}
 		}
 	}
 }
