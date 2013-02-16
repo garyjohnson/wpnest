@@ -324,7 +324,7 @@ namespace WPNest.Test.UnitTests {
 				Assert.AreEqual(expectedIsHeating, viewModel.IsHeating);
 			}
 
-		[TestMethod]
+			[TestMethod]
 			public async Task ShouldSetIsCoolingToFirstThermostatIsCooling() {
 				bool expectedIsCooling = true;
 				firstThermostat.IsCooling = expectedIsCooling;
@@ -332,6 +332,16 @@ namespace WPNest.Test.UnitTests {
 				await viewModel.LoginAsync();
 
 				Assert.AreEqual(expectedIsCooling, viewModel.IsCooling);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetFanModeToFirstThermostatFanMode() {
+				var expectedFanMode = FanMode.On;
+				firstThermostat.FanMode = expectedFanMode;
+
+				await viewModel.LoginAsync();
+
+				Assert.AreEqual(expectedFanMode, viewModel.FanMode);
 			}
 		}
 	}
