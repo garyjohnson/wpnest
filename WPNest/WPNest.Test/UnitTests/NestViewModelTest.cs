@@ -269,6 +269,13 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Verify(n=>n.UpdateTransportUrlAsync());
 			}
+
+			[TestMethod]
+			public async Task ShouldGetStatusAfterLogin() {
+				await viewModel.LoginAsync();
+
+				nestWebService.Verify(n=>n.GetStatusAsync());
+			}
 		}
 	}
 }
