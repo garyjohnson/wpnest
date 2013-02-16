@@ -255,6 +255,13 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Verify(n => n.LoginAsync(expectedUserName, expectedPassword));
 			}
+
+			[TestMethod]
+			public async Task ShouldNotBeLoggingInAfterLogin() {
+				await viewModel.LoginAsync();
+
+				Assert.IsFalse(viewModel.IsLoggingIn);
+			}
 		}
 	}
 }
