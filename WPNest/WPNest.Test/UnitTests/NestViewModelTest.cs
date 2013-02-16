@@ -303,6 +303,16 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(expectedTargetTemperature, viewModel.TargetTemperature);
 			}
+
+			[TestMethod]
+			public async Task ShouldSetCurrentTemperatureToFirstThermostatCurrentTemperature() {
+				double expectedCurrentTemperature = 12.3d;
+				firstThermostat.CurrentTemperature = expectedCurrentTemperature;
+
+				await viewModel.LoginAsync();
+
+				Assert.AreEqual(expectedCurrentTemperature, viewModel.TargetTemperature);
+			}
 		}
 	}
 }
