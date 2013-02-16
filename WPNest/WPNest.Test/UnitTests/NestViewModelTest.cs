@@ -537,6 +537,36 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Verify(n=>n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()));
 			}
+
+			[TestMethod]
+			public async Task ShouldUpdateStatus() {
+				await viewModel.LoginAsync();
+
+				viewModel.FanMode = FanMode.Auto;
+
+				statusUpdaterService.Verify(s=>s.UpdateStatusAsync());
+			}
+
+			[TestMethod]
+			public async Task ShouldNotUpdateStatusIfSetFanModeFails() {
+				var errorResult = new WebServiceResult(WebServiceError.Unknown, new Exception());
+				nestWebService.Setup(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(errorResult));
+				await viewModel.LoginAsync();
+
+				viewModel.FanMode = FanMode.Auto;
+
+				statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
+			}
+
+			[TestMethod]
+			public async Task ShouldNotSetFanModeIfFanModeDidNotChange() {
+				await viewModel.LoginAsync();
+
+				viewModel.FanMode = viewModel.FanMode;
+
+				nestWebService.Verify(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()), 
+					Times.Never());
+			}
 		}
 	}
 }
