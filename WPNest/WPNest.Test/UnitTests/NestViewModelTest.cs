@@ -528,6 +528,15 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(expectedFanMode, firstThermostat.FanMode);
 			}
+
+			[TestMethod]
+			public async Task ShouldSetFanModeOnWebService() {
+				await viewModel.LoginAsync();
+
+				viewModel.FanMode = FanMode.Auto;
+
+				nestWebService.Verify(n=>n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()));
+			}
 		}
 	}
 }
