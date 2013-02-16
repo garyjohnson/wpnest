@@ -276,6 +276,13 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Verify(n=>n.GetStatusAsync());
 			}
+
+			[TestMethod]
+			public async Task ShouldBeLoggedInAfterLogin() {
+				await viewModel.LoginAsync();
+
+				Assert.IsTrue(viewModel.IsLoggedIn);
+			}
 		}
 	}
 }
