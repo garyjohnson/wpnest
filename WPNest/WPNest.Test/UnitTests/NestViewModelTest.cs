@@ -416,7 +416,7 @@ namespace WPNest.Test.UnitTests {
 				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				await viewModel.RaiseTemperatureAsync();
 
-				nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()), 
+				nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
 					Times.Never(), "Expected ChangeTemperature to not be called.");
 			}
 
@@ -425,7 +425,7 @@ namespace WPNest.Test.UnitTests {
 				await viewModel.LoginAsync();
 				await viewModel.RaiseTemperatureAsync();
 
-				statusUpdaterService.Verify(s=>s.UpdateStatusAsync());
+				statusUpdaterService.Verify(s => s.UpdateStatusAsync());
 			}
 
 			[TestMethod]
@@ -437,7 +437,85 @@ namespace WPNest.Test.UnitTests {
 
 				await viewModel.RaiseTemperatureAsync();
 
-				statusUpdaterService.Verify(s=>s.UpdateStatusAsync(), Times.Never());
+				statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
+			}
+		}
+
+		[TestClass]
+		public class WhenLoweringTemperature : NestViewModelTestBase {
+
+			[TestMethod]
+			public async Task ShouldResetStatusProvider() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await viewModel.LowerTemperatureAsync();
+
+				statusProvider.Verify(s => s.Reset());
+			}
+
+			[TestMethod]
+			public async Task ShouldDecrementTargetTemperature() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				double expectedTemperature = viewModel.TargetTemperature - 1;
+				await viewModel.LowerTemperatureAsync();
+
+				Assert.AreEqual(expectedTemperature, viewModel.TargetTemperature);
+			}
+
+			[TestMethod]
+			public async Task ShouldChangeTemperatureOnFirstThermostatToDecrementedTemp() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				double expectedTemperature = viewModel.TargetTemperature - 1;
+				await viewModel.LowerTemperatureAsync();
+
+				nestWebService.Verify(n => n.ChangeTemperatureAsync(firstThermostat, expectedTemperature));
+			}
+
+			[TestMethod]
+			public async Task ShouldNotChangeTemperatureIfTargetTemperatureIsAtMinimum() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MinTemperature;
+				await viewModel.LowerTemperatureAsync();
+
+				nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
+					Times.Never(), "Expected ChangeTemperature to not be called.");
+			}
+
+			[TestMethod]
+			public async Task ShouldUpdateStatus() {
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await viewModel.LowerTemperatureAsync();
+
+				statusUpdaterService.Verify(s => s.UpdateStatusAsync());
+			}
+
+			[TestMethod]
+			public async Task ShouldNotUpdateStatusIfChangeTemperatureFails() {
+				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
+				nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
+					.Returns(Task.FromResult(result));
+				await viewModel.LoginAsync();
+				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+
+				await viewModel.LowerTemperatureAsync();
+
+				statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
+			}
+		}
+
+		[TestClass]
+		public class WhenSettingFanMode : NestViewModelTestBase {
+
+			[TestMethod]
+			public async Task ShouldResetStatusProviderOnSetFanMode() {
+				await viewModel.LoginAsync();
+
+				viewModel.FanMode = FanMode.Auto;
+
+				statusProvider.Verify(s => s.Reset());
 			}
 		}
 	}
