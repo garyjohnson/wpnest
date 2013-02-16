@@ -42,6 +42,7 @@ namespace WPNest.Test.UnitTests {
 				nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
 				nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
 				nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
+				nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
 				statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
 
 				ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
@@ -516,6 +517,16 @@ namespace WPNest.Test.UnitTests {
 				viewModel.FanMode = FanMode.Auto;
 
 				statusProvider.Verify(s => s.Reset());
+			}
+
+			[TestMethod]
+			public async Task ShouldSetFanModeOnFirstThermostat() {
+				await viewModel.LoginAsync();
+
+				var expectedFanMode = FanMode.Auto;
+				viewModel.FanMode = expectedFanMode;
+
+				Assert.AreEqual(expectedFanMode, firstThermostat.FanMode);
 			}
 		}
 	}
