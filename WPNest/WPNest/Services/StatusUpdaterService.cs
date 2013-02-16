@@ -3,12 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace WPNest.Services {
-	internal interface IStatusUpdaterService {
-		Thermostat CurrentThermostat { get; set; }
-		void Start();
-		void Stop();
-		Task UpdateStatusAsync();
-	}
 
 	internal class StatusUpdaterService : IStatusUpdaterService {
 

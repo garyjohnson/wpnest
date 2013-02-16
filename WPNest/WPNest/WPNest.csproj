@@ -144,6 +144,7 @@
     <Compile Include="Services\DialogProvider.cs" />
     <Compile Include="Services\IDialogProvider.cs" />
     <Compile Include="Services\INestWebService2.cs" />
+    <Compile Include="Services\IStatusUpdaterService.cs" />
     <Compile Include="Services\NestWebService2.cs" />
     <Compile Include="Services\DelayedStatusProvider.cs" />
     <Compile Include="Services\GetStatusResult.cs" />

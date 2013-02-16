@@ -39,7 +39,7 @@ namespace WPNest {
 			ServiceContainer.RegisterService<ISessionProvider>(new SessionProvider());
 			ServiceContainer.RegisterService<INestWebService>(new NestWebService());
 			ServiceContainer.RegisterService<IStatusProvider>(new DelayedStatusProvider());
-			ServiceContainer.RegisterService<StatusUpdaterService>(new StatusUpdaterService());
+			ServiceContainer.RegisterService<IStatusUpdaterService>(new StatusUpdaterService());
 			ServiceContainer.RegisterService<IDialogProvider>(new DialogProvider());
 		}
 

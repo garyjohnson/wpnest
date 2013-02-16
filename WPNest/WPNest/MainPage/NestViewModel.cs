@@ -14,7 +14,7 @@ namespace WPNest {
 		private readonly IStatusProvider _statusProvider;
 		private readonly ISessionProvider _sessionProvider;
 		private readonly INestWebService _nestWebService;
-		private readonly StatusUpdaterService _statusUpdater;
+		private readonly IStatusUpdaterService _statusUpdater;
 		private readonly IAnalyticsService _analyticsService;
 		private readonly IDialogProvider _dialogProvider;
 		private GetStatusResult _getStatusResult;
@@ -121,7 +121,7 @@ namespace WPNest {
 			_statusProvider = ServiceContainer.GetService<IStatusProvider>();
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			_nestWebService = ServiceContainer.GetService<INestWebService>();
-			_statusUpdater = ServiceContainer.GetService<StatusUpdaterService>();
+			_statusUpdater = ServiceContainer.GetService<IStatusUpdaterService>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
 			_dialogProvider = ServiceContainer.GetService<IDialogProvider>();
 			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;

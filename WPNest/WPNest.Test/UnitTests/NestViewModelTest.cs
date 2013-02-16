@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Moq;
 using WPNest.Services;
@@ -12,6 +14,8 @@ namespace WPNest.Test.UnitTests {
 		private static Mock<ISessionProvider> sessionProvider;
 		private static Mock<IAnalyticsService> analyticsService;
 		private static Mock<IDialogProvider> dialogProvider;
+		private static Mock<INestWebService> nestWebService;
+		private static Mock<IStatusUpdaterService> statusUpdaterService;
 		private static NestViewModel viewModel;
 
 		private static void TestInitialize() {
@@ -19,11 +23,22 @@ namespace WPNest.Test.UnitTests {
 			sessionProvider = new Mock<ISessionProvider>();
 			analyticsService = new Mock<IAnalyticsService>();
 			dialogProvider = new Mock<IDialogProvider>();
+			nestWebService = new Mock<INestWebService>();
+			statusUpdaterService = new Mock<IStatusUpdaterService>();
+
+			var structure = new Structure("1");
+			structure.Thermostats.Add(new Thermostat("1"));
+			var structures = new List<Structure> {structure};
+
+			nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
+			nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
 
 			ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
 			ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
 			ServiceContainer.RegisterService<IAnalyticsService>(analyticsService.Object);
 			ServiceContainer.RegisterService<IDialogProvider>(dialogProvider.Object);
+			ServiceContainer.RegisterService<INestWebService>(nestWebService.Object);
+			ServiceContainer.RegisterService<IStatusUpdaterService>(statusUpdaterService.Object);
 			viewModel = new NestViewModel();
 		}
 
@@ -196,6 +211,24 @@ namespace WPNest.Test.UnitTests {
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
 
 				dialogProvider.Verify(provider=>provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
+			}
+		}
+
+		[TestClass]
+		public class WhenLoggingIn {
+
+			[TestInitialize]
+			public void SetUp() {
+				TestInitialize();
+			}
+
+			[TestMethod]
+			public async Task ShouldResetCurrentError() {
+				viewModel.CurrentError = WebServiceError.InvalidCredentials;
+
+				await viewModel.LoginAsync();
+
+				Assert.AreEqual(WebServiceError.None, viewModel.CurrentError);
 			}
 		}
 	}
