@@ -14,7 +14,6 @@ namespace WPNest.Services {
 			get { return IsolatedStorageSettings.ApplicationSettings; }
 		}
 
-
 		public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
 			return SettingsDictionary.GetEnumerator();
 		}

@@ -138,9 +138,6 @@
     <Compile Include="..\WPNest\Services\AnalyticsService.cs">
       <Link>Services\AnalyticsService.cs</Link>
     </Compile>
-    <Compile Include="..\WPNest\Services\ContentType.cs">
-      <Link>Services\ContentType.cs</Link>
-    </Compile>
     <Compile Include="..\WPNest\Services\DelayedStatusProvider.cs">
       <Link>Services\DelayedStatusProvider.cs</Link>
     </Compile>
@@ -162,9 +159,6 @@
     <Compile Include="..\WPNest\Services\INestWebService.cs">
       <Link>Services\INestWebService.cs</Link>
     </Compile>
-    <Compile Include="..\WPNest\Services\INestWebService2.cs">
-      <Link>Services\INestWebService2.cs</Link>
-    </Compile>
     <Compile Include="..\WPNest\Services\ISessionProvider.cs">
       <Link>Services\ISessionProvider.cs</Link>
     </Compile>
@@ -177,14 +171,14 @@
     <Compile Include="..\WPNest\Services\IStatusUpdaterService.cs">
       <Link>Services\IStatusUpdaterService.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\IWebRequestProvider.cs">
+      <Link>Services\IWebRequestProvider.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\LoginResult.cs">
       <Link>Services\LoginResult.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\Services\NestWebService.cs">
       <Link>Services\NestWebService.cs</Link>
-    </Compile>
-    <Compile Include="..\WPNest\Services\NestWebService2.cs">
-      <Link>Services\NestWebService2.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\Services\SessionExpiredException.cs">
       <Link>Services\SessionExpiredException.cs</Link>
@@ -201,6 +195,9 @@
     <Compile Include="..\WPNest\Services\ThermostatStatusEventArgs.cs">
       <Link>Services\ThermostatStatusEventArgs.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\WebRequestProvider.cs">
+      <Link>Services\WebRequestProvider.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\WebServiceError.cs">
       <Link>Services\WebServiceError.cs</Link>
     </Compile>
@@ -210,6 +207,21 @@
     <Compile Include="..\WPNest\Services\WebServiceResult.cs">
       <Link>Services\WebServiceResult.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Web\ContentType.cs">
+      <Link>Web\ContentType.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\IWebRequest.cs">
+      <Link>Web\IWebRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\IWebResponse.cs">
+      <Link>Web\IWebResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\WebRequestWrapper.cs">
+      <Link>Web\WebRequestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\WebResponseWrapper.cs">
+      <Link>Web\WebResponseWrapper.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -217,7 +229,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mocks\MockNestWebService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -300,6 +311,9 @@
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2012.10.30\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\WPNest\Bin\Debug\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.12-beta\lib\wp8\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -321,6 +335,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

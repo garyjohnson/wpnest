@@ -1,55 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using WPNest.Web;
 
 namespace WPNest {
 
 	public static class ExtensionMethods {
 
-		public static void SetRequestStringAndThenExecute(this WebRequest request, string requestString, object userState, Action<WebRequest, object> onCompleted) {
-			var state = new Dictionary<string, object> {
-				            {"request", request},
-				            {"userState", userState},
-				            {"onCompleted", onCompleted},
-							{"requestString", requestString}};
-
-			request.BeginGetRequestStream(ContinueSetRequestString, state);
-		}
-
-		private static void ContinueSetRequestString(IAsyncResult result) {
-			var state = (Dictionary<string, object>)result.AsyncState;
-			var request = (WebRequest)state["request"];
-			var userState = state["userState"];
-			var onCompleted = (Action<WebRequest, object>)state["onCompleted"];
-			var requestString = (string)state["requestString"];
-
-			using (Stream stream = request.EndGetRequestStream(result)) {
-				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
-				stream.Write(encodedRequestString, 0, encodedRequestString.Length);
-			}
-
-			onCompleted(request, userState);
-		}
-
-		public static async Task SetRequestStringAsync(this WebRequest request, string requestString) {
+		public static async Task SetRequestStringAsync(this IWebRequest request, string requestString) {
 			using (Stream stream = await request.GetRequestStreamAsync()) {
 				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
 				await stream.WriteAsync(encodedRequestString, 0, encodedRequestString.Length);
 			}
 		}
 
-		public static async Task<string> GetResponseStringAsync(this WebRequest request) {
-			WebResponse response = await request.GetResponseAsync();
+		public static async Task<string> GetResponseStringAsync(this IWebRequest request) {
+			IWebResponse response = await request.GetResponseAsync();
 			Stream responseStream = response.GetResponseStream();
 			using (var streamReader = new StreamReader(responseStream)) {
 				return streamReader.ReadToEnd();
 			}
 		}
 
-		public static string GetResponseString(this WebResponse response) {
+		public static string GetResponseString(this IWebResponse response) {
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
 			using (var sr = new StreamReader(responseStream)) {
@@ -60,20 +34,15 @@ namespace WPNest {
 		}
 
 		public static async Task<string> GetResponseStringAsync(this WebResponse response) {
+			var wrapper = new WebResponseWrapper(response);
+			return await wrapper.GetResponseStringAsync();
+		}
+
+		public static async Task<string> GetResponseStringAsync(this IWebResponse response) {
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
 			using (var sr = new StreamReader(responseStream)) {
-//				var builder = new StringBuilder();
-//				var buffer = new char[128];
-//				while(!sr.EndOfStream) {
-//					sr.Read(buffer, 0, 128);
-////					await sr.ReadAsync(buffer, 0, 128);
-//					builder.Append(buffer);
-//					buffer = new char[128];
-//				}
-					
 				strContent = await sr.ReadToEndAsync();
-//				strContent = builder.ToString();
 			}
 
 			return strContent;

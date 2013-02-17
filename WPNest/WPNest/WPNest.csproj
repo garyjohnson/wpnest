@@ -140,12 +140,12 @@
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AnalyticsService.cs" />
-    <Compile Include="Services\ContentType.cs" />
+    <Compile Include="Services\IWebRequestProvider.cs" />
+    <Compile Include="Services\WebRequestProvider.cs" />
+    <Compile Include="Web\ContentType.cs" />
     <Compile Include="Services\DialogProvider.cs" />
     <Compile Include="Services\IDialogProvider.cs" />
-    <Compile Include="Services\INestWebService2.cs" />
     <Compile Include="Services\IStatusUpdaterService.cs" />
-    <Compile Include="Services\NestWebService2.cs" />
     <Compile Include="Services\DelayedStatusProvider.cs" />
     <Compile Include="Services\GetStatusResult.cs" />
     <Compile Include="Services\GetThermostatStatusResult.cs" />
@@ -171,6 +171,10 @@
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage\TrueToVisibleConverter.cs" />
+    <Compile Include="Web\IWebRequest.cs" />
+    <Compile Include="Web\IWebResponse.cs" />
+    <Compile Include="Web\WebRequestWrapper.cs" />
+    <Compile Include="Web\WebResponseWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

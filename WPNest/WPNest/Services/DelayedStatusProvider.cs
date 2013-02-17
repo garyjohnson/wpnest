@@ -38,10 +38,7 @@ namespace WPNest.Services {
 					}
 				});
 			}
-			catch (NullReferenceException ex) {
-//				Debugger.Break();
-//				ex.ToString();
-			}
+			catch (NullReferenceException) {}
 		}
 
 		private void StartDisplayCachedStatusTimer() {

@@ -1,5 +1,5 @@
 ﻿
-namespace WPNest.Services {
+namespace WPNest.Web {
 
 	public static class ContentType {
 

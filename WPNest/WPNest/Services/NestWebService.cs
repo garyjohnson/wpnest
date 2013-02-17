@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using WPNest.Web;
 
 namespace WPNest.Services {
 
@@ -11,20 +12,22 @@ namespace WPNest.Services {
 
 		private ISessionProvider _sessionProvider;
 		private IAnalyticsService _analyticsService;
+		private IWebRequestProvider _webRequestProvider;
 
 		public NestWebService() {
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
+			_webRequestProvider = ServiceContainer.GetService<IWebRequestProvider>();
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
-			WebRequest request = GetPostFormRequest("https://home.nest.com/user/login");
+			IWebRequest request = GetPostFormRequest("https://home.nest.com/user/login");
 			string requestString = string.Format("username={0}&password={1}", UrlEncode(userName), UrlEncode(password));
 			await request.SetRequestStringAsync(requestString);
 			Exception exception;
 
 			try {
-				WebResponse response = await request.GetResponseAsync();
+				IWebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
 				CacheSession(responseString);
 				return new WebServiceResult();
@@ -47,7 +50,7 @@ namespace WPNest.Services {
 			Exception exception = null;
 
 			try {
-				WebResponse response = await request.GetResponseAsync();
+				IWebResponse response = await request.GetResponseAsync();
 				string responseString = await response.GetResponseStringAsync();
 				return ParseGetStatusResult(responseString, _sessionProvider.UserId);
 			}
@@ -63,7 +66,7 @@ namespace WPNest.Services {
 			if (_sessionProvider.IsSessionExpired)
 				return new GetStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
-			WebRequest request = GetPostJsonRequest(url);
+			IWebRequest request = GetPostJsonRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
@@ -90,12 +93,12 @@ namespace WPNest.Services {
 		}
 
 		public async Task<WebServiceResult> UpdateTransportUrlAsync() {
-			WebRequest request = GetPostJsonRequest("https://home.nest.com/user/service_urls");
+			IWebRequest request = GetPostJsonRequest("https://home.nest.com/user/service_urls");
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 
 			Exception exception = null;
 			try {
-				WebResponse response = await request.GetResponseAsync();
+				IWebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
 				var jsonResult = ParseAsJsonOrNull(strContent);
 				var transportUrl = jsonResult["urls"]["transport_url"].Value<string>();
@@ -149,7 +152,7 @@ namespace WPNest.Services {
 
 		private async Task<GetThermostatStatusResult> GetDeviceThermostatPropertiesAsync(Thermostat thermostat, GetThermostatStatusResult result) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
-			WebRequest request = GetPostJsonRequest(url);
+			IWebRequest request = GetPostJsonRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"device.{0}\"}}]}}", thermostat.ID);
@@ -157,7 +160,7 @@ namespace WPNest.Services {
 
 			Exception exception;
 			try {
-				WebResponse response = await request.GetResponseAsync();
+				IWebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
 				var values = JObject.Parse(strContent);
 				result.FanMode = GetFanModeFromString(values["fan_mode"].Value<string>());
@@ -173,7 +176,7 @@ namespace WPNest.Services {
 
 		private async Task<GetThermostatStatusResult> GetSharedThermostatPropertiesAsync(Thermostat thermostat) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
-			WebRequest request = GetPostJsonRequest(url);
+			IWebRequest request = GetPostJsonRequest(url);
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"shared.{0}\"}}]}}", thermostat.ID);
@@ -181,7 +184,7 @@ namespace WPNest.Services {
 
 			Exception exception;
 			try {
-				WebResponse response = await request.GetResponseAsync();
+				IWebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
 				return ParseGetTemperatureResult(strContent);
 			}
@@ -273,7 +276,7 @@ namespace WPNest.Services {
 			int deviceCount = 0;
 			foreach (var structureResult in structureResults) {
 				var structure = values["structure"][structureResult.ID];
-				var devices = values["structure"][structureResult.ID]["devices"];
+				var devices = structure["devices"];
 				foreach (var device in devices) {
 					deviceCount++;
 					string thermostatId = device.Value<string>().Replace("device.", "");
@@ -300,21 +303,21 @@ namespace WPNest.Services {
 			return new GetStatusResult(structureResults);
 		}
 
-		private static WebRequest GetGetRequest(string url) {
-			WebRequest request = WebRequest.Create(new Uri(url));
+		private IWebRequest GetGetRequest(string url) {
+			IWebRequest request = _webRequestProvider.CreateRequest(new Uri(url));
 			request.Method = "GET";
 			return request;
 		}
 
-		private static WebRequest GetPostFormRequest(string url) {
-			WebRequest request = WebRequest.Create(new Uri(url));
+		private IWebRequest GetPostFormRequest(string url) {
+			IWebRequest request = _webRequestProvider.CreateRequest(new Uri(url));
 			request.ContentType = ContentType.Form;
 			request.Method = "POST";
 			return request;
 		}
 
-		private static WebRequest GetPostJsonRequest(string url) {
-			WebRequest request = WebRequest.Create(new Uri(url));
+		private IWebRequest GetPostJsonRequest(string url) {
+			IWebRequest request = _webRequestProvider.CreateRequest(new Uri(url));
 			request.ContentType = ContentType.Json;
 			request.Method = "POST";
 			return request;
@@ -334,11 +337,11 @@ namespace WPNest.Services {
 			return HttpUtility.UrlEncode(value);
 		}
 
-		private static void SetAuthorizationHeaderOnRequest(WebRequest request, string accessToken) {
+		private static void SetAuthorizationHeaderOnRequest(IWebRequest request, string accessToken) {
 			request.Headers["Authorization"] = string.Format("Basic {0}", accessToken);
 		}
 
-		private static void SetNestHeadersOnRequest(WebRequest request, string userId) {
+		private static void SetNestHeadersOnRequest(IWebRequest request, string userId) {
 			request.Headers["X-nl-protocol-version"] = "1";
 			request.Headers["X-nl-user-id"] = userId;
 		}
