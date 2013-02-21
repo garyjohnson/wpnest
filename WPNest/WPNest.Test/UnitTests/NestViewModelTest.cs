@@ -74,52 +74,53 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public void ShouldUpdateTargetTemperature() {
-				var expectedStatus = new GetThermostatStatusResult();
-				expectedStatus.TargetTemperature = 48d;
+				var thermostat = new Thermostat("") {TargetTemperature = 48d};
+				var expectedStatus = new GetThermostatStatusResult(thermostat);
+				expectedStatus.Thermostat.TargetTemperature = 48d;
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
 
-				Assert.AreEqual(expectedStatus.TargetTemperature, viewModel.TargetTemperature, "Expected TargetTemperature to update from status change.");
+				Assert.AreEqual(expectedStatus.Thermostat.TargetTemperature, viewModel.TargetTemperature, "Expected TargetTemperature to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateCurrentTemperature() {
-				var expectedStatus = new GetThermostatStatusResult();
-				expectedStatus.CurrentTemperature = 37d;
+				var thermostat = new Thermostat("") {CurrentTemperature = 37d};
+				var expectedStatus = new GetThermostatStatusResult(thermostat);
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
 
-				Assert.AreEqual(expectedStatus.CurrentTemperature, viewModel.CurrentTemperature, "Expected CurrentTemperature to update from status change.");
+				Assert.AreEqual(expectedStatus.Thermostat.CurrentTemperature, viewModel.CurrentTemperature, "Expected CurrentTemperature to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateFanMode() {
-				var expectedStatus = new GetThermostatStatusResult();
-				expectedStatus.FanMode = FanMode.On;
+				var thermostat = new Thermostat("") {FanMode = FanMode.On};
+				var expectedStatus = new GetThermostatStatusResult(thermostat);
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
 
-				Assert.AreEqual(expectedStatus.FanMode, viewModel.FanMode, "Expected FanMode to update from status change.");
+				Assert.AreEqual(expectedStatus.Thermostat.FanMode, viewModel.FanMode, "Expected FanMode to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateIsCooling() {
-				var expectedStatus = new GetThermostatStatusResult();
-				expectedStatus.IsCooling = true;
+				var thermostat = new Thermostat("") {IsCooling = true};
+				var expectedStatus = new GetThermostatStatusResult(thermostat);
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
 
-				Assert.AreEqual(expectedStatus.IsCooling, viewModel.IsCooling, "Expected IsCooling to update from status change.");
+				Assert.AreEqual(expectedStatus.Thermostat.IsCooling, viewModel.IsCooling, "Expected IsCooling to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateIsHeating() {
-				var expectedStatus = new GetThermostatStatusResult();
-				expectedStatus.IsHeating = true;
+				var thermostat = new Thermostat("") {IsHeating = true};
+				var expectedStatus = new GetThermostatStatusResult(thermostat);
 
 				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
 
-				Assert.AreEqual(expectedStatus.IsHeating, viewModel.IsHeating, "Expected IsHeating to update from status change.");
+				Assert.AreEqual(expectedStatus.Thermostat.IsHeating, viewModel.IsHeating, "Expected IsHeating to update from status change.");
 			}
 
 			[TestMethod]

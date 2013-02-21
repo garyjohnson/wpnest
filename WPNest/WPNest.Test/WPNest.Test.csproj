@@ -180,6 +180,9 @@
     <Compile Include="..\WPNest\Services\NestWebService.cs">
       <Link>Services\NestWebService.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\NestWebServiceDeserializer.cs">
+      <Link>Services\NestWebServiceDeserializer.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\SessionExpiredException.cs">
       <Link>Services\SessionExpiredException.cs</Link>
     </Compile>
@@ -235,7 +238,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UnitTests\FakeJsonMessages.cs" />
     <Compile Include="UnitTests\NestViewModelTest.cs" />
+    <Compile Include="UnitTests\NestWebServiceDeserializerTest.cs" />
+    <Compile Include="UnitTests\NestWebServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

@@ -131,11 +131,11 @@ namespace WPNest {
 			if (IsErrorHandled(e.ThermostatStatus.Error, e.ThermostatStatus.Exception))
 				return;
 
-			TargetTemperature = e.ThermostatStatus.TargetTemperature;
-			CurrentTemperature = e.ThermostatStatus.CurrentTemperature;
-			IsHeating = e.ThermostatStatus.IsHeating;
-			IsCooling = e.ThermostatStatus.IsCooling;
-			FanMode = e.ThermostatStatus.FanMode;
+			TargetTemperature = e.ThermostatStatus.Thermostat.TargetTemperature;
+			CurrentTemperature = e.ThermostatStatus.Thermostat.CurrentTemperature;
+			IsHeating = e.ThermostatStatus.Thermostat.IsHeating;
+			IsCooling = e.ThermostatStatus.Thermostat.IsCooling;
+			FanMode = e.ThermostatStatus.Thermostat.FanMode;
 		}
 
 		public async Task InitializeAsync() {

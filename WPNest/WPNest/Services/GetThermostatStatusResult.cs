@@ -4,7 +4,8 @@ namespace WPNest.Services {
 
 	public class GetThermostatStatusResult : WebServiceResult {
 
-		public GetThermostatStatusResult() {
+		public GetThermostatStatusResult(Thermostat thermostat) {
+			Thermostat = thermostat;
 		}
 
 		public GetThermostatStatusResult(WebServiceError error, Exception exception) {
@@ -12,13 +13,6 @@ namespace WPNest.Services {
 			Exception = exception;
 		}
 
-		public bool IsHeating { get; set; }
-		public bool IsCooling { get; set; }
-		public double TargetTemperature { get; set; }
-		public double CurrentTemperature { get; set; }
-
-		public FanMode FanMode { get; set; }
-		public HvacMode HvacMode { get; set; }
-		public bool IsAway { get; set; }
+		public Thermostat Thermostat { get; private set; }
 	}
 }

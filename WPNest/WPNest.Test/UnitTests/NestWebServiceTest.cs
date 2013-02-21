@@ -4,5 +4,6 @@ namespace WPNest.Test.UnitTests {
 
 	[TestClass]
 	public class NestWebServiceTest {
+
 	}
 }
