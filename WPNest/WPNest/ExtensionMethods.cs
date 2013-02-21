@@ -8,7 +8,7 @@ namespace WPNest {
 
 	public static class ExtensionMethods {
 
-		public static async Task SetRequestStringAsync(this IWebRequest request, string requestString) {
+		public static async Task SetRequestStringAsync(this WebRequest request, string requestString) {
 			using (Stream stream = await request.GetRequestStreamAsync()) {
 				byte[] encodedRequestString = Encoding.UTF8.GetBytes(requestString);
 				await stream.WriteAsync(encodedRequestString, 0, encodedRequestString.Length);

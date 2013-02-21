@@ -9,5 +9,6 @@ namespace WPNest.Web {
 		WebHeaderCollection Headers { get; set; }
 		Task<Stream> GetRequestStreamAsync();
 		Task<IWebResponse> GetResponseAsync();
+		Task SetRequestStringAsync(string requestString);
 	}
 }

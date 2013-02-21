@@ -10,7 +10,7 @@ namespace WPNest.Test.UnitTests {
 	[TestClass]
 	public class NestWebServiceTest {
 
-		protected static string BaseUrl = "http://fakeurl.com"; 
+		protected static string BaseUrl = "http://fakeurl.com";
 
 		protected static NestWebService _webService;
 		protected static Mock<IWebRequestProvider> _requestProvider;
@@ -19,7 +19,7 @@ namespace WPNest.Test.UnitTests {
 		protected static Mock<IWebRequest> _webRequest;
 
 		public class NestWebServiceTestBase {
-			
+
 			[TestInitialize]
 			public void SetUp() {
 				_webRequest = new Mock<IWebRequest>();
@@ -29,6 +29,7 @@ namespace WPNest.Test.UnitTests {
 
 				_sessionProvider.SetupGet(s => s.TransportUrl).Returns(BaseUrl);
 				_requestProvider.Setup(r => r.CreateRequest(It.IsAny<Uri>())).Returns(_webRequest.Object);
+				_webRequest.Setup(w => w.SetRequestStringAsync(It.IsAny<string>())).Returns(Task.Delay(0));
 
 				ServiceContainer.RegisterService<IWebRequestProvider>(_requestProvider.Object);
 				ServiceContainer.RegisterService<IAnalyticsService>(_analytics.Object);
@@ -47,15 +48,24 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenCallingGetStructureAndDeviceStatus  : NestWebServiceTestBase{
+		public class WhenCallingGetStructureAndDeviceStatus : NestWebServiceTestBase {
 
 			[TestMethod]
-			public void ShouldUseCorrectUrl() {
+			public async Task ShouldUseCorrectUrl() {
 				var structure = new Structure("id");
-				_webService.GetStructureAndDeviceStatusAsync(structure);
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
 				var expectedUri = new Uri(BaseUrl + "/v2/subscribe");
 
 				_requestProvider.Verify(r => r.CreateRequest(expectedUri));
+			}
+
+			[TestMethod]
+			public async Task ShouldAddKeyForStructure() {
+				var structureId = "id";
+				var structure = new Structure(structureId);
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains("\"key\":\"structure.id\""))));
 			}
 		}
 	}

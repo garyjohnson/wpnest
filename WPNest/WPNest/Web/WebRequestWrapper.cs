@@ -37,5 +37,9 @@ namespace WPNest.Web {
 			WebResponse response = await _request.GetResponseAsync();
 			return new WebResponseWrapper(response);
 		}
+
+		public async Task SetRequestStringAsync(string requestString) {
+			await _request.SetRequestStringAsync(requestString);
+		}
 	}
 }

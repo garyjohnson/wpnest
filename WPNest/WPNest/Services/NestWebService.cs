@@ -19,9 +19,12 @@ namespace WPNest.Services {
 			_webRequestProvider = ServiceContainer.GetService<IWebRequestProvider>();
 		}
 
-		public void GetStructureAndDeviceStatusAsync(Structure structure) {
+		public async Task GetStructureAndDeviceStatusAsync(Structure structure) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
-			GetGetRequest(url);
+			var request = GetGetRequest(url);
+
+			string requestString = string.Format("{{\"keys\":[{{\"key\":\"structure.{0}\"}}]}}", structure.ID);
+			await request.SetRequestStringAsync(requestString);
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
