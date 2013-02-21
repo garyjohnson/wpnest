@@ -40,7 +40,7 @@ namespace WPNest.Test.UnitTests {
 
 				nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
 				nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
-				nestWebService.Setup(w => w.GetStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
+				nestWebService.Setup(w => w.GetFullStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
 				nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
 				nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
 				statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
@@ -295,7 +295,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldGetStatus() {
 				await viewModel.LoginAsync();
 
-				nestWebService.Verify(n => n.GetStatusAsync());
+				nestWebService.Verify(n => n.GetFullStatusAsync());
 			}
 
 			[TestMethod]

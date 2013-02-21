@@ -178,7 +178,7 @@ namespace WPNest {
 			if (IsErrorHandled(result.Error, result.Exception))
 				return;
 
-			_getStatusResult = await _nestWebService.GetStatusAsync();
+			_getStatusResult = await _nestWebService.GetFullStatusAsync();
 			if (IsErrorHandled(_getStatusResult.Error, _getStatusResult.Exception))
 				return;
 

@@ -19,6 +19,11 @@ namespace WPNest.Services {
 			_webRequestProvider = ServiceContainer.GetService<IWebRequestProvider>();
 		}
 
+		public void GetStructureAndDeviceStatusAsync(Structure structure) {
+			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
+			GetGetRequest(url);
+		}
+
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
 			IWebRequest request = GetPostFormRequest("https://home.nest.com/user/login");
 			string requestString = string.Format("username={0}&password={1}", UrlEncode(userName), UrlEncode(password));
@@ -39,7 +44,7 @@ namespace WPNest.Services {
 			return new WebServiceResult(error, exception);
 		}
 
-		public async Task<GetStatusResult> GetStatusAsync() {
+		public async Task<GetStatusResult> GetFullStatusAsync() {
 			if (_sessionProvider.IsSessionExpired)
 				return new GetStatusResult(WebServiceError.SessionTokenExpired, new SessionExpiredException());
 
