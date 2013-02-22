@@ -67,6 +67,20 @@ namespace WPNest.Test.UnitTests {
 
 				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains("\"key\":\"structure.id\""))));
 			}
+
+			[TestMethod]
+			public async Task ShouldAddDeviceKeysForThermostats() {
+				string thermostatId1 = "12345";
+				string thermostatId2 = "54321";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat(thermostatId1));
+				structure.Thermostats.Add(new Thermostat(thermostatId2));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey1 = string.Format("\"key\":\"device.{0}\"", thermostatId1);
+				string expectedKey2 = string.Format("\"key\":\"device.{0}\"", thermostatId2);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey1) && s.Contains(expectedKey2))));
+			}
 		}
 	}
 }
