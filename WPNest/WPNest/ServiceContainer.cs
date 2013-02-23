@@ -11,6 +11,10 @@ namespace WPNest {
 			_container = new ServiceContainer();
 		}
 
+		public static void Clear() {
+			_container.ClearServices();
+		}
+
 		public static T GetService<T>() where T : class {
 			return _container.GetDependency<T>();
 		}
@@ -27,6 +31,11 @@ namespace WPNest {
 
 		private readonly Dictionary<Type, object> registeredDependencies = new Dictionary<Type, object>();
 		private readonly Dictionary<Type, Type> registeredTypes = new Dictionary<Type, Type>();
+
+		public void ClearServices() {
+			registeredDependencies.Clear();
+			registeredTypes.Clear();
+		}
 
 		public T GetDependency<T>() where T : class {
 			if (registeredDependencies.ContainsKey(typeof(T)))

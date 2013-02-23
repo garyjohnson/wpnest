@@ -22,9 +22,10 @@ namespace WPNest.Services {
 
 		public async Task GetStructureAndDeviceStatusAsync(Structure structure) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
-			var request = GetGetRequest(url);
+			var request = GetPostJsonRequest(url);
 
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
 			var keys = new List<string>();
 			keys.Add(string.Format("{{\"key\":\"structure.{0}\"}}", structure.ID));
@@ -38,6 +39,14 @@ namespace WPNest.Services {
 			string requestString = string.Format("{{\"keys\":[{0}]}}", joinedKeys);
 
 			await request.SetRequestStringAsync(requestString);
+
+			try {
+				IWebResponse response = await request.GetResponseAsync();
+				string responseString = await response.GetResponseStringAsync();
+			}
+			catch (Exception ex) {
+				ex.ToString();
+			}
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
