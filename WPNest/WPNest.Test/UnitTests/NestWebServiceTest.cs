@@ -17,6 +17,7 @@ namespace WPNest.Test.UnitTests {
 		protected static Mock<IAnalyticsService> _analytics;
 		protected static Mock<ISessionProvider> _sessionProvider;
 		protected static Mock<IWebRequest> _webRequest;
+		protected static Mock<IWebHeaderCollection> _webHeaderCollection;
 
 		public class NestWebServiceTestBase {
 
@@ -26,10 +27,13 @@ namespace WPNest.Test.UnitTests {
 				_requestProvider = new Mock<IWebRequestProvider>();
 				_analytics = new Mock<IAnalyticsService>();
 				_sessionProvider = new Mock<ISessionProvider>();
+				_webHeaderCollection = new Mock<IWebHeaderCollection>();
 
 				_sessionProvider.SetupGet(s => s.TransportUrl).Returns(BaseUrl);
 				_requestProvider.Setup(r => r.CreateRequest(It.IsAny<Uri>())).Returns(_webRequest.Object);
 				_webRequest.Setup(w => w.SetRequestStringAsync(It.IsAny<string>())).Returns(Task.Delay(0));
+				_webRequest.SetupGet(w => w.Headers).Returns(_webHeaderCollection.Object);
+				_webHeaderCollection.SetupSet(w => w[It.IsAny<string>()] = It.IsAny<string>());
 
 				ServiceContainer.RegisterService<IWebRequestProvider>(_requestProvider.Object);
 				ServiceContainer.RegisterService<IAnalyticsService>(_analytics.Object);
@@ -80,6 +84,29 @@ namespace WPNest.Test.UnitTests {
 				string expectedKey1 = string.Format("\"key\":\"device.{0}\"", thermostatId1);
 				string expectedKey2 = string.Format("\"key\":\"device.{0}\"", thermostatId2);
 				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey1) && s.Contains(expectedKey2))));
+			}
+
+			[TestMethod]
+			public async Task ShouldAddSharedKeysForThermostats() {
+				string thermostatId1 = "12345";
+				string thermostatId2 = "54321";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat(thermostatId1));
+				structure.Thermostats.Add(new Thermostat(thermostatId2));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey1 = string.Format("\"key\":\"shared.{0}\"", thermostatId1);
+				string expectedKey2 = string.Format("\"key\":\"shared.{0}\"", thermostatId2);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey1) && s.Contains(expectedKey2))));
+			}
+
+			[TestMethod]
+			public async Task ShouldSetAuthorizationHeaderOnRequest() {
+				string accessToken = "token";
+				_sessionProvider.SetupGet(s => s.AccessToken).Returns(accessToken);
+				await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
+
+				_webHeaderCollection.VerifySet(w => w["Authorization"] = "Basic " + accessToken);
 			}
 		}
 	}

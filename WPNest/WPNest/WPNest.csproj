@@ -172,8 +172,10 @@
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage\TrueToVisibleConverter.cs" />
+    <Compile Include="Web\IWebHeaderCollection.cs" />
     <Compile Include="Web\IWebRequest.cs" />
     <Compile Include="Web\IWebResponse.cs" />
+    <Compile Include="Web\WebHeaderCollectionWrapper.cs" />
     <Compile Include="Web\WebRequestWrapper.cs" />
     <Compile Include="Web\WebResponseWrapper.cs" />
   </ItemGroup>

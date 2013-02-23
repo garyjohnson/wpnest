@@ -24,11 +24,15 @@ namespace WPNest.Services {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			var request = GetGetRequest(url);
 
+			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
+
 			var keys = new List<string>();
 			keys.Add(string.Format("{{\"key\":\"structure.{0}\"}}", structure.ID));
 
-			foreach(var thermostat in structure.Thermostats)
+			foreach (var thermostat in structure.Thermostats) {
 				keys.Add(string.Format("{{\"key\":\"device.{0}\"}}", thermostat.ID));
+				keys.Add(string.Format("{{\"key\":\"shared.{0}\"}}", thermostat.ID));
+			}
 
 			string joinedKeys = string.Join(",", keys);
 			string requestString = string.Format("{{\"keys\":[{0}]}}", joinedKeys);

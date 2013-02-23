@@ -24,9 +24,8 @@ namespace WPNest.Web {
 			set { _request.ContentType = value; }
 		}
 
-		public WebHeaderCollection Headers {
-			get { return _request.Headers; }
-			set { _request.Headers = value; }
+		public IWebHeaderCollection Headers {
+			get { return new WebHeaderCollectionWrapper(_request.Headers); }
 		}
 
 		public async Task<Stream> GetRequestStreamAsync() {

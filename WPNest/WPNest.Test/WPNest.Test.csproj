@@ -213,11 +213,17 @@
     <Compile Include="..\WPNest\Web\ContentType.cs">
       <Link>Web\ContentType.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Web\IWebHeaderCollection.cs">
+      <Link>Web\IWebHeaderCollection.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Web\IWebRequest.cs">
       <Link>Web\IWebRequest.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\Web\IWebResponse.cs">
       <Link>Web\IWebResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\WebHeaderCollectionWrapper.cs">
+      <Link>Web\WebHeaderCollectionWrapper.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\Web\WebRequestWrapper.cs">
       <Link>Web\WebRequestWrapper.cs</Link>
