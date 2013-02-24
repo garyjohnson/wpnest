@@ -20,11 +20,11 @@ namespace WPNest.Services {
 			_webRequestProvider = ServiceContainer.GetService<IWebRequestProvider>();
 		}
 
-		public async Task<Structure> GetStructureAndDeviceStatusAsync(Structure structure) {
+		public async Task<GetStatusResult> GetStructureAndDeviceStatusAsync(Structure structure) {
 			return await GetStructureStatusAsync(structure);
 		}
 
-		private async Task<Structure> GetStructureStatusAsync(Structure structure) {
+		private async Task<GetStatusResult> GetStructureStatusAsync(Structure structure) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			var request = GetPostJsonRequest(url);
 
@@ -36,7 +36,9 @@ namespace WPNest.Services {
 
 			IWebResponse response = await request.GetResponseAsync();
 			string responseString = await response.GetResponseStringAsync();
-			return _deserializer.ParseStructureFromGetStructureStatusResult(responseString, structure.ID);
+			Structure parsedStructure = _deserializer.ParseStructureFromGetStructureStatusResult(responseString, structure.ID);
+
+			return new GetStatusResult(new[] {parsedStructure});
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {

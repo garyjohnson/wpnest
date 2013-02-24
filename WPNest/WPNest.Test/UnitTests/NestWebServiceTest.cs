@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Moq;
@@ -95,9 +96,9 @@ namespace WPNest.Test.UnitTests {
 				var expectedStructure = new Structure("structureId");
 				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(expectedStructure);
 					
-				var actualStructure = await _webService.GetStructureAndDeviceStatusAsync(new Structure("structureId"));
+				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure("structureId"));
 
-				Assert.AreEqual(expectedStructure, actualStructure);
+				Assert.AreEqual(expectedStructure, result.Structures.ElementAt(0));
 			}
 
 //			[TestMethod]
