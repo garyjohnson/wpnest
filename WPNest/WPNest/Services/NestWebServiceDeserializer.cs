@@ -49,7 +49,7 @@ namespace WPNest.Services {
 		}
 
 		public Structure ParseStructureFromGetStructureStatusResult(string result, string structureId) {
-			var structure = new Structure("");
+			var structure = new Structure(structureId);
 			var values = JObject.Parse(result);
 			structure.IsAway = values["away"].Value<bool>();
 

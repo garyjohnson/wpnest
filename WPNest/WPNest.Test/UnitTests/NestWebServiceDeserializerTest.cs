@@ -29,10 +29,18 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseStructuresFromGetStructureStatusResult() {
+		public void ShouldParseStructureFromGetStructureStatusResult() {
 			Structure structure = _deserializer.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, "");
 
 			Assert.IsFalse(structure.IsAway, "Expected Structure.IsAway to be parsed.");
+		}
+
+		[TestMethod]
+		public void ShouldAssignStructureIdToGetStructureStatusResult() {
+			string expectedId = "expectedId";
+			Structure structure = _deserializer.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, expectedId);
+
+			Assert.AreEqual(expectedId, structure.ID);
 		}
 	}
 }
