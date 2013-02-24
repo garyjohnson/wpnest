@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,32 +11,23 @@ namespace WPNest.Services {
 		private ISessionProvider _sessionProvider;
 		private IAnalyticsService _analyticsService;
 		private IWebRequestProvider _webRequestProvider;
-		private readonly NestWebServiceDeserializer _deserializer = new NestWebServiceDeserializer();
+		private INestWebServiceDeserializer _deserializer;
 
 		public NestWebService() {
+			_deserializer = ServiceContainer.GetService<INestWebServiceDeserializer>();
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
 			_webRequestProvider = ServiceContainer.GetService<IWebRequestProvider>();
 		}
 
-		public async Task GetStructureAndDeviceStatusAsync(Structure structure) {
+		public async Task GetStructureStatusAsync(Structure structure) {
 			string url = string.Format("{0}/v2/subscribe", _sessionProvider.TransportUrl);
 			var request = GetPostJsonRequest(url);
 
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);
 			SetNestHeadersOnRequest(request, _sessionProvider.UserId);
 
-			var keys = new List<string>();
-			keys.Add(string.Format("{{\"key\":\"structure.{0}\"}}", structure.ID));
-
-			foreach (var thermostat in structure.Thermostats) {
-				keys.Add(string.Format("{{\"key\":\"device.{0}\"}}", thermostat.ID));
-				keys.Add(string.Format("{{\"key\":\"shared.{0}\"}}", thermostat.ID));
-			}
-
-			string joinedKeys = string.Join(",", keys);
-			string requestString = string.Format("{{\"keys\":[{0}]}}", joinedKeys);
-
+			string requestString = string.Format("{{\"keys\":[{{\"key\":\"structure.{0}\"}}]}}", structure.ID);
 			await request.SetRequestStringAsync(requestString);
 
 			try {
@@ -206,7 +196,9 @@ namespace WPNest.Services {
 			try {
 				IWebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
-				return _deserializer.ParseThermostatStatusFromSharedSubscribeResult(strContent, thermostat.ID);
+				var updatedThermostat = new Thermostat(thermostat.ID);
+				_deserializer.UpdateThermostatStatusFromSharedStatusResult(strContent, updatedThermostat);
+				return new GetThermostatStatusResult(updatedThermostat);
 			}
 			catch (Exception ex) {
 				exception = ex;

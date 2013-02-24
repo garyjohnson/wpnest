@@ -140,6 +140,7 @@
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AnalyticsService.cs" />
+    <Compile Include="Services\INestWebServiceDeserializer.cs" />
     <Compile Include="Services\IWebRequestProvider.cs" />
     <Compile Include="Services\NestWebServiceDeserializer.cs" />
     <Compile Include="Services\WebRequestProvider.cs" />

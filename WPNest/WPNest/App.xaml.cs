@@ -34,6 +34,7 @@ namespace WPNest {
 		}
 
 		private void InitializeServices() {
+			ServiceContainer.RegisterService<INestWebServiceDeserializer>(new NestWebServiceDeserializer());
 			ServiceContainer.RegisterService<IWebRequestProvider>(new WebRequestProvider());
 			ServiceContainer.RegisterService<IAnalyticsService>(_analyticsService);
 			ServiceContainer.RegisterService<ISettingsProvider>(new SettingsProvider());

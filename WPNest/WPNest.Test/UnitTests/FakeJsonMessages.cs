@@ -13,7 +13,11 @@
 			get { return GetStatusResultBase.Replace("|||ISAWAY|||", "true"); }
 		}
 
-		private static string GetStatusResultBase = @"{
+		public static string GetStructureStatusResult {
+			get { return GetStructureStatusResultBase; }
+		}
+
+		private const string GetStatusResultBase = @"{
    ""metadata"":{
       ""02AA01AB41120QVD"":{
          ""$version"":-2074012793,
@@ -543,5 +547,21 @@
    }
 }
 ";
+
+		private const string GetStructureStatusResultBase = @"{ 
+  ""away"" : false,
+  ""away_setter"" : 1,
+  ""away_timestamp"" : 1361487421,
+  ""country_code"" : ""US"",
+  ""creation_time"" : 1352234444972,
+  ""devices"" : [ ""device.02AA01AB41120QVD"" ],
+  ""house_type"" : ""family"",
+  ""location"" : ""44039"",
+  ""name"" : """",
+  ""num_thermostats"" : ""1"",
+  ""postal_code"" : ""44039"",
+  ""renovation_date"" : ""2010"",
+  ""user"" : ""user.137516""
+}";
 	}
 }

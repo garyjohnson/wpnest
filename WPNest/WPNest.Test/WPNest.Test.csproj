@@ -159,6 +159,9 @@
     <Compile Include="..\WPNest\Services\INestWebService.cs">
       <Link>Services\INestWebService.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\INestWebServiceDeserializer.cs">
+      <Link>Services\INestWebServiceDeserializer.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\ISessionProvider.cs">
       <Link>Services\ISessionProvider.cs</Link>
     </Compile>

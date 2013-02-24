@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using WPNest.Services;
-using WPNest.Web;
 
 namespace WPNest.Test.IntegrationTests {
 
@@ -33,10 +29,10 @@ namespace WPNest.Test.IntegrationTests {
 
 		[TestMethod]
 		[Ignore]
-		public async Task Should() {
+		public async Task ShouldGetStructureStatus() {
 			await _webService.LoginAsync("gary@gjtt.com", "YesMaam");
 			var t = await _webService.GetFullStatusAsync();
-			await _webService.GetStructureAndDeviceStatusAsync(t.Structures.ElementAt(0));
+			await _webService.GetStructureStatusAsync(t.Structures.ElementAt(0));
 		}
 	}
 }

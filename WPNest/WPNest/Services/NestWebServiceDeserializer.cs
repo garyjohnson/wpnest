@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace WPNest.Services {
-
-	internal class NestWebServiceDeserializer {
+	internal class NestWebServiceDeserializer : INestWebServiceDeserializer {
 
 		public IEnumerable<Structure> ParseStructuresFromGetStatusResult(string responseString, string userId) {
 			var structureResults = new List<Structure>();
@@ -49,18 +48,23 @@ namespace WPNest.Services {
 			return structureResults;
 		}
 
-		public GetThermostatStatusResult ParseThermostatStatusFromSharedSubscribeResult(string strContent, string thermostatId) {
+		public Structure ParseStructureFromGetStructureStatusResult(string result, string structureId) {
+			var structure = new Structure("");
+			var values = JObject.Parse(result);
+			structure.IsAway = values["away"].Value<bool>();
+
+			return structure;
+		}
+
+		public void UpdateThermostatStatusFromSharedStatusResult(string strContent, Thermostat thermostatToUpdate) {
 			var values = JObject.Parse(strContent);
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
 			double currentTemperatureCelcius = double.Parse(values["current_temperature"].Value<string>());
 
-			var thermostat = new Thermostat(thermostatId);
-			thermostat.CurrentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
-			thermostat.TargetTemperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
-			thermostat.IsHeating = values["hvac_heater_state"].Value<bool>();
-			thermostat.IsCooling = values["hvac_ac_state"].Value<bool>();
-
-			return new GetThermostatStatusResult(thermostat);
+			thermostatToUpdate.CurrentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
+			thermostatToUpdate.TargetTemperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
+			thermostatToUpdate.IsHeating = values["hvac_heater_state"].Value<bool>();
+			thermostatToUpdate.IsCooling = values["hvac_ac_state"].Value<bool>();
 		}
 
 		public string ParseAccessTokenFromLoginResult(string responseString) {
