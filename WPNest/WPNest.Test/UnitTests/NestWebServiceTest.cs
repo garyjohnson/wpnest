@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Moq;
@@ -39,7 +40,10 @@ namespace WPNest.Test.UnitTests {
 				_webRequest.SetupGet(w => w.Headers).Returns(_webHeaderCollection.Object);
 				_webHeaderCollection.SetupSet(w => w[It.IsAny<string>()] = It.IsAny<string>());
 				_webRequest.Setup(w => w.GetResponseAsync()).Returns(Task.FromResult(_webResponse.Object));
+				_webResponse.Setup(w => w.GetResponseStream()).Returns(new MemoryStream());
+				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(""));
 
+				ServiceContainer.RegisterService<INestWebServiceDeserializer>(_webServiceDeserializer.Object);
 				ServiceContainer.RegisterService<IWebRequestProvider>(_requestProvider.Object);
 				ServiceContainer.RegisterService<IAnalyticsService>(_analytics.Object);
 				ServiceContainer.RegisterService<ISessionProvider>(_sessionProvider.Object);
@@ -62,7 +66,7 @@ namespace WPNest.Test.UnitTests {
 			[TestMethod]
 			public async Task ShouldUseCorrectUrl() {
 				var structure = new Structure("id");
-				await _webService.GetStructureStatusAsync(structure);
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
 				var expectedUri = new Uri(BaseUrl + "/v2/subscribe");
 
 				_requestProvider.Verify(r => r.CreateRequest(expectedUri));
@@ -72,20 +76,19 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldAddKeyForStructure() {
 				var structureId = "id";
 				var structure = new Structure(structureId);
-				await _webService.GetStructureStatusAsync(structure);
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
 
 				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains("\"key\":\"structure.id\""))));
 			}
 
-//			[TestMethod]
-//			public async Task ShouldSendResponseStringToDeserializer() {
-//				_sessionProvider.Setup(s => s.UserId).Returns("userId");
-//				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult));
-//
-//				await _webService.GetStructureStatusAsync(new Structure(""));
-//
-//				_webServiceDeserializer.Verify(d => d.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStructureStatusResult, "userId"));
-//			}
+			[TestMethod]
+			public async Task ShouldSendResponseStringToDeserializer() {
+				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult));
+
+				await _webService.GetStructureAndDeviceStatusAsync(new Structure("structureId"));
+
+				_webServiceDeserializer.Verify(d => d.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, "structureId"));
+			}
 
 //			[TestMethod]
 //			public async Task ShouldAddDeviceKeysForThermostats() {
@@ -119,21 +122,21 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldSetAuthorizationHeaderOnRequest() {
 				string accessToken = "token";
 				_sessionProvider.SetupGet(s => s.AccessToken).Returns(accessToken);
-				await _webService.GetStructureStatusAsync(new Structure(""));
+				await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				_webHeaderCollection.VerifySet(w => w["Authorization"] = "Basic " + accessToken);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetMethodToPost() {
-				await _webService.GetStructureStatusAsync(new Structure(""));
+				await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				_webRequest.VerifySet(w => w.Method = "POST");
 			}
 
 			[TestMethod]
 			public async Task ShouldSetContentTypeToJson() {
-				await _webService.GetStructureStatusAsync(new Structure(""));
+				await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				_webRequest.VerifySet(w => w.ContentType = ContentType.Json);
 			}
@@ -142,7 +145,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldSetNestHeadersOnRequest() {
 				string userId = "userId";
 				_sessionProvider.SetupGet(s => s.UserId).Returns(userId);
-				await _webService.GetStructureStatusAsync(new Structure(""));
+				await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				_webHeaderCollection.VerifySet(w => w["X-nl-protocol-version"] = "1");
 				_webHeaderCollection.VerifySet(w => w["X-nl-user-id"] = userId);

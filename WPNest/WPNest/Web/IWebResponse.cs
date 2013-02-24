@@ -7,5 +7,6 @@ namespace WPNest.Web {
 	public interface IWebResponse {
 		HttpStatusCode StatusCode { get; }
 		Stream GetResponseStream();
+		Task<string> GetResponseStringAsync();
 	}
 }

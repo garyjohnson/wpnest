@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace WPNest.Web {
 	internal class WebResponseWrapper : IWebResponse {
@@ -19,6 +20,10 @@ namespace WPNest.Web {
 
 		public Stream GetResponseStream() {
 			return _response.GetResponseStream();
+		}
+
+		public async Task<string> GetResponseStringAsync() {
+			return await _response.GetResponseStringAsync();
 		}
 	}
 }

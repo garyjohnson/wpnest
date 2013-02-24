@@ -15,30 +15,12 @@ namespace WPNest {
 			}
 		}
 
-		public static async Task<string> GetResponseStringAsync(this IWebRequest request) {
-			IWebResponse response = await request.GetResponseAsync();
-			Stream responseStream = response.GetResponseStream();
-			using (var streamReader = new StreamReader(responseStream)) {
-				return streamReader.ReadToEnd();
-			}
-		}
-
-		public static string GetResponseString(this IWebResponse response) {
-			Stream responseStream = response.GetResponseStream();
-			string strContent = "";
-			using (var sr = new StreamReader(responseStream)) {
-				strContent = sr.ReadToEnd();
-			}
-
-			return strContent;
+		public static async Task<string> GetResponseStringAsync(this WebRequest request) {
+			WebResponse response = await request.GetResponseAsync();
+			return await response.GetResponseStringAsync();
 		}
 
 		public static async Task<string> GetResponseStringAsync(this WebResponse response) {
-			var wrapper = new WebResponseWrapper(response);
-			return await wrapper.GetResponseStringAsync();
-		}
-
-		public static async Task<string> GetResponseStringAsync(this IWebResponse response) {
 			Stream responseStream = response.GetResponseStream();
 			string strContent = "";
 			using (var sr = new StreamReader(responseStream)) {
