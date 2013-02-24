@@ -90,6 +90,16 @@ namespace WPNest.Test.UnitTests {
 				_webServiceDeserializer.Verify(d => d.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, "structureId"));
 			}
 
+			[TestMethod]
+			public async Task ShouldReturnStructureFromDeserializer() {
+				var expectedStructure = new Structure("structureId");
+				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(expectedStructure);
+					
+				var actualStructure = await _webService.GetStructureAndDeviceStatusAsync(new Structure("structureId"));
+
+				Assert.AreEqual(expectedStructure, actualStructure);
+			}
+
 //			[TestMethod]
 //			public async Task ShouldAddDeviceKeysForThermostats() {
 //				string thermostatId1 = "12345";
