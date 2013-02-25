@@ -96,9 +96,19 @@ namespace WPNest.Test.UnitTests {
 				var expectedStructure = new Structure("structureId");
 				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(expectedStructure);
 					
-				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure("structureId"));
+				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				Assert.AreEqual(expectedStructure, result.Structures.ElementAt(0));
+			}
+
+			[TestMethod]
+			public async Task ShouldReturnErrorWhenGetResponseFails() {
+				var expectedException = new Exception("Failed!");
+				_webRequest.Setup(r => r.GetResponseAsync()).Throws(expectedException);
+
+				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
+
+				Assert.AreEqual(expectedException, result.Exception);
 			}
 
 //			[TestMethod]

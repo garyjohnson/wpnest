@@ -33,12 +33,19 @@ namespace WPNest.Services {
 
 			string requestString = string.Format("{{\"keys\":[{{\"key\":\"structure.{0}\"}}]}}", structure.ID);
 			await request.SetRequestStringAsync(requestString);
+			Exception exception;
 
-			IWebResponse response = await request.GetResponseAsync();
-			string responseString = await response.GetResponseStringAsync();
-			Structure parsedStructure = _deserializer.ParseStructureFromGetStructureStatusResult(responseString, structure.ID);
+			try {
+				IWebResponse response = await request.GetResponseAsync();
+				string responseString = await response.GetResponseStringAsync();
+				Structure parsedStructure = _deserializer.ParseStructureFromGetStructureStatusResult(responseString, structure.ID);
+				return new GetStatusResult(new[] {parsedStructure});
+			}
+			catch (Exception ex) {
+				exception = ex;
+			}
 
-			return new GetStatusResult(new[] {parsedStructure});
+			return new GetStatusResult(WebServiceError.None, exception);
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
