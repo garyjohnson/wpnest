@@ -43,6 +43,7 @@ namespace WPNest.Test.UnitTests {
 				_webRequest.Setup(w => w.GetResponseAsync()).Returns(Task.FromResult(_webResponse.Object));
 				_webResponse.Setup(w => w.GetResponseStream()).Returns(new MemoryStream());
 				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(""));
+				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.Unknown));
 
 				ServiceContainer.RegisterService<INestWebServiceDeserializer>(_webServiceDeserializer.Object);
 				ServiceContainer.RegisterService<IWebRequestProvider>(_requestProvider.Object);
@@ -102,13 +103,23 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public async Task ShouldReturnErrorWhenGetResponseFails() {
+			public async Task ShouldReturnExceptionWhenGetResponseFails() {
 				var expectedException = new Exception("Failed!");
 				_webRequest.Setup(r => r.GetResponseAsync()).Throws(expectedException);
 
 				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				Assert.AreEqual(expectedException, result.Exception);
+			}
+
+			[TestMethod]
+			public async Task ShouldReturnErrorWhenGetResponseFails() {
+				_webRequest.Setup(r => r.GetResponseAsync()).Throws(new Exception());
+				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.SessionTokenExpired));
+
+				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
+
+				Assert.AreEqual(WebServiceError.SessionTokenExpired, result.Error);
 			}
 
 //			[TestMethod]

@@ -45,7 +45,8 @@ namespace WPNest.Services {
 				exception = ex;
 			}
 
-			return new GetStatusResult(WebServiceError.None, exception);
+			var error = await _deserializer.ParseWebServiceErrorAsync(exception);
+			return new GetStatusResult(error, exception);
 		}
 
 		public async Task<WebServiceResult> LoginAsync(string userName, string password) {
