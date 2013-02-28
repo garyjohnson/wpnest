@@ -148,6 +148,24 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public async Task ShouldAddThermostatsToResult() {
+				var expectedFanMode = FanMode.On;
+				_webServiceDeserializer.Setup(d => d.ParseFanModeFromDeviceSubscribeResult(It.IsAny<string>()))
+					.Returns(expectedFanMode);
+				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
+				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
+				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
+
+				var structure = new Structure("");
+				structure.Thermostats.Add(new Thermostat(""));
+				structure.Thermostats.Add(new Thermostat(""));
+
+				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				Assert.AreEqual(2, result.Structures.ElementAt(0).Thermostats.Count);
+			}
+
+			[TestMethod]
 			public async Task ShouldUseFanModeFromDeserializer() {
 				var expectedFanMode = FanMode.On;
 				_webServiceDeserializer.Setup(d => d.ParseFanModeFromDeviceSubscribeResult(It.IsAny<string>()))
