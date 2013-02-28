@@ -43,6 +43,7 @@ namespace WPNest.Test.UnitTests {
 				_webRequest.Setup(w => w.GetResponseAsync()).Returns(Task.FromResult(_webResponse.Object));
 				_webResponse.Setup(w => w.GetResponseStream()).Returns(new MemoryStream());
 				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(""));
+				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(new Structure(""));
 				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.Unknown));
 
 				ServiceContainer.RegisterService<INestWebServiceDeserializer>(_webServiceDeserializer.Object);
@@ -122,20 +123,45 @@ namespace WPNest.Test.UnitTests {
 				Assert.AreEqual(WebServiceError.SessionTokenExpired, result.Error);
 			}
 
-//			[TestMethod]
-//			public async Task ShouldAddDeviceKeysForThermostats() {
-//				string thermostatId1 = "12345";
-//				string thermostatId2 = "54321";
-//				var structure = new Structure("id");
-//				structure.Thermostats.Add(new Thermostat(thermostatId1));
-//				structure.Thermostats.Add(new Thermostat(thermostatId2));
-//				await _webService.GetStructureAndDeviceStatusAsync(structure);
-//
-//				string expectedKey1 = string.Format("\"key\":\"device.{0}\"", thermostatId1);
-//				string expectedKey2 = string.Format("\"key\":\"device.{0}\"", thermostatId2);
-//				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey1) && s.Contains(expectedKey2))));
-//			}
-//
+			[TestMethod]
+			public async Task ShouldAddDeviceKeyForThermostats() {
+				string thermostatId = "12345";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat(thermostatId));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey = string.Format("\"key\":\"device.{0}\"", thermostatId);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey))));
+			}
+
+			[TestMethod]
+			public async Task ShouldSendGetDeviceResponseStringToDeserializer() {
+				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
+				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
+				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
+
+				var structure = new Structure("");
+				structure.Thermostats.Add(new Thermostat(""));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				_webServiceDeserializer.Verify(d => d.ParseFanModeFromDeviceSubscribeResult(FakeJsonMessages.GetDeviceStatusResult));
+			}
+
+			[TestMethod]
+			public async Task ShouldUseFanModeFromDeserializer() {
+				var expectedFanMode = FanMode.On;
+				_webServiceDeserializer.Setup(d => d.ParseFanModeFromDeviceSubscribeResult(It.IsAny<string>()))
+					.Returns(expectedFanMode);
+				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
+				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
+				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
+
+				var structure = new Structure("");
+				structure.Thermostats.Add(new Thermostat(""));
+				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(structure);
+				Assert.AreEqual(expectedFanMode, result.Structures.ElementAt(0).Thermostats[0].FanMode);
+			}
+
 //			[TestMethod]
 //			public async Task ShouldAddSharedKeysForThermostats() {
 //				string thermostatId1 = "12345";
