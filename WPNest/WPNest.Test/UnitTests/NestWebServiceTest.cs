@@ -180,6 +180,20 @@ namespace WPNest.Test.UnitTests {
 				Assert.AreEqual(expectedFanMode, result.Structures.ElementAt(0).Thermostats[0].FanMode);
 			}
 
+			[TestMethod]
+			public async Task ShouldNotAddDeviceKeyForThermostatsWhenGetStructureStatusFails() {
+				_webRequest.Setup(r => r.GetResponseAsync()).Throws(new Exception());
+				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.SessionTokenExpired));
+
+				string thermostatId = "12345";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat(thermostatId));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey = string.Format("\"key\":\"device.{0}\"", thermostatId);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey))), Times.Never());
+			}
+
 //			[TestMethod]
 //			public async Task ShouldAddSharedKeysForThermostats() {
 //				string thermostatId1 = "12345";

@@ -22,6 +22,9 @@ namespace WPNest.Services {
 
 		public async Task<GetStatusResult> GetStructureAndDeviceStatusAsync(Structure structure) {
 			var structureResult = await GetStructureStatusAsync(structure);
+			if (structureResult.Exception != null)
+				return structureResult;
+
 			foreach (var thermostat in structure.Thermostats) {
 				GetThermostatStatusResult r = await GetDeviceThermostatPropertiesAsync(thermostat, new GetThermostatStatusResult(new Thermostat("")));
 				structureResult.Structures.ElementAt(0).Thermostats.Add(r.Thermostat);
