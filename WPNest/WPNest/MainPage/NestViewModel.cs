@@ -124,18 +124,18 @@ namespace WPNest {
 			_statusUpdater = ServiceContainer.GetService<IStatusUpdaterService>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
 			_dialogProvider = ServiceContainer.GetService<IDialogProvider>();
-			_statusProvider.ThermostatStatusUpdated += OnThermostatStatusUpdated;
+			_statusProvider.StatusUpdated += OnStatusUpdated;
 		}
 
-		private void OnThermostatStatusUpdated(object sender, ThermostatStatusEventArgs e) {
-			if (IsErrorHandled(e.ThermostatStatus.Error, e.ThermostatStatus.Exception))
+		private void OnStatusUpdated(object sender, StatusEventArgs e) {
+			if (IsErrorHandled(e.Status.Error, e.Status.Exception))
 				return;
 
-			TargetTemperature = e.ThermostatStatus.Thermostat.TargetTemperature;
-			CurrentTemperature = e.ThermostatStatus.Thermostat.CurrentTemperature;
-			IsHeating = e.ThermostatStatus.Thermostat.IsHeating;
-			IsCooling = e.ThermostatStatus.Thermostat.IsCooling;
-			FanMode = e.ThermostatStatus.Thermostat.FanMode;
+			TargetTemperature = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).TargetTemperature;
+			CurrentTemperature = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).CurrentTemperature;
+			IsHeating = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).IsHeating;
+			IsCooling = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).IsCooling;
+			FanMode = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).FanMode;
 		}
 
 		public async Task InitializeAsync() {

@@ -3,8 +3,8 @@
 namespace WPNest.Services {
 
 	public interface IStatusProvider {
-		void CacheThermostatStatus(GetThermostatStatusResult thermostatStatus);
+		void CacheStatus(GetStatusResult status);
 		void Reset();
-		event EventHandler<ThermostatStatusEventArgs> ThermostatStatusUpdated;
+		event EventHandler<StatusEventArgs> StatusUpdated;
 	}
 }

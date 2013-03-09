@@ -1,11 +1,11 @@
 ﻿using System;
 
 namespace WPNest.Services {
-	public class ThermostatStatusEventArgs : EventArgs {
+	public class StatusEventArgs : EventArgs {
 
-		public GetThermostatStatusResult ThermostatStatus { get; private set; }
-		public ThermostatStatusEventArgs(GetThermostatStatusResult thermostatStatus) {
-			ThermostatStatus = thermostatStatus;
+		public GetStatusResult Status { get; private set; }
+		public StatusEventArgs(GetStatusResult status) {
+			Status = status;
 		}
 
 	}

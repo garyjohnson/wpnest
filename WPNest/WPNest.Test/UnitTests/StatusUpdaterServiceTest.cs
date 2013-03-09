@@ -14,6 +14,7 @@ namespace WPNest.Test.UnitTests {
 		private Mock<INestWebService> _mockWebService;
 		private StatusUpdaterService _updaterService;
 		private TimerCallback _timerCallback;
+		private GetStatusResult _cachedStatusResult;
 
 		[TestInitialize]
 		public void SetUp() {
@@ -28,6 +29,7 @@ namespace WPNest.Test.UnitTests {
 			_mockWebService.Setup(w => w.GetThermostatStatusAsync(It.IsAny<Thermostat>())).Returns(Task.FromResult(new GetThermostatStatusResult(new Thermostat(""))));
 			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(new GetStatusResult(new[]{new Structure("")})));
 			_mockTimer.Setup(t => t.SetCallback(It.IsAny<TimerCallback>())).Callback<TimerCallback>(c => _timerCallback = c);
+			_mockStatusProvider.Setup(s => s.CacheStatus(It.IsAny<GetStatusResult>())).Callback<GetStatusResult>(g => _cachedStatusResult = g);
 
 			_updaterService = new StatusUpdaterService();
 		}
@@ -44,6 +46,16 @@ namespace WPNest.Test.UnitTests {
 			_timerCallback(null);
 
 			_mockWebService.Verify(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>()));
+		}
+
+		[TestMethod]
+		public void ShouldCacheStatusOnTimerTick() {
+			var expectedResult = new GetStatusResult(new[] {new Structure("")});
+			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(expectedResult));
+
+			_timerCallback(null);
+
+			_mockStatusProvider.Verify(s=>s.CacheStatus(expectedResult));
 		}
 	}
 }

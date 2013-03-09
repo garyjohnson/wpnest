@@ -7,33 +7,33 @@ namespace WPNest.Services {
 	internal class DelayedStatusProvider : IStatusProvider {
 
 		private readonly Timer _displayCachedStatusTimer;
-		private GetThermostatStatusResult _cachedThermostatStatus;
+		private GetStatusResult _cachedStatusResult;
 
 		public DelayedStatusProvider() {
 			_displayCachedStatusTimer = new Timer(OnDisplayCachedStatusTick);
 			StartDisplayCachedStatusTimer();
 		}
 
-		public void CacheThermostatStatus(GetThermostatStatusResult thermostatStatus) {
-			_cachedThermostatStatus = thermostatStatus;
+		public void CacheStatus(GetStatusResult status) {
+			_cachedStatusResult = status;
 		}
 
 		public void Reset() {
-			_cachedThermostatStatus = null;
+			_cachedStatusResult = null;
 		}
 
-		public event EventHandler<ThermostatStatusEventArgs> ThermostatStatusUpdated;
+		public event EventHandler<StatusEventArgs> StatusUpdated;
 
 		private void OnDisplayCachedStatusTick(object state) {
 			try {
 				Deployment.Current.Dispatcher.InvokeAsync(() => {
-					GetThermostatStatusResult cachedStatus = _cachedThermostatStatus;
+					GetStatusResult cachedStatus = _cachedStatusResult;
 					if (cachedStatus != null) {
 
-						if (ThermostatStatusUpdated != null)
-							ThermostatStatusUpdated(this, new ThermostatStatusEventArgs(cachedStatus));
+						if (StatusUpdated != null)
+							StatusUpdated(this, new StatusEventArgs(cachedStatus));
 
-						_cachedThermostatStatus = null;
+						_cachedStatusResult = null;
 					}
 				});
 			}

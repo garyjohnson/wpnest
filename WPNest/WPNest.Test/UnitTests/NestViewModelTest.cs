@@ -11,61 +11,61 @@ namespace WPNest.Test.UnitTests {
 	public class NestViewModelTest {
 
 		public abstract class NestViewModelTestBase {
-			protected Mock<IStatusProvider> statusProvider;
-			protected Mock<ISessionProvider> sessionProvider;
-			protected Mock<IAnalyticsService> analyticsService;
-			protected Mock<IDialogProvider> dialogProvider;
-			protected Mock<INestWebService> nestWebService;
-			protected Mock<IStatusUpdaterService> statusUpdaterService;
-			protected NestViewModel viewModel;
-			protected Structure structure;
-			protected Thermostat firstThermostat;
-			protected Thermostat secondThermostat;
+			protected Mock<IStatusProvider> _statusProvider;
+			protected Mock<ISessionProvider> _sessionProvider;
+			protected Mock<IAnalyticsService> _analyticsService;
+			protected Mock<IDialogProvider> _dialogProvider;
+			protected Mock<INestWebService> _nestWebService;
+			protected Mock<IStatusUpdaterService> _statusUpdaterService;
+			protected NestViewModel _viewModel;
+			protected Structure _structure;
+			protected Thermostat _firstThermostat;
+			protected Thermostat _secondThermostat;
 
 			[TestInitialize]
 			public void SetUp() {
-				statusProvider = new Mock<IStatusProvider>();
-				sessionProvider = new Mock<ISessionProvider>();
-				analyticsService = new Mock<IAnalyticsService>();
-				dialogProvider = new Mock<IDialogProvider>();
-				nestWebService = new Mock<INestWebService>();
-				statusUpdaterService = new Mock<IStatusUpdaterService>();
+				_statusProvider = new Mock<IStatusProvider>();
+				_sessionProvider = new Mock<ISessionProvider>();
+				_analyticsService = new Mock<IAnalyticsService>();
+				_dialogProvider = new Mock<IDialogProvider>();
+				_nestWebService = new Mock<INestWebService>();
+				_statusUpdaterService = new Mock<IStatusUpdaterService>();
 
-				structure = new Structure("1");
-				firstThermostat = new Thermostat("1");
-				secondThermostat = new Thermostat("1");
-				structure.Thermostats.Add(firstThermostat);
-				structure.Thermostats.Add(secondThermostat);
-				var structures = new List<Structure> { structure };
+				_structure = new Structure("1");
+				_firstThermostat = new Thermostat("1");
+				_secondThermostat = new Thermostat("1");
+				_structure.Thermostats.Add(_firstThermostat);
+				_structure.Thermostats.Add(_secondThermostat);
+				var structures = new List<Structure> { _structure };
 
-				nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
-				nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
-				nestWebService.Setup(w => w.GetFullStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
-				nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
-				nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
-				statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
+				_nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
+				_nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
+				_nestWebService.Setup(w => w.GetFullStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
+				_nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
+				_nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
+				_statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
 
-				ServiceContainer.RegisterService<IStatusProvider>(statusProvider.Object);
-				ServiceContainer.RegisterService<ISessionProvider>(sessionProvider.Object);
-				ServiceContainer.RegisterService<IAnalyticsService>(analyticsService.Object);
-				ServiceContainer.RegisterService<IDialogProvider>(dialogProvider.Object);
-				ServiceContainer.RegisterService<INestWebService>(nestWebService.Object);
-				ServiceContainer.RegisterService<IStatusUpdaterService>(statusUpdaterService.Object);
-				viewModel = new NestViewModel();
+				ServiceContainer.RegisterService<IStatusProvider>(_statusProvider.Object);
+				ServiceContainer.RegisterService<ISessionProvider>(_sessionProvider.Object);
+				ServiceContainer.RegisterService<IAnalyticsService>(_analyticsService.Object);
+				ServiceContainer.RegisterService<IDialogProvider>(_dialogProvider.Object);
+				ServiceContainer.RegisterService<INestWebService>(_nestWebService.Object);
+				ServiceContainer.RegisterService<IStatusUpdaterService>(_statusUpdaterService.Object);
+				_viewModel = new NestViewModel();
 			}
 
 			[TestCleanup]
 			public void TearDown() {
-				statusProvider = null;
-				sessionProvider = null;
-				analyticsService = null;
-				dialogProvider = null;
-				nestWebService = null;
-				statusUpdaterService = null;
-				viewModel = null;
-				structure = null;
-				firstThermostat = null;
-				secondThermostat = null;
+				_statusProvider = null;
+				_sessionProvider = null;
+				_analyticsService = null;
+				_dialogProvider = null;
+				_nestWebService = null;
+				_statusUpdaterService = null;
+				_viewModel = null;
+				_structure = null;
+				_firstThermostat = null;
+				_secondThermostat = null;
 			}
 		}
 
@@ -74,166 +74,176 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public void ShouldUpdateTargetTemperature() {
+				var structure = new Structure("");
 				var thermostat = new Thermostat("") {TargetTemperature = 48d};
-				var expectedStatus = new GetThermostatStatusResult(thermostat);
-				expectedStatus.Thermostat.TargetTemperature = 48d;
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
+				thermostat.TargetTemperature = 48d;
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
 
-				Assert.AreEqual(expectedStatus.Thermostat.TargetTemperature, viewModel.TargetTemperature, "Expected TargetTemperature to update from status change.");
+				Assert.AreEqual(thermostat.TargetTemperature, _viewModel.TargetTemperature, "Expected TargetTemperature to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateCurrentTemperature() {
+				var structure = new Structure("");
 				var thermostat = new Thermostat("") {CurrentTemperature = 37d};
-				var expectedStatus = new GetThermostatStatusResult(thermostat);
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
 
-				Assert.AreEqual(expectedStatus.Thermostat.CurrentTemperature, viewModel.CurrentTemperature, "Expected CurrentTemperature to update from status change.");
+				Assert.AreEqual(thermostat.CurrentTemperature, _viewModel.CurrentTemperature, "Expected CurrentTemperature to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateFanMode() {
+				var structure = new Structure("");
 				var thermostat = new Thermostat("") {FanMode = FanMode.On};
-				var expectedStatus = new GetThermostatStatusResult(thermostat);
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
 
-				Assert.AreEqual(expectedStatus.Thermostat.FanMode, viewModel.FanMode, "Expected FanMode to update from status change.");
+				Assert.AreEqual(thermostat.FanMode, _viewModel.FanMode, "Expected FanMode to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateIsCooling() {
+				var structure = new Structure("");
 				var thermostat = new Thermostat("") {IsCooling = true};
-				var expectedStatus = new GetThermostatStatusResult(thermostat);
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
 
-				Assert.AreEqual(expectedStatus.Thermostat.IsCooling, viewModel.IsCooling, "Expected IsCooling to update from status change.");
+				Assert.AreEqual(thermostat.IsCooling, _viewModel.IsCooling, "Expected IsCooling to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldUpdateIsHeating() {
+				var structure = new Structure("");
 				var thermostat = new Thermostat("") {IsHeating = true};
-				var expectedStatus = new GetThermostatStatusResult(thermostat);
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, new ThermostatStatusEventArgs(expectedStatus));
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
 
-				Assert.AreEqual(expectedStatus.Thermostat.IsHeating, viewModel.IsHeating, "Expected IsHeating to update from status change.");
+				Assert.AreEqual(thermostat.IsHeating, _viewModel.IsHeating, "Expected IsHeating to update from status change.");
 			}
 
 			[TestMethod]
 			public void ShouldNotBeLoggedInOnInvalidCredentialsException() {
-				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.InvalidCredentials, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(viewModel.IsLoggedIn);
+				Assert.IsFalse(_viewModel.IsLoggedIn);
 			}
 
 			[TestMethod]
 			public void ShouldBeLoggingInOnInvalidCredentialsException() {
-				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.InvalidCredentials, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsTrue(viewModel.IsLoggingIn);
+				Assert.IsTrue(_viewModel.IsLoggingIn);
 			}
 
 			[TestMethod]
 			public void ShouldSetCurrentErrorToErrorOnInvalidCredentialsException() {
 				var expectedError = WebServiceError.InvalidCredentials;
-				var result = new GetThermostatStatusResult(expectedError, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(expectedError, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.AreEqual(expectedError, viewModel.CurrentError);
+				Assert.AreEqual(expectedError, _viewModel.CurrentError);
 			}
 
 			[TestMethod]
 			public void ShouldClearSessionOnInvalidCredentialsException() {
-				var result = new GetThermostatStatusResult(WebServiceError.InvalidCredentials, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.InvalidCredentials, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				sessionProvider.Verify(provider => provider.ClearSession(), "Expected session to be cleared when an InvalidCredentials exception occurs.");
+				_sessionProvider.Verify(provider => provider.ClearSession(), "Expected session to be cleared when an InvalidCredentials exception occurs.");
 			}
 
 			[TestMethod]
 			public void ShouldNotBeLoggedInOnSessionTokenExpiredException() {
-				var result = new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.SessionTokenExpired, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(viewModel.IsLoggedIn);
+				Assert.IsFalse(_viewModel.IsLoggedIn);
 			}
 
 			[TestMethod]
 			public void ShouldBeLoggingInOnSessionTokenExpiredException() {
-				var result = new GetThermostatStatusResult(WebServiceError.SessionTokenExpired, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.SessionTokenExpired, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsTrue(viewModel.IsLoggingIn);
+				Assert.IsTrue(_viewModel.IsLoggingIn);
 			}
 
 			[TestMethod]
 			public void ShouldSetCurrentErrorToErrorOnSessionTokenExpiredException() {
 				var expectedError = WebServiceError.SessionTokenExpired;
-				var result = new GetThermostatStatusResult(expectedError, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(expectedError, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.AreEqual(expectedError, viewModel.CurrentError);
+				Assert.AreEqual(expectedError, _viewModel.CurrentError);
 			}
 
 			[TestMethod]
 			public void ShouldLogToAnalyticsOnException() {
 				var expectedException = new Exception();
-				var result = new GetThermostatStatusResult(WebServiceError.Unknown, expectedException);
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.Unknown, expectedException);
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				analyticsService.Verify(analytics => analytics.LogError(expectedException));
+				_analyticsService.Verify(analytics => analytics.LogError(expectedException));
 			}
 
 			[TestMethod]
 			public void ShouldNotBeLoggingInOnServerNotFoundException() {
-				var result = new GetThermostatStatusResult(WebServiceError.ServerNotFound, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.ServerNotFound, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(viewModel.IsLoggingIn);
+				Assert.IsFalse(_viewModel.IsLoggingIn);
 			}
 
 			[TestMethod]
 			public void ShouldShowMessageOnServerNotFoundException() {
-				var result = new GetThermostatStatusResult(WebServiceError.ServerNotFound, new Exception());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.ServerNotFound, new Exception());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("Server was not found.")));
+				_dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("Server was not found.")));
 			}
 
 			[TestMethod]
 			public void ShouldShowMessageOnAnyOtherException() {
-				var result = new GetThermostatStatusResult(WebServiceError.Unknown, new InvalidCastException());
-				var args = new ThermostatStatusEventArgs(result);
+				var result = new GetStatusResult(WebServiceError.Unknown, new InvalidCastException());
+				var args = new StatusEventArgs(result);
 
-				statusProvider.Raise(provider => provider.ThermostatStatusUpdated += null, args);
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
+				_dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
 			}
 		}
 
@@ -242,35 +252,35 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldResetCurrentError() {
-				viewModel.CurrentError = WebServiceError.InvalidCredentials;
+				_viewModel.CurrentError = WebServiceError.InvalidCredentials;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(WebServiceError.None, viewModel.CurrentError);
+				Assert.AreEqual(WebServiceError.None, _viewModel.CurrentError);
 			}
 
 			[TestMethod]
 			public async Task ShouldClearLoginFields() {
-				viewModel.UserName = "Bob";
-				viewModel.Password = "Bob's Password";
+				_viewModel.UserName = "Bob";
+				_viewModel.Password = "Bob's Password";
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(string.Empty, viewModel.UserName);
-				Assert.AreEqual(string.Empty, viewModel.Password);
+				Assert.AreEqual(string.Empty, _viewModel.UserName);
+				Assert.AreEqual(string.Empty, _viewModel.Password);
 			}
 
 			[TestMethod]
 			public async Task ShouldLoginWithCredentialsIfSessionExpired() {
 				string expectedUserName = "Bob";
 				string expectedPassword = "Bob's Password";
-				sessionProvider.SetupGet(s => s.IsSessionExpired).Returns(true);
-				viewModel.UserName = expectedUserName;
-				viewModel.Password = expectedPassword;
+				_sessionProvider.SetupGet(s => s.IsSessionExpired).Returns(true);
+				_viewModel.UserName = expectedUserName;
+				_viewModel.Password = expectedPassword;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				nestWebService.Verify(n => n.LoginAsync(expectedUserName, expectedPassword));
+				_nestWebService.Verify(n => n.LoginAsync(expectedUserName, expectedPassword));
 			}
 		}
 
@@ -279,94 +289,94 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldNotBeLoggingIn() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.IsFalse(viewModel.IsLoggingIn);
+				Assert.IsFalse(_viewModel.IsLoggingIn);
 			}
 
 			[TestMethod]
 			public async Task ShouldUpdateTransportUrls() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				nestWebService.Verify(n => n.UpdateTransportUrlAsync());
+				_nestWebService.Verify(n => n.UpdateTransportUrlAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldGetStatus() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				nestWebService.Verify(n => n.GetFullStatusAsync());
+				_nestWebService.Verify(n => n.GetFullStatusAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldBeLoggedIn() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.IsTrue(viewModel.IsLoggedIn);
+				Assert.IsTrue(_viewModel.IsLoggedIn);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetTargetTemperatureToFirstThermostatTargetTemperature() {
 				double expectedTargetTemperature = 12.3d;
-				firstThermostat.TargetTemperature = expectedTargetTemperature;
+				_firstThermostat.TargetTemperature = expectedTargetTemperature;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(expectedTargetTemperature, viewModel.TargetTemperature);
+				Assert.AreEqual(expectedTargetTemperature, _viewModel.TargetTemperature);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetCurrentTemperatureToFirstThermostatCurrentTemperature() {
 				double expectedCurrentTemperature = 12.3d;
-				firstThermostat.CurrentTemperature = expectedCurrentTemperature;
+				_firstThermostat.CurrentTemperature = expectedCurrentTemperature;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(expectedCurrentTemperature, viewModel.CurrentTemperature);
+				Assert.AreEqual(expectedCurrentTemperature, _viewModel.CurrentTemperature);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetIsHeatingToFirstThermostatIsHeating() {
 				bool expectedIsHeating = true;
-				firstThermostat.IsHeating = expectedIsHeating;
+				_firstThermostat.IsHeating = expectedIsHeating;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(expectedIsHeating, viewModel.IsHeating);
+				Assert.AreEqual(expectedIsHeating, _viewModel.IsHeating);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetIsCoolingToFirstThermostatIsCooling() {
 				bool expectedIsCooling = true;
-				firstThermostat.IsCooling = expectedIsCooling;
+				_firstThermostat.IsCooling = expectedIsCooling;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(expectedIsCooling, viewModel.IsCooling);
+				Assert.AreEqual(expectedIsCooling, _viewModel.IsCooling);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetFanModeToFirstThermostatFanMode() {
 				var expectedFanMode = FanMode.On;
-				firstThermostat.FanMode = expectedFanMode;
+				_firstThermostat.FanMode = expectedFanMode;
 
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(expectedFanMode, viewModel.FanMode);
+				Assert.AreEqual(expectedFanMode, _viewModel.FanMode);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetStatusUpdaterCurrentThermostatToFirstThermostat() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				statusUpdaterService.VerifySet(s => s.CurrentThermostat = firstThermostat);
+				_statusUpdaterService.VerifySet(s => s.CurrentThermostat = _firstThermostat);
 			}
 
 			[TestMethod]
 			public async Task ShouldStartStatusUpdater() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				statusUpdaterService.Verify(s => s.Start());
+				_statusUpdaterService.Verify(s => s.Start());
 			}
 		}
 
@@ -375,9 +385,9 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldStartStatusUpdater() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				statusUpdaterService.Verify(s => s.Start());
+				_statusUpdaterService.Verify(s => s.Start());
 			}
 		}
 
@@ -386,60 +396,60 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldResetStatusProvider() {
-				await viewModel.LoginAsync();
-				await viewModel.RaiseTemperatureAsync();
+				await _viewModel.LoginAsync();
+				await _viewModel.RaiseTemperatureAsync();
 
-				statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Reset());
 			}
 
 			[TestMethod]
 			public async Task ShouldIncrementTargetTemperature() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = 31.0d;
-				double expectedTemperature = viewModel.TargetTemperature + 1;
-				await viewModel.RaiseTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = 31.0d;
+				double expectedTemperature = _viewModel.TargetTemperature + 1;
+				await _viewModel.RaiseTemperatureAsync();
 
-				Assert.AreEqual(expectedTemperature, viewModel.TargetTemperature);
+				Assert.AreEqual(expectedTemperature, _viewModel.TargetTemperature);
 			}
 
 			[TestMethod]
 			public async Task ShouldChangedTemperatureOnFirstThermostatToIncrementedTemp() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = 31.0d;
-				double expectedTemperature = viewModel.TargetTemperature + 1;
-				await viewModel.RaiseTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = 31.0d;
+				double expectedTemperature = _viewModel.TargetTemperature + 1;
+				await _viewModel.RaiseTemperatureAsync();
 
-				nestWebService.Verify(n => n.ChangeTemperatureAsync(firstThermostat, expectedTemperature));
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(_firstThermostat, expectedTemperature));
 			}
 
 			[TestMethod]
 			public async Task ShouldNotChangeTemperatureIfTargetTemperatureIsAtMaxiumum() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
-				await viewModel.RaiseTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await _viewModel.RaiseTemperatureAsync();
 
-				nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
 					Times.Never(), "Expected ChangeTemperature to not be called.");
 			}
 
 			[TestMethod]
 			public async Task ShouldUpdateStatus() {
-				await viewModel.LoginAsync();
-				await viewModel.RaiseTemperatureAsync();
+				await _viewModel.LoginAsync();
+				await _viewModel.RaiseTemperatureAsync();
 
-				statusUpdaterService.Verify(s => s.UpdateStatusAsync());
+				_statusUpdaterService.Verify(s => s.UpdateStatusAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldNotUpdateStatusIfChangeTemperatureFails() {
 				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
-				nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
+				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
 					.Returns(Task.FromResult(result));
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				await viewModel.RaiseTemperatureAsync();
+				await _viewModel.RaiseTemperatureAsync();
 
-				statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
+				_statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
 			}
 		}
 
@@ -448,63 +458,63 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldResetStatusProvider() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
-				await viewModel.LowerTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await _viewModel.LowerTemperatureAsync();
 
-				statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Reset());
 			}
 
 			[TestMethod]
 			public async Task ShouldDecrementTargetTemperature() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
-				double expectedTemperature = viewModel.TargetTemperature - 1;
-				await viewModel.LowerTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				double expectedTemperature = _viewModel.TargetTemperature - 1;
+				await _viewModel.LowerTemperatureAsync();
 
-				Assert.AreEqual(expectedTemperature, viewModel.TargetTemperature);
+				Assert.AreEqual(expectedTemperature, _viewModel.TargetTemperature);
 			}
 
 			[TestMethod]
 			public async Task ShouldChangeTemperatureOnFirstThermostatToDecrementedTemp() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
-				double expectedTemperature = viewModel.TargetTemperature - 1;
-				await viewModel.LowerTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				double expectedTemperature = _viewModel.TargetTemperature - 1;
+				await _viewModel.LowerTemperatureAsync();
 
-				nestWebService.Verify(n => n.ChangeTemperatureAsync(firstThermostat, expectedTemperature));
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(_firstThermostat, expectedTemperature));
 			}
 
 			[TestMethod]
 			public async Task ShouldNotChangeTemperatureIfTargetTemperatureIsAtMinimum() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MinTemperature;
-				await viewModel.LowerTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MinTemperature;
+				await _viewModel.LowerTemperatureAsync();
 
-				nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
 					Times.Never(), "Expected ChangeTemperature to not be called.");
 			}
 
 			[TestMethod]
 			public async Task ShouldUpdateStatus() {
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
-				await viewModel.LowerTemperatureAsync();
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await _viewModel.LowerTemperatureAsync();
 
-				statusUpdaterService.Verify(s => s.UpdateStatusAsync());
+				_statusUpdaterService.Verify(s => s.UpdateStatusAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldNotUpdateStatusIfChangeTemperatureFails() {
 				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
-				nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
+				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
 					.Returns(Task.FromResult(result));
-				await viewModel.LoginAsync();
-				viewModel.TargetTemperature = NestViewModel.MaxTemperature;
+				await _viewModel.LoginAsync();
+				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 
-				await viewModel.LowerTemperatureAsync();
+				await _viewModel.LowerTemperatureAsync();
 
-				statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
+				_statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
 			}
 		}
 
@@ -513,59 +523,59 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldResetStatusProviderOnSetFanMode() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				viewModel.FanMode = FanMode.Auto;
+				_viewModel.FanMode = FanMode.Auto;
 
-				statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Reset());
 			}
 
 			[TestMethod]
 			public async Task ShouldSetFanModeOnFirstThermostat() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
 				var expectedFanMode = FanMode.Auto;
-				viewModel.FanMode = expectedFanMode;
+				_viewModel.FanMode = expectedFanMode;
 
-				Assert.AreEqual(expectedFanMode, firstThermostat.FanMode);
+				Assert.AreEqual(expectedFanMode, _firstThermostat.FanMode);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetFanModeOnWebService() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				viewModel.FanMode = FanMode.Auto;
+				_viewModel.FanMode = FanMode.Auto;
 
-				nestWebService.Verify(n=>n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()));
+				_nestWebService.Verify(n=>n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()));
 			}
 
 			[TestMethod]
 			public async Task ShouldUpdateStatus() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				viewModel.FanMode = FanMode.Auto;
+				_viewModel.FanMode = FanMode.Auto;
 
-				statusUpdaterService.Verify(s=>s.UpdateStatusAsync());
+				_statusUpdaterService.Verify(s=>s.UpdateStatusAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldNotUpdateStatusIfSetFanModeFails() {
 				var errorResult = new WebServiceResult(WebServiceError.Unknown, new Exception());
-				nestWebService.Setup(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(errorResult));
-				await viewModel.LoginAsync();
+				_nestWebService.Setup(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(errorResult));
+				await _viewModel.LoginAsync();
 
-				viewModel.FanMode = FanMode.Auto;
+				_viewModel.FanMode = FanMode.Auto;
 
-				statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
+				_statusUpdaterService.Verify(s => s.UpdateStatusAsync(), Times.Never());
 			}
 
 			[TestMethod]
 			public async Task ShouldNotSetFanModeIfFanModeDidNotChange() {
-				await viewModel.LoginAsync();
+				await _viewModel.LoginAsync();
 
-				viewModel.FanMode = viewModel.FanMode;
+				_viewModel.FanMode = _viewModel.FanMode;
 
-				nestWebService.Verify(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()), 
+				_nestWebService.Verify(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()), 
 					Times.Never());
 			}
 		}
