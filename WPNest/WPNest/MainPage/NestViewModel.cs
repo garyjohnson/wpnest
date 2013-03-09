@@ -140,12 +140,16 @@ namespace WPNest {
 			if (IsErrorHandled(e.Status.Error, e.Status.Exception))
 				return;
 
-			TargetTemperature = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).TargetTemperature;
-			CurrentTemperature = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).CurrentTemperature;
-			IsHeating = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).IsHeating;
-			IsCooling = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).IsCooling;
-			FanMode = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).FanMode;
-			IsAway = e.Status.Structures.ElementAt(0).IsAway;
+			UpdateViewModelFromGetStatusResult(e.Status);
+		}
+
+		private void UpdateViewModelFromGetStatusResult(GetStatusResult statusResult) {
+			TargetTemperature = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).TargetTemperature;
+			CurrentTemperature = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).CurrentTemperature;
+			IsHeating = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).IsHeating;
+			IsCooling = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).IsCooling;
+			FanMode = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).FanMode;
+			IsAway = statusResult.Structures.ElementAt(0).IsAway;
 		}
 
 		public async Task InitializeAsync() {
@@ -194,12 +198,7 @@ namespace WPNest {
 
 			IsLoggedIn = true;
 
-			var thermostat = GetFirstThermostat();
-			TargetTemperature = thermostat.TargetTemperature;
-			CurrentTemperature = thermostat.CurrentTemperature;
-			IsHeating = thermostat.IsHeating;
-			IsCooling = thermostat.IsCooling;
-			FanMode = thermostat.FanMode;
+			UpdateViewModelFromGetStatusResult(_getStatusResult);
 
 			_statusUpdater.CurrentStructure = _getStatusResult.Structures.ElementAt(0);
 			_statusUpdater.Start();

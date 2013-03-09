@@ -369,12 +369,21 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldSetFanModeToFirstThermostatFanMode() {
-				var expectedFanMode = FanMode.On;
+				var expectedFanMode = FanMode.Auto;
 				_firstThermostat.FanMode = expectedFanMode;
 
 				await _viewModel.LoginAsync();
 
 				Assert.AreEqual(expectedFanMode, _viewModel.FanMode);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetIsAwayToStructureIsAway() {
+				_structure.IsAway = true;
+
+				await _viewModel.LoginAsync();
+
+				Assert.AreEqual(_structure.IsAway, _viewModel.IsAway);
 			}
 
 			[TestMethod]
