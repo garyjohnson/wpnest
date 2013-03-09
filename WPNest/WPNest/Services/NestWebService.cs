@@ -8,10 +8,10 @@ namespace WPNest.Services {
 
 	public class NestWebService : INestWebService {
 
-		private ISessionProvider _sessionProvider;
-		private IAnalyticsService _analyticsService;
-		private IWebRequestProvider _webRequestProvider;
-		private INestWebServiceDeserializer _deserializer;
+		private readonly ISessionProvider _sessionProvider;
+		private readonly IAnalyticsService _analyticsService;
+		private readonly IWebRequestProvider _webRequestProvider;
+		private readonly INestWebServiceDeserializer _deserializer;
 
 		public NestWebService() {
 			_deserializer = ServiceContainer.GetService<INestWebServiceDeserializer>();
@@ -26,8 +26,14 @@ namespace WPNest.Services {
 				return structureResult;
 
 			foreach (var thermostat in structure.Thermostats) {
-				GetThermostatStatusResult r = await GetDeviceThermostatPropertiesAsync(thermostat, new GetThermostatStatusResult(new Thermostat("")));
-				structureResult.Structures.ElementAt(0).Thermostats.Add(r.Thermostat);
+				GetThermostatStatusResult sharedResult = await GetSharedThermostatPropertiesAsync(thermostat);
+				if (sharedResult.Exception != null)
+					return new GetStatusResult(sharedResult.Error, sharedResult.Exception);
+				GetThermostatStatusResult thermostatResult = await GetDeviceThermostatPropertiesAsync(thermostat, sharedResult);
+				if (thermostatResult.Exception != null)
+					return new GetStatusResult(thermostatResult.Error, thermostatResult.Exception);
+
+				structureResult.Structures.ElementAt(0).Thermostats.Add(sharedResult.Thermostat);
 			}
 			return structureResult;
 		}

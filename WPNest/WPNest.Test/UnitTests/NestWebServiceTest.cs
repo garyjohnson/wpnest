@@ -138,6 +138,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldSendGetDeviceResponseStringToDeserializer() {
 				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
 				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
+				            .Returns(Task.FromResult(FakeJsonMessages.GetSharedStatusResult))
 				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
 
 				var structure = new Structure("");
@@ -194,19 +195,54 @@ namespace WPNest.Test.UnitTests {
 				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey))), Times.Never());
 			}
 
-//			[TestMethod]
-//			public async Task ShouldAddSharedKeysForThermostats() {
-//				string thermostatId1 = "12345";
-//				string thermostatId2 = "54321";
-//				var structure = new Structure("id");
-//				structure.Thermostats.Add(new Thermostat(thermostatId1));
-//				structure.Thermostats.Add(new Thermostat(thermostatId2));
-//				await _webService.GetStructureAndDeviceStatusAsync(structure);
-//
-//				string expectedKey1 = string.Format("\"key\":\"shared.{0}\"", thermostatId1);
-//				string expectedKey2 = string.Format("\"key\":\"shared.{0}\"", thermostatId2);
-//				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey1) && s.Contains(expectedKey2))));
-//			}
+			[TestMethod]
+			public async Task ShouldStopGettingDeviceStatusIfOneFails() {
+				_webRequest.SetupSequence(r => r.GetResponseAsync())
+				           .Returns(Task.FromResult(_webResponse.Object))
+						   .Throws(new Exception());
+				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.SessionTokenExpired));
+
+				string secondThermostatId = "12345";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat("id"));
+				structure.Thermostats.Add(new Thermostat(secondThermostatId));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey = string.Format("\"key\":\"device.{0}\"", secondThermostatId);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey))), Times.Never());
+			}
+
+			[TestMethod]
+			public async Task ShouldAddSharedKeysForThermostats() {
+				string thermostatId1 = "12345";
+				string thermostatId2 = "54321";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat(thermostatId1));
+				structure.Thermostats.Add(new Thermostat(thermostatId2));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey1 = string.Format("\"key\":\"shared.{0}\"", thermostatId1);
+				string expectedKey2 = string.Format("\"key\":\"shared.{0}\"", thermostatId2);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey1))), Times.Once());
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey2))), Times.Once());
+			}
+
+			[TestMethod]
+			public async Task ShouldStopGettingDeviceStatusIfSharedStatusFails() {
+				_webRequest.SetupSequence(r => r.GetResponseAsync())
+				           .Returns(Task.FromResult(_webResponse.Object))
+						   .Throws(new Exception());
+				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.SessionTokenExpired));
+
+				string firstThermostatId = "12345";
+				var structure = new Structure("id");
+				structure.Thermostats.Add(new Thermostat(firstThermostatId));
+				structure.Thermostats.Add(new Thermostat("id"));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				string expectedKey = string.Format("\"key\":\"device.{0}\"", firstThermostatId);
+				_webRequest.Verify(w => w.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedKey))), Times.Never());
+			}
 
 			[TestMethod]
 			public async Task ShouldSetAuthorizationHeaderOnRequest() {

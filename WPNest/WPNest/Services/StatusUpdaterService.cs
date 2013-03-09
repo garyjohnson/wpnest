@@ -6,14 +6,17 @@ namespace WPNest.Services {
 
 	internal class StatusUpdaterService : IStatusUpdaterService {
 
-		private readonly Timer _updateStatusTimer;
+		private readonly ITimer _updateStatusTimer;
 		private readonly IStatusProvider _delayedStatusProvider;
+		private readonly INestWebService _nestWebService;
 
 		public Thermostat CurrentThermostat { get; set; }
 
 		public StatusUpdaterService() {
+			_nestWebService = ServiceContainer.GetService<INestWebService>();
 			_delayedStatusProvider = ServiceContainer.GetService<IStatusProvider>();
-			_updateStatusTimer = new Timer(OnTimerTick);
+			_updateStatusTimer = ServiceContainer.GetService<ITimer>();
+			_updateStatusTimer.SetCallback(OnTimerTick);
 		}
 
 		public void Start() {
@@ -31,8 +34,7 @@ namespace WPNest.Services {
 		private async Task UpdateStatusAsync(Thermostat thermostat) {
 			_delayedStatusProvider.Reset();
 
-			var nestWebService = ServiceContainer.GetService<INestWebService>();
-			GetThermostatStatusResult temperatureResult = await nestWebService.GetThermostatStatusAsync(thermostat);
+			GetThermostatStatusResult temperatureResult = await _nestWebService.GetThermostatStatusAsync(thermostat);
 			if(temperatureResult.Exception != null)
 				Stop();
 			
