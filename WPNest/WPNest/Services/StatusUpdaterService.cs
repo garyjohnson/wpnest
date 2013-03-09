@@ -35,14 +35,10 @@ namespace WPNest.Services {
 			_delayedStatusProvider.Reset();
 
 			GetStatusResult result = await _nestWebService.GetStructureAndDeviceStatusAsync(new Structure(""));
+			if (result.Exception != null)
+				Stop();
 
 			_delayedStatusProvider.CacheStatus(result);
-
-//			GetThermostatStatusResult temperatureResult = await _nestWebService.GetThermostatStatusAsync(thermostat);
-//			if(temperatureResult.Exception != null)
-//				Stop();
-			
-//			_delayedStatusProvider.CacheStatus(temperatureResult);
 		}
 
 		private async void OnTimerTick(object state) {

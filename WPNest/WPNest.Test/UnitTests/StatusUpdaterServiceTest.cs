@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Moq;
@@ -27,7 +28,7 @@ namespace WPNest.Test.UnitTests {
 			ServiceContainer.RegisterService<IStatusProvider>(_mockStatusProvider.Object);
 
 			_mockWebService.Setup(w => w.GetThermostatStatusAsync(It.IsAny<Thermostat>())).Returns(Task.FromResult(new GetThermostatStatusResult(new Thermostat(""))));
-			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(new GetStatusResult(new[]{new Structure("")})));
+			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(new GetStatusResult(new[] { new Structure("") })));
 			_mockTimer.Setup(t => t.SetCallback(It.IsAny<TimerCallback>())).Callback<TimerCallback>(c => _timerCallback = c);
 			_mockStatusProvider.Setup(s => s.CacheStatus(It.IsAny<GetStatusResult>())).Callback<GetStatusResult>(g => _cachedStatusResult = g);
 
@@ -50,12 +51,22 @@ namespace WPNest.Test.UnitTests {
 
 		[TestMethod]
 		public void ShouldCacheStatusOnTimerTick() {
-			var expectedResult = new GetStatusResult(new[] {new Structure("")});
+			var expectedResult = new GetStatusResult(new[] { new Structure("") });
 			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(expectedResult));
 
 			_timerCallback(null);
 
-			_mockStatusProvider.Verify(s=>s.CacheStatus(expectedResult));
+			_mockStatusProvider.Verify(s => s.CacheStatus(expectedResult));
+		}
+
+		[TestMethod]
+		public void ShouldStopTimerIfGetStructureAndDeviceStatusFails() {
+			var expectedResult = new GetStatusResult(WebServiceError.Unknown, new Exception());
+			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(expectedResult));
+
+			_timerCallback(null);
+
+			_mockTimer.Verify(t => t.Change(Timeout.Infinite, Timeout.Infinite));
 		}
 	}
 }
