@@ -39,5 +39,16 @@ namespace WPNest.Test.UnitTests {
 
 			_mockStatusProvider.Verify(s=>s.Reset());
 		}
+
+		[TestMethod]
+		public void ShouldGetStrucutreAndDeviceStatusOnTimerTick() {
+			TimerCallback callback = null;
+			_mockTimer.Setup(t => t.SetCallback(It.IsAny<TimerCallback>())).Callback<TimerCallback>(c => callback = c);
+
+			_updaterService = new StatusUpdaterService();
+			callback(null);
+
+			_mockWebService.Verify(w=>w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>()));
+		}
 	}
 }

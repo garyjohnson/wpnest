@@ -10,5 +10,6 @@ namespace WPNest.Services {
 		Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat);
 		Task<WebServiceResult> SetFanModeAsync(Thermostat thermostat, FanMode fanMode);
 		Task<WebServiceResult> UpdateTransportUrlAsync();
+		Task<GetStatusResult> GetStructureAndDeviceStatusAsync(Structure structure);
 	}
 }
