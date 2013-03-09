@@ -25,6 +25,7 @@ namespace WPNest.Test.UnitTests {
 			ServiceContainer.RegisterService<IStatusProvider>(_mockStatusProvider.Object);
 
 			_mockWebService.Setup(w => w.GetThermostatStatusAsync(It.IsAny<Thermostat>())).Returns(Task.FromResult(new GetThermostatStatusResult(new Thermostat(""))));
+			_mockWebService.Setup(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>())).Returns(Task.FromResult(new GetStatusResult(new[]{new Structure("")})));
 
 			_updaterService = new StatusUpdaterService();
 		}
@@ -37,7 +38,7 @@ namespace WPNest.Test.UnitTests {
 			_updaterService = new StatusUpdaterService();
 			callback(null);
 
-			_mockStatusProvider.Verify(s=>s.Reset());
+			_mockStatusProvider.Verify(s => s.Reset());
 		}
 
 		[TestMethod]
@@ -48,7 +49,7 @@ namespace WPNest.Test.UnitTests {
 			_updaterService = new StatusUpdaterService();
 			callback(null);
 
-			_mockWebService.Verify(w=>w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>()));
+			_mockWebService.Verify(w => w.GetStructureAndDeviceStatusAsync(It.IsAny<Structure>()));
 		}
 	}
 }
