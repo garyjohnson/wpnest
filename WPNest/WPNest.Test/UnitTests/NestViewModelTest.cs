@@ -134,6 +134,18 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public void ShouldUpdateIsAway() {
+				var structure = new Structure("") {IsAway = true};
+				var thermostat = new Thermostat("");
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
+
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
+
+				Assert.AreEqual(structure.IsAway, _viewModel.IsAway, "Expected IsAway to update from status change.");
+			}
+
+			[TestMethod]
 			public void ShouldNotBeLoggedInOnInvalidCredentialsException() {
 				var result = new GetStatusResult(WebServiceError.InvalidCredentials, new Exception());
 				var args = new StatusEventArgs(result);

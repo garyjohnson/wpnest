@@ -19,6 +19,15 @@ namespace WPNest {
 		private readonly IDialogProvider _dialogProvider;
 		private GetStatusResult _getStatusResult;
 
+		private bool _isAway;
+		public bool IsAway {
+			get { return _isAway; }
+			set {
+				_isAway = value;
+				OnPropertyChanged("IsAway");
+			}
+		}
+
 		private double _targetTemperature;
 		public double TargetTemperature {
 			get { return _targetTemperature; }
@@ -136,6 +145,7 @@ namespace WPNest {
 			IsHeating = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).IsHeating;
 			IsCooling = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).IsCooling;
 			FanMode = e.Status.Structures.ElementAt(0).Thermostats.ElementAt(0).FanMode;
+			IsAway = e.Status.Structures.ElementAt(0).IsAway;
 		}
 
 		public async Task InitializeAsync() {
