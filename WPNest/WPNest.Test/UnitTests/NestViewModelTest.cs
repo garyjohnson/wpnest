@@ -366,10 +366,10 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public async Task ShouldSetStatusUpdaterCurrentThermostatToFirstThermostat() {
+			public async Task ShouldSetStatusUpdaterCurrentStructureToStructure() {
 				await _viewModel.LoginAsync();
 
-				_statusUpdaterService.VerifySet(s => s.CurrentThermostat = _firstThermostat);
+				_statusUpdaterService.VerifySet(s => s.CurrentStructure = _structure);
 			}
 
 			[TestMethod]

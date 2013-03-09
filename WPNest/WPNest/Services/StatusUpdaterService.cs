@@ -10,7 +10,7 @@ namespace WPNest.Services {
 		private readonly IStatusProvider _delayedStatusProvider;
 		private readonly INestWebService _nestWebService;
 
-		public Thermostat CurrentThermostat { get; set; }
+		public Structure CurrentStructure { get; set; }
 
 		public StatusUpdaterService() {
 			_nestWebService = ServiceContainer.GetService<INestWebService>();
@@ -28,13 +28,13 @@ namespace WPNest.Services {
 		}
 
 		public async Task UpdateStatusAsync() {
-			await UpdateStatusAsync(CurrentThermostat);
+			await UpdateStatusAsync(CurrentStructure);
 		}
 
-		private async Task UpdateStatusAsync(Thermostat thermostat) {
+		private async Task UpdateStatusAsync(Structure structure) {
 			_delayedStatusProvider.Reset();
 
-			GetStatusResult result = await _nestWebService.GetStructureAndDeviceStatusAsync(new Structure(""));
+			GetStatusResult result = await _nestWebService.GetStructureAndDeviceStatusAsync(structure);
 			if (result.Exception != null)
 				Stop();
 
@@ -42,7 +42,7 @@ namespace WPNest.Services {
 		}
 
 		private async void OnTimerTick(object state) {
-			await UpdateStatusAsync(CurrentThermostat);
+			await UpdateStatusAsync(CurrentStructure);
 		}
 	}
 }

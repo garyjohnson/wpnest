@@ -191,7 +191,7 @@ namespace WPNest {
 			IsCooling = thermostat.IsCooling;
 			FanMode = thermostat.FanMode;
 
-			_statusUpdater.CurrentThermostat = thermostat;
+			_statusUpdater.CurrentStructure = _getStatusResult.Structures.ElementAt(0);
 			_statusUpdater.Start();
 		}
 

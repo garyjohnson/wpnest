@@ -68,5 +68,15 @@ namespace WPNest.Test.UnitTests {
 
 			_mockTimer.Verify(t => t.Change(Timeout.Infinite, Timeout.Infinite));
 		}
+
+		[TestMethod]
+		public void ShouldPassCurrentStructureToWebServiceForStatus() {
+			var expectedStructure = new Structure("id");
+			_updaterService.CurrentStructure = expectedStructure;
+
+			_timerCallback(null);
+
+			_mockWebService.Verify(w=>w.GetStructureAndDeviceStatusAsync(expectedStructure));
+		}
 	}
 }

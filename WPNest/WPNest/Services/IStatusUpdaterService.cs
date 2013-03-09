@@ -3,7 +3,7 @@
 namespace WPNest.Services {
 
 	public interface IStatusUpdaterService {
-		Thermostat CurrentThermostat { get; set; }
+		Structure CurrentStructure { get; set; }
 		void Start();
 		void Stop();
 		Task UpdateStatusAsync();
