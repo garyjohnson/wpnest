@@ -536,8 +536,10 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
-			<TextBlock x:Name="fanLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Fan" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
+			<TextBlock x:Name="fanLabel" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Fan" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
 			<toolkit:ToggleSwitch x:Name="fanSwitch" VerticalAlignment="Top" Grid.Row="2" Margin="20,10,0,0" Content="{Binding FanMode, Converter={StaticResource FanModeToLabelConverter}}" IsChecked="{Binding FanMode, Converter={StaticResource FanModeToBoolConverter}, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
+			<TextBlock x:Name="awayLabel" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Away" VerticalAlignment="Top" Grid.Row="3" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
+			<toolkit:ToggleSwitch x:Name="awaySwitch" VerticalAlignment="Top" Grid.Row="3" Margin="20,10,0,0" IsChecked="{Binding IsAway, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
 		</Grid>
 
 	</Grid>

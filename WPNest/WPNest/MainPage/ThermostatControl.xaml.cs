@@ -25,6 +25,9 @@ namespace WPNest {
 		private const string VisualStateHeating = "Heating";
 		private const string VisualStateDefault = "Default";
 
+		private const string VisualStateAway = "Away";
+		private const string VisualStateNotAway = "NotAway";
+
 		private readonly PathGeometry _heavyTicksGeometry = new PathGeometry();
 		private readonly PathGeometry _mediumTicksGeometry = new PathGeometry();
 		private readonly PathGeometry _lightTicksGeometry = new PathGeometry();
@@ -70,9 +73,25 @@ namespace WPNest {
 			set { SetValue(IsCoolingProperty, value); }
 		}
 
+		public static readonly DependencyProperty IsAwayProperty =
+			DependencyProperty.Register("IsAway", typeof(bool), typeof(ThermostatControl),
+			new PropertyMetadata(false, OnIsAwayChanged));
+
+		public bool IsAway {
+			get { return (bool)GetValue(IsAwayProperty); }
+			set { SetValue(IsAwayProperty, value); }
+		}
+
 		private static void OnHVACChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl) sender;
-			thermostat.UpdateVisualState();
+			thermostat.UpdateHvacVisualState();
+		}
+
+		private static void OnIsAwayChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var thermostat = (ThermostatControl) sender;
+			bool isAway = (bool) args.NewValue;
+
+			thermostat.UpdateAwayVisualState(isAway);
 		}
 
 		private NestViewModel ViewModel {
@@ -119,13 +138,20 @@ namespace WPNest {
 			await ViewModel.LowerTemperatureAsync();
 		}
 
-		private void UpdateVisualState() {
+		private void UpdateHvacVisualState() {
 			if (ViewModel.IsCooling)
 				VisualStateManager.GoToState(this, VisualStateCooling, true);
 			else if (ViewModel.IsHeating)
 				VisualStateManager.GoToState(this, VisualStateHeating, true);
 			else
 				VisualStateManager.GoToState(this, VisualStateDefault, true);
+		}
+
+		private void UpdateAwayVisualState(bool isAway) {
+			if (isAway)
+				VisualStateManager.GoToState(this, VisualStateAway, true);
+			else
+				VisualStateManager.GoToState(this, VisualStateNotAway, true);
 		}
 
 		private double AngleFromTemperature(double temperature) {
@@ -228,6 +254,12 @@ namespace WPNest {
 
 		private void OnCurrentTemperatureLayoutUpdated(object sender, EventArgs e) {
 			RefreshCurrentTemperatureLabelPosition();
+		}
+
+		private void OnAwayButtonPressed(object sender, RoutedEventArgs e) {
+			MessageBoxResult result = MessageBox.Show("Do you want to end Away?", "Your home is currently set to Away.", MessageBoxButton.OKCancel);
+			if (result == MessageBoxResult.OK)
+				ViewModel.IsAway = false;
 		}
 	}
 }

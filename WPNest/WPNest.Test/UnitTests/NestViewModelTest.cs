@@ -543,7 +543,7 @@ namespace WPNest.Test.UnitTests {
 		public class WhenSettingFanMode : NestViewModelTestBase {
 
 			[TestMethod]
-			public async Task ShouldResetStatusProviderOnSetFanMode() {
+			public async Task ShouldResetStatusProvider() {
 				await _viewModel.LoginAsync();
 
 				_viewModel.FanMode = FanMode.Auto;
@@ -598,6 +598,19 @@ namespace WPNest.Test.UnitTests {
 
 				_nestWebService.Verify(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()), 
 					Times.Never());
+			}
+		}
+
+		[TestClass]
+		public class WhenSettingIsAway : NestViewModelTestBase {
+				
+			[TestMethod]
+			public async Task ShouldResetStatusProvider() {
+				await _viewModel.LoginAsync();
+
+				_viewModel.IsAway = true;
+
+				_statusProvider.Verify(s => s.Reset());
 			}
 		}
 	}

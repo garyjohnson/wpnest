@@ -25,6 +25,8 @@ namespace WPNest {
 			set {
 				_isAway = value;
 				OnPropertyChanged("IsAway");
+				if (IsLoggedIn)
+					SetAwayModeAsync(_isAway);
 			}
 		}
 
@@ -224,6 +226,10 @@ namespace WPNest {
 				return;
 
 			await _statusUpdater.UpdateStatusAsync();
+		}
+
+		private async void SetAwayModeAsync(bool isAway) {
+			_statusProvider.Reset();
 		}
 
 		private async void SetFanModeAsync(FanMode fanMode) {
