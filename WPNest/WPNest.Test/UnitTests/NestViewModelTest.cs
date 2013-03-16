@@ -622,6 +622,16 @@ namespace WPNest.Test.UnitTests {
 
 				_nestWebService.Verify(w=>w.SetAwayMode(It.IsAny<Structure>(), true));
 			}
+
+			[TestMethod]
+			public async Task ShouldNotSetIsAwayIfSameAsStructure() {
+				await _viewModel.LoginAsync();
+
+				_viewModel.IsAway = _structure.IsAway;
+
+				_nestWebService.Verify(n => n.SetAwayMode(It.IsAny<Structure>(), It.IsAny<bool>()), 
+					Times.Never());
+			}
 		}
 	}
 }

@@ -229,6 +229,9 @@ namespace WPNest {
 		}
 
 		private async void SetAwayModeAsync(bool isAway) {
+			if (GetFirstStructure().IsAway == isAway)
+				return;
+
 			_statusProvider.Reset();
 
 			await _nestWebService.SetAwayMode(null, isAway);
@@ -267,8 +270,12 @@ namespace WPNest {
 			await _statusUpdater.UpdateStatusAsync();
 		}
 
+		private Structure GetFirstStructure() {
+			return _getStatusResult.Structures.ElementAt(0);
+		}
+
 		private Thermostat GetFirstThermostat() {
-			return _getStatusResult.Structures.ElementAt(0).Thermostats[0];
+			return GetFirstStructure().Thermostats[0];
 		}
 
 		private bool IsErrorHandled(WebServiceError error, Exception exception) {
