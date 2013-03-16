@@ -146,12 +146,17 @@ namespace WPNest {
 		}
 
 		private void UpdateViewModelFromGetStatusResult(GetStatusResult statusResult) {
-			TargetTemperature = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).TargetTemperature;
-			CurrentTemperature = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).CurrentTemperature;
-			IsHeating = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).IsHeating;
-			IsCooling = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).IsCooling;
-			FanMode = statusResult.Structures.ElementAt(0).Thermostats.ElementAt(0).FanMode;
-			IsAway = statusResult.Structures.ElementAt(0).IsAway;
+			Structure firstStructure = statusResult.Structures.ElementAt(0);
+			Thermostat firstThermostat = firstStructure.Thermostats.ElementAt(0);
+
+			_getStatusResult = statusResult;
+
+			TargetTemperature = firstThermostat.TargetTemperature;
+			CurrentTemperature = firstThermostat.CurrentTemperature;
+			IsHeating = firstThermostat.IsHeating;
+			IsCooling = firstThermostat.IsCooling;
+			FanMode = firstThermostat.FanMode;
+			IsAway = firstStructure.IsAway;
 		}
 
 		public async Task InitializeAsync() {
