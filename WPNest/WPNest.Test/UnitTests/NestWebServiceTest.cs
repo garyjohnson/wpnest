@@ -280,6 +280,16 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenSettingAwayMode : NestWebServiceTestBase {}
+		public class WhenSettingAwayMode : NestWebServiceTestBase {
+			
+			[TestMethod]
+			public async Task ShouldUseCorrectUrl() {
+				var structure = new Structure("id123");
+				await _webService.SetAwayMode(structure, true);
+
+				var expectedUri = new Uri(BaseUrl + "/v2/put/structure.id123");
+				_requestProvider.Verify(r => r.CreateRequest(expectedUri));
+			}
+		}
 	}
 }

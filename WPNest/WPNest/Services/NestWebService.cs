@@ -137,8 +137,10 @@ namespace WPNest.Services {
 			return await SendPutRequestAsync(url, requestString);
 		}
 
-		public Task<WebServiceResult> SetAwayMode(Structure structure, bool isAway) {
-			return null;
+		public async Task<WebServiceResult> SetAwayMode(Structure structure, bool isAway) {
+			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
+			string requestString = "";
+			return await SendPutRequestAsync(url, requestString);
 		}
 
 		public async Task<WebServiceResult> UpdateTransportUrlAsync() {
