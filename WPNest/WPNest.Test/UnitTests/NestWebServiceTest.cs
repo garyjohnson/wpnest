@@ -290,6 +290,15 @@ namespace WPNest.Test.UnitTests {
 				var expectedUri = new Uri(BaseUrl + "/v2/put/structure.id123");
 				_requestProvider.Verify(r => r.CreateRequest(expectedUri));
 			}
+
+			[TestMethod]
+			public async Task ShouldSetAwayModeInRequestString() {
+				var structure = new Structure("id123");
+				await _webService.SetAwayMode(structure, true);
+
+				string expectedString = "{\"away\":\"true\"}";
+				_webRequest.Verify(r=>r.SetRequestStringAsync(expectedString));
+			}
 		}
 	}
 }
