@@ -187,7 +187,7 @@
     		<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
     		<Path x:Name="mediumTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="3"/>
     		<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7"/>
-    		<TextBlock x:Name="awayTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="AWAY" VerticalAlignment="Center" Grid.RowSpan="3" FontSize="80" FontFamily="Segoe WP Semibold" IsHitTestVisible="False" Opacity="0"/>
+    		<TextBlock x:Name="awayTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="AWAY" VerticalAlignment="Center" Grid.RowSpan="3" FontSize="80" FontFamily="Segoe WP Semibold" IsHitTestVisible="False" Opacity="0" Foreground="White"/>
     		<TextBlock x:Name="textBlock" Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="White"/>
     		<Canvas Grid.RowSpan="3">
 				<TextBlock x:Name="currentTemperature" HorizontalAlignment="Left" TextWrapping="NoWrap" TextAlignment="Center" 
