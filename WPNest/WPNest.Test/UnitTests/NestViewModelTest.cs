@@ -40,6 +40,7 @@ namespace WPNest.Test.UnitTests {
 
 				_nestWebService.Setup(w => w.LoginAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
+				_nestWebService.Setup(w => w.SetAwayMode(It.IsAny<Structure>(), It.IsAny<bool>())).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.GetFullStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
 				_nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
@@ -611,6 +612,15 @@ namespace WPNest.Test.UnitTests {
 				_viewModel.IsAway = true;
 
 				_statusProvider.Verify(s => s.Reset());
+			}
+
+			[TestMethod]
+			public async Task ShouldCallWebServiceSetAwayMode() {
+				await _viewModel.LoginAsync();
+
+				_viewModel.IsAway = true;
+
+				_nestWebService.Verify(w=>w.SetAwayMode(It.IsAny<Structure>(), true));
 			}
 		}
 	}

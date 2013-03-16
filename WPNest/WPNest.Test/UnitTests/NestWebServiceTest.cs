@@ -97,7 +97,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldReturnStructureFromDeserializer() {
 				var expectedStructure = new Structure("structureId");
 				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(expectedStructure);
-					
+
 				GetStatusResult result = await _webService.GetStructureAndDeviceStatusAsync(new Structure(""));
 
 				Assert.AreEqual(expectedStructure, result.Structures.ElementAt(0));
@@ -152,7 +152,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldAddThermostatsToResult() {
 				var expectedFanMode = FanMode.On;
 				_webServiceDeserializer.Setup(d => d.ParseFanModeFromDeviceSubscribeResult(It.IsAny<string>()))
-					.Returns(expectedFanMode);
+				                       .Returns(expectedFanMode);
 				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
 				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
 				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
@@ -170,7 +170,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldUseFanModeFromDeserializer() {
 				var expectedFanMode = FanMode.On;
 				_webServiceDeserializer.Setup(d => d.ParseFanModeFromDeviceSubscribeResult(It.IsAny<string>()))
-					.Returns(expectedFanMode);
+				                       .Returns(expectedFanMode);
 				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
 				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
 				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
@@ -199,7 +199,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldStopGettingDeviceStatusIfOneFails() {
 				_webRequest.SetupSequence(r => r.GetResponseAsync())
 				           .Returns(Task.FromResult(_webResponse.Object))
-						   .Throws(new Exception());
+				           .Throws(new Exception());
 				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.SessionTokenExpired));
 
 				string secondThermostatId = "12345";
@@ -231,7 +231,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldStopGettingDeviceStatusIfSharedStatusFails() {
 				_webRequest.SetupSequence(r => r.GetResponseAsync())
 				           .Returns(Task.FromResult(_webResponse.Object))
-						   .Throws(new Exception());
+				           .Throws(new Exception());
 				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.SessionTokenExpired));
 
 				string firstThermostatId = "12345";
@@ -276,6 +276,10 @@ namespace WPNest.Test.UnitTests {
 				_webHeaderCollection.VerifySet(w => w["X-nl-protocol-version"] = "1");
 				_webHeaderCollection.VerifySet(w => w["X-nl-user-id"] = userId);
 			}
+
 		}
+
+		[TestClass]
+		public class WhenSettingAwayMode : NestWebServiceTestBase {}
 	}
 }

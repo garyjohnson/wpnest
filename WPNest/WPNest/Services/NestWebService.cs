@@ -137,6 +137,10 @@ namespace WPNest.Services {
 			return await SendPutRequestAsync(url, requestString);
 		}
 
+		public Task<WebServiceResult> SetAwayMode(Structure structure, bool isAway) {
+			return null;
+		}
+
 		public async Task<WebServiceResult> UpdateTransportUrlAsync() {
 			IWebRequest request = GetPostJsonRequest("https://home.nest.com/user/service_urls");
 			SetAuthorizationHeaderOnRequest(request, _sessionProvider.AccessToken);

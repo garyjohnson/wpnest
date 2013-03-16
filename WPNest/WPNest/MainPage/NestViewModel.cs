@@ -230,6 +230,8 @@ namespace WPNest {
 
 		private async void SetAwayModeAsync(bool isAway) {
 			_statusProvider.Reset();
+
+			await _nestWebService.SetAwayMode(null, isAway);
 		}
 
 		private async void SetFanModeAsync(FanMode fanMode) {
