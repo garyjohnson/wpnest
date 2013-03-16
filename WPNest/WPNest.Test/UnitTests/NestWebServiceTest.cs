@@ -299,6 +299,39 @@ namespace WPNest.Test.UnitTests {
 				string expectedString = "{\"away\":\"true\"}";
 				_webRequest.Verify(r=>r.SetRequestStringAsync(expectedString));
 			}
+
+			[TestMethod]
+			public async Task ShouldSetAuthorizationHeaderOnRequest() {
+				string accessToken = "token";
+				_sessionProvider.SetupGet(s => s.AccessToken).Returns(accessToken);
+				await _webService.SetAwayMode(new Structure(""), true);
+
+				_webHeaderCollection.VerifySet(w => w["Authorization"] = "Basic " + accessToken);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetMethodToPost() {
+				await _webService.SetAwayMode(new Structure(""), true);
+
+				_webRequest.VerifySet(w => w.Method = "POST");
+			}
+
+			[TestMethod]
+			public async Task ShouldSetContentTypeToJson() {
+				await _webService.SetAwayMode(new Structure(""), true);
+
+				_webRequest.VerifySet(w => w.ContentType = ContentType.Json);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetNestHeadersOnRequest() {
+				string userId = "userId";
+				_sessionProvider.SetupGet(s => s.UserId).Returns(userId);
+				await _webService.SetAwayMode(new Structure(""), true);
+
+				_webHeaderCollection.VerifySet(w => w["X-nl-protocol-version"] = "1");
+				_webHeaderCollection.VerifySet(w => w["X-nl-user-id"] = userId);
+			}
 		}
 	}
 }
