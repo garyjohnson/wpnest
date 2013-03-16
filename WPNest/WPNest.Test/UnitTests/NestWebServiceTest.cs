@@ -22,6 +22,7 @@ namespace WPNest.Test.UnitTests {
 		protected static Mock<IWebHeaderCollection> _webHeaderCollection;
 		protected static Mock<INestWebServiceDeserializer> _webServiceDeserializer;
 		protected static Mock<IWebResponse> _webResponse;
+		protected static Mock<ITimestampProvider> _timestampProvider;
 
 		public class NestWebServiceTestBase {
 
@@ -34,6 +35,7 @@ namespace WPNest.Test.UnitTests {
 				_analytics = new Mock<IAnalyticsService>();
 				_sessionProvider = new Mock<ISessionProvider>();
 				_webHeaderCollection = new Mock<IWebHeaderCollection>();
+				_timestampProvider = new Mock<ITimestampProvider>();
 
 				_sessionProvider.SetupGet(s => s.TransportUrl).Returns(BaseUrl);
 				_requestProvider.Setup(r => r.CreateRequest(It.IsAny<Uri>())).Returns(_webRequest.Object);
@@ -45,11 +47,13 @@ namespace WPNest.Test.UnitTests {
 				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(""));
 				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(new Structure(""));
 				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.Unknown));
+				_timestampProvider.Setup(t => t.GetTimestamp()).Returns(1234567890L);
 
 				ServiceContainer.RegisterService<INestWebServiceDeserializer>(_webServiceDeserializer.Object);
 				ServiceContainer.RegisterService<IWebRequestProvider>(_requestProvider.Object);
 				ServiceContainer.RegisterService<IAnalyticsService>(_analytics.Object);
 				ServiceContainer.RegisterService<ISessionProvider>(_sessionProvider.Object);
+				ServiceContainer.RegisterService<ITimestampProvider>(_timestampProvider.Object);
 
 				_webService = new NestWebService();
 			}
@@ -293,8 +297,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldSetAwayModeInRequestString() {
-				var structure = new Structure("id123");
-				await _webService.SetAwayMode(structure, true);
+				await _webService.SetAwayMode(new Structure(""), true);
 
 				string expectedString = "\"away\":true";
 				_webRequest.Verify(r=>r.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedString))));
@@ -302,10 +305,20 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldSetAwaySetterInRequestString() {
-				var structure = new Structure("id123");
-				await _webService.SetAwayMode(structure, true);
+				await _webService.SetAwayMode(new Structure(""), true);
 
 				string expectedString = "\"away_setter\":0";
+				_webRequest.Verify(r=>r.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedString))));
+			}
+
+			[TestMethod]
+			public async Task ShouldSetAwayTimestampInRequestString() {
+				long timestamp = 1234567890L;
+				_timestampProvider.Setup(t => t.GetTimestamp()).Returns(timestamp);
+
+				await _webService.SetAwayMode(new Structure(""), true);
+
+				string expectedString = "\"away_timestamp\":" + timestamp;
 				_webRequest.Verify(r=>r.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedString))));
 			}
 

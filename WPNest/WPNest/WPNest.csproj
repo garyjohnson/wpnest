@@ -142,6 +142,7 @@
     <Compile Include="Services\AnalyticsService.cs" />
     <Compile Include="Services\INestWebServiceDeserializer.cs" />
     <Compile Include="Services\ITimer.cs" />
+    <Compile Include="Services\ITimestampProvider.cs" />
     <Compile Include="Services\IWebRequestProvider.cs" />
     <Compile Include="Services\NestWebServiceDeserializer.cs" />
     <Compile Include="Services\TimerWrapper.cs" />

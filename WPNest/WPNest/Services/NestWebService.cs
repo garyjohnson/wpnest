@@ -12,12 +12,14 @@ namespace WPNest.Services {
 		private readonly IAnalyticsService _analyticsService;
 		private readonly IWebRequestProvider _webRequestProvider;
 		private readonly INestWebServiceDeserializer _deserializer;
+		private readonly ITimestampProvider _timestampProvider;
 
 		public NestWebService() {
 			_deserializer = ServiceContainer.GetService<INestWebServiceDeserializer>();
 			_sessionProvider = ServiceContainer.GetService<ISessionProvider>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
 			_webRequestProvider = ServiceContainer.GetService<IWebRequestProvider>();
+			_timestampProvider = ServiceContainer.GetService<ITimestampProvider>();
 		}
 
 		public async Task<GetStatusResult> GetStructureAndDeviceStatusAsync(Structure structure) {
@@ -139,7 +141,8 @@ namespace WPNest.Services {
 
 		public async Task<WebServiceResult> SetAwayMode(Structure structure, bool isAway) {
 			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
-			string requestString = string.Format("{{\"away\":{0},\"away_setter\":0}}", isAway.ToString().ToLower());
+			string requestString = string.Format("{{\"away_timestamp\":{0},\"away\":{1},\"away_setter\":0}}", 
+				_timestampProvider.GetTimestamp(), isAway.ToString().ToLower());
 			return await SendPutRequestAsync(url, requestString);
 		}
 

@@ -177,6 +177,9 @@
     <Compile Include="..\WPNest\Services\ITimer.cs">
       <Link>Services\ITimer.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\ITimestampProvider.cs">
+      <Link>Services\ITimestampProvider.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\IWebRequestProvider.cs">
       <Link>Services\IWebRequestProvider.cs</Link>
     </Compile>
