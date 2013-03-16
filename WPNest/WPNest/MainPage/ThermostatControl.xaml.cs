@@ -103,6 +103,7 @@ namespace WPNest {
 			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
 			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
 			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
+			SetBinding(IsAwayProperty, new Binding("IsAway"));
 		}
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -257,7 +258,7 @@ namespace WPNest {
 		}
 
 		private void OnAwayButtonPressed(object sender, RoutedEventArgs e) {
-			MessageBoxResult result = MessageBox.Show("Do you want to end Away?", "Your home is currently set to Away.", MessageBoxButton.OKCancel);
+			MessageBoxResult result = MessageBox.Show("Do you want to end Away Mode?", string.Empty, MessageBoxButton.OKCancel);
 			if (result == MessageBoxResult.OK)
 				ViewModel.IsAway = false;
 		}

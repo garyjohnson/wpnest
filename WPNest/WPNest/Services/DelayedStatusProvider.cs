@@ -18,7 +18,17 @@ namespace WPNest.Services {
 			_cachedStatusResult = status;
 		}
 
-		public void Reset() {
+		public void Stop() {
+			Reset();
+			_displayCachedStatusTimer.Change(Timeout.Infinite, Timeout.Infinite);
+		}
+
+		public void Start() {
+			Reset();
+			StartDisplayCachedStatusTimer();	
+		}
+
+		private void Reset() {
 			_cachedStatusResult = null;
 		}
 

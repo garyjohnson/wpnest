@@ -34,6 +34,7 @@ namespace WPNest {
 		}
 
 		private void InitializeServices() {
+			ServiceContainer.RegisterService<ITimestampProvider>(new TimestampProvider());
 			ServiceContainer.RegisterService<ITimer, TimerWrapper>();
 			ServiceContainer.RegisterService<INestWebServiceDeserializer>(new NestWebServiceDeserializer());
 			ServiceContainer.RegisterService<IWebRequestProvider>(new WebRequestProvider());

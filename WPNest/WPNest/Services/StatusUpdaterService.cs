@@ -32,8 +32,6 @@ namespace WPNest.Services {
 		}
 
 		private async Task UpdateStatusAsync(Structure structure) {
-			_delayedStatusProvider.Reset();
-
 			GetStatusResult result = await _nestWebService.GetStructureAndDeviceStatusAsync(structure);
 			if (result.Exception != null)
 				Stop();

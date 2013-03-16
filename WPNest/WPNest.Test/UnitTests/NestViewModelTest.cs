@@ -417,11 +417,12 @@ namespace WPNest.Test.UnitTests {
 		public class WhenRaisingTemperature : NestViewModelTestBase {
 
 			[TestMethod]
-			public async Task ShouldResetStatusProvider() {
+			public async Task ShouldStopAndStartStatusProvider() {
 				await _viewModel.LoginAsync();
 				await _viewModel.RaiseTemperatureAsync();
 
-				_statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Stop());
+				_statusProvider.Verify(s => s.Start());
 			}
 
 			[TestMethod]
@@ -479,12 +480,13 @@ namespace WPNest.Test.UnitTests {
 		public class WhenLoweringTemperature : NestViewModelTestBase {
 
 			[TestMethod]
-			public async Task ShouldResetStatusProvider() {
+			public async Task ShouldStopAndStartStatusProvider() {
 				await _viewModel.LoginAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				await _viewModel.LowerTemperatureAsync();
 
-				_statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Stop());
+				_statusProvider.Verify(s => s.Start());
 			}
 
 			[TestMethod]
@@ -544,12 +546,13 @@ namespace WPNest.Test.UnitTests {
 		public class WhenSettingFanMode : NestViewModelTestBase {
 
 			[TestMethod]
-			public async Task ShouldResetStatusProvider() {
+			public async Task ShouldStopAndStartStatusProvider() {
 				await _viewModel.LoginAsync();
 
 				_viewModel.FanMode = FanMode.Auto;
 
-				_statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Stop());
+				_statusProvider.Verify(s => s.Start());
 			}
 
 			[TestMethod]
@@ -606,12 +609,13 @@ namespace WPNest.Test.UnitTests {
 		public class WhenSettingIsAway : NestViewModelTestBase {
 				
 			[TestMethod]
-			public async Task ShouldResetStatusProvider() {
+			public async Task ShouldStopAndStartStatusProvider() {
 				await _viewModel.LoginAsync();
 
 				_viewModel.IsAway = true;
 
-				_statusProvider.Verify(s => s.Reset());
+				_statusProvider.Verify(s => s.Stop());
+				_statusProvider.Verify(s => s.Start());
 			}
 
 			[TestMethod]

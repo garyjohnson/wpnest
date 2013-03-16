@@ -4,7 +4,8 @@ namespace WPNest.Services {
 
 	public interface IStatusProvider {
 		void CacheStatus(GetStatusResult status);
-		void Reset();
+		void Start();
+		void Stop();
 		event EventHandler<StatusEventArgs> StatusUpdated;
 	}
 }

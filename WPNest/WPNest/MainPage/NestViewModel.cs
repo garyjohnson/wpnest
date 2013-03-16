@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WPNest.Services;
@@ -219,28 +220,39 @@ namespace WPNest {
 			if (TargetTemperature >= MaxTemperature)
 				return;
 
-			_statusProvider.Reset();
+			try {
+				_statusProvider.Stop();
 
-			var thermostat = GetFirstThermostat();
+				var thermostat = GetFirstThermostat();
 
-			double desiredTemperature = TargetTemperature + 1.0d;
-			TargetTemperature = desiredTemperature;
+				double desiredTemperature = TargetTemperature + 1.0d;
+				TargetTemperature = desiredTemperature;
 
-			var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
-			if (IsErrorHandled(result.Error, result.Exception))
-				return;
+				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
+				if (IsErrorHandled(result.Error, result.Exception))
+					return;
 
-			await _statusUpdater.UpdateStatusAsync();
+				await _statusUpdater.UpdateStatusAsync();
+			}
+			finally {
+				_statusProvider.Start();
+			}
 		}
 
 		private async void SetAwayModeAsync(bool isAway) {
 			Structure structure = GetFirstStructure();
-			if (structure.IsAway == isAway)
+			if (structure.IsAway == isAway) {
 				return;
+			}
 
-			_statusProvider.Reset();
-
-			await _nestWebService.SetAwayMode(structure, isAway);
+			try {
+				_statusProvider.Stop();
+				structure.IsAway = isAway;
+				await _nestWebService.SetAwayMode(structure, isAway);
+			}
+			finally {
+				_statusProvider.Start();
+			}
 		}
 
 		private async void SetFanModeAsync(FanMode fanMode) {
@@ -248,32 +260,41 @@ namespace WPNest {
 			if (thermostat.FanMode == fanMode)
 				return;
 
-			_statusProvider.Reset();
+			try {
+				_statusProvider.Stop();
 
-			thermostat.FanMode = fanMode;
-			FanMode = fanMode;
-			var result = await _nestWebService.SetFanModeAsync(thermostat, fanMode);
-			if (IsErrorHandled(result.Error, result.Exception))
-				return;
+				thermostat.FanMode = fanMode;
+				var result = await _nestWebService.SetFanModeAsync(thermostat, fanMode);
+				if (IsErrorHandled(result.Error, result.Exception))
+					return;
 
-			await _statusUpdater.UpdateStatusAsync();
+				await _statusUpdater.UpdateStatusAsync();
+			}
+			finally {
+				_statusProvider.Start();
+			}
 		}
 
 		public async Task LowerTemperatureAsync() {
 			if (TargetTemperature <= MinTemperature)
 				return;
 
-			_statusProvider.Reset();
+			try {
+				_statusProvider.Stop();
 
-			var thermostat = GetFirstThermostat();
-			double desiredTemperature = TargetTemperature - 1.0d;
-			TargetTemperature = desiredTemperature;
+				var thermostat = GetFirstThermostat();
+				double desiredTemperature = TargetTemperature - 1.0d;
+				TargetTemperature = desiredTemperature;
 
-			var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
-			if (IsErrorHandled(result.Error, result.Exception))
-				return;
+				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
+				if (IsErrorHandled(result.Error, result.Exception))
+					return;
 
-			await _statusUpdater.UpdateStatusAsync();
+				await _statusUpdater.UpdateStatusAsync();
+			}
+			finally {
+				_statusProvider.Start();
+			}
 		}
 
 		private Structure GetFirstStructure() {

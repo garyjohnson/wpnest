@@ -36,13 +36,6 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldRefreshStatusProviderOnTimerTick() {
-			_timerCallback(null);
-
-			_mockStatusProvider.Verify(s => s.Reset());
-		}
-
-		[TestMethod]
 		public void ShouldGetStrucutreAndDeviceStatusOnTimerTick() {
 			_timerCallback(null);
 

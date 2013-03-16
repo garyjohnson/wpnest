@@ -47,7 +47,7 @@ namespace WPNest.Test.UnitTests {
 				_webResponse.Setup(w => w.GetResponseStringAsync()).Returns(Task.FromResult(""));
 				_webServiceDeserializer.Setup(d => d.ParseStructureFromGetStructureStatusResult(It.IsAny<string>(), It.IsAny<string>())).Returns(new Structure(""));
 				_webServiceDeserializer.Setup(d => d.ParseWebServiceErrorAsync(It.IsAny<Exception>())).Returns(Task.FromResult(WebServiceError.Unknown));
-				_timestampProvider.Setup(t => t.GetTimestamp()).Returns(1234567890L);
+				_timestampProvider.Setup(t => t.GetTimestamp()).Returns(1234567890d);
 
 				ServiceContainer.RegisterService<INestWebServiceDeserializer>(_webServiceDeserializer.Object);
 				ServiceContainer.RegisterService<IWebRequestProvider>(_requestProvider.Object);
@@ -313,7 +313,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldSetAwayTimestampInRequestString() {
-				long timestamp = 1234567890L;
+				double timestamp = 1234567890d;
 				_timestampProvider.Setup(t => t.GetTimestamp()).Returns(timestamp);
 
 				await _webService.SetAwayMode(new Structure(""), true);
