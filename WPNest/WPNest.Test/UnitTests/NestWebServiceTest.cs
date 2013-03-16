@@ -296,8 +296,8 @@ namespace WPNest.Test.UnitTests {
 				var structure = new Structure("id123");
 				await _webService.SetAwayMode(structure, true);
 
-				string expectedString = "{\"away\":\"true\"}";
-				_webRequest.Verify(r=>r.SetRequestStringAsync(expectedString));
+				string expectedString = "\"away\":true";
+				_webRequest.Verify(r=>r.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedString))));
 			}
 
 			[TestMethod]
