@@ -229,12 +229,13 @@ namespace WPNest {
 		}
 
 		private async void SetAwayModeAsync(bool isAway) {
-			if (GetFirstStructure().IsAway == isAway)
+			Structure structure = GetFirstStructure();
+			if (structure.IsAway == isAway)
 				return;
 
 			_statusProvider.Reset();
 
-			await _nestWebService.SetAwayMode(null, isAway);
+			await _nestWebService.SetAwayMode(structure, isAway);
 		}
 
 		private async void SetFanModeAsync(FanMode fanMode) {
