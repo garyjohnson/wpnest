@@ -301,6 +301,15 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public async Task ShouldSetAwaySetterInRequestString() {
+				var structure = new Structure("id123");
+				await _webService.SetAwayMode(structure, true);
+
+				string expectedString = "\"away_setter\":0";
+				_webRequest.Verify(r=>r.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedString))));
+			}
+
+			[TestMethod]
 			public async Task ShouldSetAuthorizationHeaderOnRequest() {
 				string accessToken = "token";
 				_sessionProvider.SetupGet(s => s.AccessToken).Returns(accessToken);

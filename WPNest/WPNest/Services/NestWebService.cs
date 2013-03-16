@@ -139,7 +139,7 @@ namespace WPNest.Services {
 
 		public async Task<WebServiceResult> SetAwayMode(Structure structure, bool isAway) {
 			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
-			string requestString = string.Format("{{\"away\":{0}}}", isAway.ToString().ToLower());
+			string requestString = string.Format("{{\"away\":{0},\"away_setter\":0}}", isAway.ToString().ToLower());
 			return await SendPutRequestAsync(url, requestString);
 		}
 
