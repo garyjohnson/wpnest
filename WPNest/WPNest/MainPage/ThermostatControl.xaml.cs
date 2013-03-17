@@ -105,18 +105,22 @@ namespace WPNest {
 			set { SetValue(IsLeafOnProperty, value); }
 		}
 
+		private NestViewModel ViewModel {
+			get { return DataContext as NestViewModel; }
+		}
+
 		private static void OnIsLeafOnChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl)sender;
 			var isLeafOn = (bool)args.NewValue;
 
-			thermostat.GoToNotificationVisualState(isLeafOn, thermostat.FanMode == FanMode.On);
+			thermostat.UpdateNotificationVisualState(isLeafOn, thermostat.FanMode == FanMode.On);
 		}
 
 		private static void OnFanModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl)sender;
 			var fanMode = (FanMode)args.NewValue;
 
-			thermostat.GoToNotificationVisualState(thermostat.IsLeafOn, fanMode == FanMode.On);
+			thermostat.UpdateNotificationVisualState(thermostat.IsLeafOn, fanMode == FanMode.On);
 		}
 
 		private static void OnHVACChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -131,23 +135,19 @@ namespace WPNest {
 			thermostat.UpdateAwayVisualState(isAway);
 		}
 
-		private NestViewModel ViewModel {
-			get { return DataContext as NestViewModel; }
-		}
-
-		private void InitializeBindings() {
-			SetBinding(CurrentTemperatureProperty, new Binding("CurrentTemperature"));
-			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
-			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
-			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
-			SetBinding(IsAwayProperty, new Binding("IsAway"));
-			SetBinding(FanModeProperty, new Binding("FanMode"));
-			SetBinding(IsLeafOnProperty, new Binding("IsLeafOn"));
-		}
-
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostatControl = (ThermostatControl)sender;
 			thermostatControl.RedrawTicks();
+		}
+
+		private void OnAwayButtonPressed(object sender, RoutedEventArgs e) {
+			MessageBoxResult result = MessageBox.Show("Do you want to end Away Mode?", string.Empty, MessageBoxButton.OKCancel);
+			if (result == MessageBoxResult.OK)
+				ViewModel.IsAway = false;
+		}
+
+		private void OnCurrentTemperatureLayoutUpdated(object sender, EventArgs e) {
+			RefreshCurrentTemperatureLabelPosition();
 		}
 
 		private void OnLoaded(object sender, RoutedEventArgs e) {
@@ -162,14 +162,6 @@ namespace WPNest {
 			RedrawTicks();
 		}
 
-		private void RedrawTicks() {
-			ClearTicks();
-			DrawMinorTicks();
-			DrawTargetTemperatureTick();
-			DrawCurrentTemperatureTick();
-			RefreshCurrentTemperatureLabelPosition();
-		}
-
 		private async void OnUpClick(object sender, RoutedEventArgs e) {
 			await ViewModel.RaiseTemperatureAsync();
 		}
@@ -178,20 +170,22 @@ namespace WPNest {
 			await ViewModel.LowerTemperatureAsync();
 		}
 
-		private void UpdateHvacVisualState() {
-			if (ViewModel.IsCooling)
-				GoToVisualState(VisualStateCooling);
-			else if (ViewModel.IsHeating)
-				GoToVisualState(VisualStateHeating);
-			else
-				GoToVisualState(VisualStateDefault);
+		private void InitializeBindings() {
+			SetBinding(CurrentTemperatureProperty, new Binding("CurrentTemperature"));
+			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
+			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
+			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
+			SetBinding(IsAwayProperty, new Binding("IsAway"));
+			SetBinding(FanModeProperty, new Binding("FanMode"));
+			SetBinding(IsLeafOnProperty, new Binding("IsLeafOn"));
 		}
 
-		private void UpdateAwayVisualState(bool isAway) {
-			if (isAway)
-				GoToVisualState(VisualStateAway);
-			else
-				GoToVisualState(VisualStateTemperatureTarget);
+		private void RedrawTicks() {
+			ClearTicks();
+			DrawMinorTicks();
+			DrawTargetTemperatureTick();
+			DrawCurrentTemperatureTick();
+			RefreshCurrentTemperatureLabelPosition();
 		}
 
 		private double AngleFromTemperature(double temperature) {
@@ -292,17 +286,24 @@ namespace WPNest {
 			return tickFigure;
 		}
 
-		private void OnCurrentTemperatureLayoutUpdated(object sender, EventArgs e) {
-			RefreshCurrentTemperatureLabelPosition();
+		private void UpdateHvacVisualState() {
+			if (ViewModel.IsCooling)
+				GoToVisualState(VisualStateCooling);
+			else if (ViewModel.IsHeating)
+				GoToVisualState(VisualStateHeating);
+			else
+				GoToVisualState(VisualStateDefault);
 		}
 
-		private void OnAwayButtonPressed(object sender, RoutedEventArgs e) {
-			MessageBoxResult result = MessageBox.Show("Do you want to end Away Mode?", string.Empty, MessageBoxButton.OKCancel);
-			if (result == MessageBoxResult.OK)
-				ViewModel.IsAway = false;
+		private void UpdateAwayVisualState(bool isAway) {
+			if (isAway)
+				GoToVisualState(VisualStateAway);
+			else
+				GoToVisualState(VisualStateTemperatureTarget);
 		}
 
-		private void GoToNotificationVisualState(bool isLeafOn, bool isFanOn) {
+
+		private void UpdateNotificationVisualState(bool isLeafOn, bool isFanOn) {
 			if(isFanOn)
 				GoToVisualState(VisualStateFanOn);
 			else if(isLeafOn)
