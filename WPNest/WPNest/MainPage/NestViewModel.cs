@@ -117,6 +117,15 @@ namespace WPNest {
 			}
 		}
 
+		private HvacMode _hvacMode;
+		public HvacMode HvacMode {
+			get { return _hvacMode; }
+			set {
+				_hvacMode = value;
+				OnPropertyChanged("HvacMode");
+			}
+		}
+
 		private bool _isLeafOn;
 		public bool IsLeafOn {
 			get { return _isLeafOn; }
@@ -167,6 +176,7 @@ namespace WPNest {
 			IsCooling = firstThermostat.IsCooling;
 			FanMode = firstThermostat.FanMode;
 			IsLeafOn = firstThermostat.IsLeafOn;
+			HvacMode = firstThermostat.HvacMode;
 			IsAway = firstStructure.IsAway;
 		}
 
@@ -319,7 +329,7 @@ namespace WPNest {
 			if (error == WebServiceError.InvalidCredentials ||
 				error == WebServiceError.SessionTokenExpired)
 				HandleLoginException(error);
-			else if(error == WebServiceError.Cancelled)
+			else if (error == WebServiceError.Cancelled)
 				HandleException();
 			else if (error == WebServiceError.ServerNotFound)
 				HandleException("Server was not found. Please check your network connection and press OK to retry.");

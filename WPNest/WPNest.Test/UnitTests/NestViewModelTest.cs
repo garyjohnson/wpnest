@@ -147,6 +147,18 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public void ShouldUpdateHvacMode() {
+				var structure = new Structure("");
+				var thermostat = new Thermostat(""){HvacMode = HvacMode.HeatAndCool};
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
+
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
+
+				Assert.AreEqual(thermostat.HvacMode, _viewModel.HvacMode, "Expected HvacMode to update from status change.");
+			}
+
+			[TestMethod]
 			public void ShouldUpdateIsLeafOn() {
 				var structure = new Structure("");
 				var thermostat = new Thermostat("") {IsLeafOn = true};
