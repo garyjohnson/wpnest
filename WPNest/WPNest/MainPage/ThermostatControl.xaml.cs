@@ -28,6 +28,10 @@ namespace WPNest {
 		private const string VisualStateAway = "Away";
 		private const string VisualStateNotAway = "NotAway";
 
+		private const string VisualStateFanOn = "FanOn";
+		private const string VisualStateLeafOn = "LeafOn";
+		private const string VisualStateAllOff = "AllOff";
+
 		private readonly PathGeometry _heavyTicksGeometry = new PathGeometry();
 		private readonly PathGeometry _mediumTicksGeometry = new PathGeometry();
 		private readonly PathGeometry _lightTicksGeometry = new PathGeometry();
@@ -91,14 +95,27 @@ namespace WPNest {
 			set { SetValue(FanModeProperty, value); }
 		}
 
+		public static readonly DependencyProperty IsLeafOnProperty =
+			DependencyProperty.Register("IsLeafOn", typeof(bool), typeof(ThermostatControl),
+			new PropertyMetadata(false, OnIsLeafOnChanged));
+
+		public bool IsLeafOn {
+			get { return (bool)GetValue(IsLeafOnProperty); }
+			set { SetValue(IsLeafOnProperty, value); }
+		}
+
+		private static void OnIsLeafOnChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var thermostat = (ThermostatControl)sender;
+			var isLeafOn = (bool)args.NewValue;
+
+			thermostat.GoToNotificationVisualState(isLeafOn, thermostat.FanMode == FanMode.On);
+		}
+
 		private static void OnFanModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl)sender;
 			var fanMode = (FanMode)args.NewValue;
 
-			if(fanMode == FanMode.Auto)
-				thermostat.GoToFanAutoVisualState();
-			else
-				thermostat.GoToFanOnVisualState();
+			thermostat.GoToNotificationVisualState(thermostat.IsLeafOn, fanMode == FanMode.On);
 		}
 
 		private static void OnHVACChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -124,6 +141,7 @@ namespace WPNest {
 			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
 			SetBinding(IsAwayProperty, new Binding("IsAway"));
 			SetBinding(FanModeProperty, new Binding("FanMode"));
+			SetBinding(IsLeafOnProperty, new Binding("IsLeafOn"));
 		}
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -161,18 +179,18 @@ namespace WPNest {
 
 		private void UpdateHvacVisualState() {
 			if (ViewModel.IsCooling)
-				VisualStateManager.GoToState(this, VisualStateCooling, true);
+				GoToVisualState(VisualStateCooling);
 			else if (ViewModel.IsHeating)
-				VisualStateManager.GoToState(this, VisualStateHeating, true);
+				GoToVisualState(VisualStateHeating);
 			else
-				VisualStateManager.GoToState(this, VisualStateDefault, true);
+				GoToVisualState(VisualStateDefault);
 		}
 
 		private void UpdateAwayVisualState(bool isAway) {
 			if (isAway)
-				VisualStateManager.GoToState(this, VisualStateAway, true);
+				GoToVisualState(VisualStateAway);
 			else
-				VisualStateManager.GoToState(this, VisualStateNotAway, true);
+				GoToVisualState(VisualStateNotAway);
 		}
 
 		private double AngleFromTemperature(double temperature) {
@@ -283,13 +301,17 @@ namespace WPNest {
 				ViewModel.IsAway = false;
 		}
 
-		private void GoToFanAutoVisualState() {
-			VisualStateManager.GoToState(this, "FanAuto", true);
+		private void GoToNotificationVisualState(bool isLeafOn, bool isFanOn) {
+			if(isFanOn)
+				GoToVisualState(VisualStateFanOn);
+			else if(isLeafOn)
+				GoToVisualState(VisualStateLeafOn);
+			else
+				GoToVisualState(VisualStateAllOff);
 		}
 
-		private void GoToFanOnVisualState() {
-			VisualStateManager.GoToState(this, "FanOn", true);
+		private void GoToVisualState(string visualState) {
+			VisualStateManager.GoToState(this, visualState, true);
 		}
-
 	}
 }

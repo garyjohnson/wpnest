@@ -117,6 +117,15 @@ namespace WPNest {
 			}
 		}
 
+		private bool _isLeafOn;
+		public bool IsLeafOn {
+			get { return _isLeafOn; }
+			set {
+				_isLeafOn = value;
+				OnPropertyChanged("IsLeafOn");
+			}
+		}
+
 		private WebServiceError _currentError = WebServiceError.None;
 		public WebServiceError CurrentError {
 			get { return _currentError; }
@@ -157,6 +166,7 @@ namespace WPNest {
 			IsHeating = firstThermostat.IsHeating;
 			IsCooling = firstThermostat.IsCooling;
 			FanMode = firstThermostat.FanMode;
+			IsLeafOn = firstThermostat.IsLeafOn;
 			IsAway = firstStructure.IsAway;
 		}
 

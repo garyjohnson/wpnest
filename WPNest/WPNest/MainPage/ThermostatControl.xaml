@@ -169,16 +169,21 @@
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
-			<VisualStateGroup x:Name="Fan_States">
+			<VisualStateGroup x:Name="Notification_States">
 				<VisualStateGroup.Transitions>
 					<VisualTransition GeneratedDuration="0:0:0.2" To="FanOn">
 						<VisualTransition.GeneratedEasingFunction>
 							<QuadraticEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>
 					</VisualTransition>
-					<VisualTransition GeneratedDuration="0:0:0.2" To="FanAuto">
+					<VisualTransition GeneratedDuration="0:0:0.2" To="AllOff">
 						<VisualTransition.GeneratedEasingFunction>
 							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.2" To="LeafOn">
+						<VisualTransition.GeneratedEasingFunction>
+							<ExponentialEase EasingMode="EaseInOut"/>
 						</VisualTransition.GeneratedEasingFunction>
 					</VisualTransition>
 				</VisualStateGroup.Transitions>
@@ -187,7 +192,13 @@
 						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="fanViewbox" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
-				<VisualState x:Name="FanAuto"/>
+				<VisualState x:Name="AllOff"/>
+				<VisualState x:Name="LeafOn">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="fanViewbox" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="leafViewbox" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 		<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" Margin="1,0,-1,0">
@@ -220,7 +231,7 @@
 			<Viewbox x:Name="fanViewbox" HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="40" Grid.Row="2" Margin="0,0,0,20" Opacity="0" IsHitTestVisible="False">
 				<Assets:FanIcon VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Opacity="0.4"/>
 			</Viewbox>
-			<Viewbox x:Name="leafViewbox" HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="55" Grid.Row="2" Margin="0,0,0,25" Visibility="Collapsed">
+			<Viewbox x:Name="leafViewbox" HorizontalAlignment="Center" Height="35" VerticalAlignment="Bottom" Width="45" Grid.Row="2" Margin="0,0,0,25" Opacity="0">
 				<Assets:LeafIcon HorizontalAlignment="Center" VerticalAlignment="Center"/>
 			</Viewbox>
 		</Grid>

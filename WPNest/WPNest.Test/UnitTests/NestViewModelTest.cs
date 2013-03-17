@@ -147,6 +147,18 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public void ShouldUpdateIsLeafOn() {
+				var structure = new Structure("");
+				var thermostat = new Thermostat("") {IsLeafOn = true};
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
+
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
+
+				Assert.AreEqual(thermostat.IsLeafOn, _viewModel.IsLeafOn, "Expected IsLeafOn to update from status change.");
+			}
+
+			[TestMethod]
 			public void ShouldNotBeLoggedInOnInvalidCredentialsException() {
 				var result = new GetStatusResult(WebServiceError.InvalidCredentials, new Exception());
 				var args = new StatusEventArgs(result);
