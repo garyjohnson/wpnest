@@ -46,7 +46,7 @@ namespace WPNest {
 
 		public static readonly DependencyProperty IsHeatingProperty =
 			DependencyProperty.Register("IsHeating", typeof(bool), typeof(ThermostatControl),
-			new PropertyMetadata(false, OnHVACChanged));
+			new PropertyMetadata(false, OnIsHeatingChanged));
 
 		public bool IsHeating {
 			get { return (bool)GetValue(IsHeatingProperty); }
@@ -55,7 +55,7 @@ namespace WPNest {
 
 		public static readonly DependencyProperty IsCoolingProperty =
 			DependencyProperty.Register("IsCooling", typeof(bool), typeof(ThermostatControl),
-			new PropertyMetadata(false, OnHVACChanged));
+			new PropertyMetadata(false, OnIsCoolingChanged));
 
 		public bool IsCooling {
 			get { return (bool)GetValue(IsCoolingProperty); }
@@ -78,6 +78,15 @@ namespace WPNest {
 		public FanMode FanMode {
 			get { return (FanMode)GetValue(FanModeProperty); }
 			set { SetValue(FanModeProperty, value); }
+		}
+
+		public static readonly DependencyProperty HvacModeProperty =
+			DependencyProperty.Register("HvacMode", typeof(HvacMode), typeof(ThermostatControl), 
+			new PropertyMetadata(HvacMode.HeatOnly, OnHvacModeChanged));
+
+		public HvacMode HvacMode {
+			get { return (HvacMode)GetValue(HvacModeProperty); }
+			set { SetValue(HvacModeProperty, value); }
 		}
 
 		public static readonly DependencyProperty IsLeafOnProperty =
@@ -107,16 +116,32 @@ namespace WPNest {
 			thermostat.UpdateNotificationVisualState(thermostat.IsLeafOn, fanMode == FanMode.On);
 		}
 
-		private static void OnHVACChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+		private static void OnHvacModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var thermostat = (ThermostatControl)sender;
+			var hvacMode = (HvacMode)args.NewValue;
+
+			thermostat.UpdateHvacModeVisualState(thermostat.IsAway, hvacMode);
+		}
+
+		private static void OnIsCoolingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl) sender;
-			thermostat.UpdateHvacVisualState();
+			bool isCooling = (bool) args.NewValue;
+
+			thermostat.UpdateHvacVisualState(thermostat.IsHeating, isCooling);
+		}
+
+		private static void OnIsHeatingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var thermostat = (ThermostatControl) sender;
+			bool isHeating = (bool) args.NewValue;
+
+			thermostat.UpdateHvacVisualState(isHeating, thermostat.IsCooling);
 		}
 
 		private static void OnIsAwayChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl) sender;
 			bool isAway = (bool) args.NewValue;
 
-			thermostat.UpdateAwayVisualState(isAway);
+			thermostat.UpdateHvacModeVisualState(isAway, thermostat.HvacMode);
 		}
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -169,24 +194,26 @@ namespace WPNest {
 			SetBinding(IsAwayProperty, new Binding("IsAway"));
 			SetBinding(FanModeProperty, new Binding("FanMode"));
 			SetBinding(IsLeafOnProperty, new Binding("IsLeafOn"));
+			SetBinding(HvacModeProperty, new Binding("HvacMode"));
 		}
 
-		private void UpdateHvacVisualState() {
-			if (ViewModel.IsCooling)
+		private void UpdateHvacVisualState(bool isHeating, bool isCooling) {
+			if (isCooling)
 				GoToVisualState(VisualStateCooling);
-			else if (ViewModel.IsHeating)
+			else if (isHeating)
 				GoToVisualState(VisualStateHeating);
 			else
 				GoToVisualState(VisualStateDefault);
 		}
 
-		private void UpdateAwayVisualState(bool isAway) {
+		private void UpdateHvacModeVisualState(bool isAway, HvacMode hvacMode) {
 			if (isAway)
 				GoToVisualState(VisualStateAway);
+			else if (hvacMode == HvacMode.HeatAndCool)
+				GoToVisualState(VisualStateTemperatureRange);
 			else
 				GoToVisualState(VisualStateTemperatureTarget);
 		}
-
 
 		private void UpdateNotificationVisualState(bool isLeafOn, bool isFanOn) {
 			if(isFanOn)
