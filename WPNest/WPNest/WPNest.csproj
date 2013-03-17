@@ -112,6 +112,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\FanIcon.xaml.cs">
+      <DependentUpon>FanIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\LeafIcon.xaml.cs">
+      <DependentUpon>LeafIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Error\CloseApplicationException.cs" />
     <Compile Include="Error\ErrorPage.xaml.cs">
       <DependentUpon>ErrorPage.xaml</DependentUpon>
@@ -189,6 +195,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Assets\FanIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\LeafIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Error\ErrorPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

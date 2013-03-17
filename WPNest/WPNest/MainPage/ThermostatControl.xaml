@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-	xmlns:WPNest="clr-namespace:WPNest" xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="WPNest.ThermostatControl"
+	xmlns:WPNest="clr-namespace:WPNest" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Assets="clr-namespace:WPNest.Assets" x:Class="WPNest.ThermostatControl"
     mc:Ignorable="d"
     d:DesignHeight="380" d:DesignWidth="380"
 	Loaded="OnLoaded" SizeChanged="OnSizeChanged" >
@@ -111,93 +111,119 @@
 		<WPNest:NestSampleViewModel/>
 	</d:DataContext>
     
-    <Grid x:Name="LayoutRoot">
-    	<VisualStateManager.VisualStateGroups>
-    		<VisualStateGroup x:Name="HVAC_States">
-    			<VisualStateGroup.Transitions>
-    				<VisualTransition GeneratedDuration="0:0:0.5" To="Cooling">
-    					<Storyboard/>
-    				</VisualTransition>
-    				<VisualTransition GeneratedDuration="0:0:0.5" To="Heating">
-    					<Storyboard/>
-    				</VisualTransition>
-    				<VisualTransition GeneratedDuration="0:0:0.5" To="Default"/>
-    			</VisualStateGroup.Transitions>
-    			<VisualState x:Name="Default"/>
-    			<VisualState x:Name="Heating">
-    				<Storyboard>
-    					<ColorAnimation Duration="0" To="#FFFF2301" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
-    					<ColorAnimation Duration="0" To="#FFFE9B4A" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
-    					<DoubleAnimation Duration="0" To="0.776" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
-    				</Storyboard>
-    			</VisualState>
-    			<VisualState x:Name="Cooling">
-    				<Storyboard>
-    					<ColorAnimation Duration="0" To="#FF0353E5" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
-    					<ColorAnimation Duration="0" To="#FF5CB1F6" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
-    				</Storyboard>
-    			</VisualState>
-    		</VisualStateGroup>
-    		<VisualStateGroup x:Name="Away_States">
-    			<VisualStateGroup.Transitions>
-    				<VisualTransition GeneratedDuration="0:0:0.2" To="NotAway">
-    					<VisualTransition.GeneratedEasingFunction>
-    						<QuadraticEase EasingMode="EaseInOut"/>
-    					</VisualTransition.GeneratedEasingFunction>
-    				</VisualTransition>
-    				<VisualTransition GeneratedDuration="0:0:0.2" To="Away">
-    					<VisualTransition.GeneratedEasingFunction>
-    						<QuadraticEase EasingMode="EaseInOut"/>
-    					</VisualTransition.GeneratedEasingFunction>
-    				</VisualTransition>
-    			</VisualStateGroup.Transitions>
-    			<VisualState x:Name="NotAway"/>
-    			<VisualState x:Name="Away">
-    				<Storyboard>
-    					<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="textBlock" d:IsOptimized="True"/>
-    					<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="upButton" d:IsOptimized="True"/>
-    					<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="downButton" d:IsOptimized="True"/>
-    					<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="awayButton">
-    						<DiscreteObjectKeyFrame KeyTime="0">
-    							<DiscreteObjectKeyFrame.Value>
-    								<System:Boolean>True</System:Boolean>
-    							</DiscreteObjectKeyFrame.Value>
-    						</DiscreteObjectKeyFrame>
-    					</ObjectAnimationUsingKeyFrames>
-    					<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="awayButton" d:IsOptimized="True"/>
-    					<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="awayTextBlock" d:IsOptimized="True"/>
-    				</Storyboard>
-    			</VisualState>
-    		</VisualStateGroup>
-    	</VisualStateManager.VisualStateGroups>
-    	<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" Margin="1,0,-1,0">
-    		<Grid.RowDefinitions>
-    			<RowDefinition/>
-    			<RowDefinition Height="0*"/>
-    			<RowDefinition/>
-    		</Grid.RowDefinitions>
-    		<Ellipse x:Name="orb" Height="380" VerticalAlignment="Center" Margin="0" Grid.RowSpan="3" Width="380" HorizontalAlignment="Center">
-    			<Ellipse.Fill>
-    				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-    					<GradientStop Color="#FF515253" Offset="0"/>
-    					<GradientStop Color="#FF262B2F" Offset="0.686"/>
-    				</LinearGradientBrush>
-    			</Ellipse.Fill>
-    		</Ellipse>
-    		<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
-    		<Path x:Name="mediumTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="3"/>
-    		<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7"/>
-    		<TextBlock x:Name="awayTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="AWAY" VerticalAlignment="Center" Grid.RowSpan="3" FontSize="80" FontFamily="Segoe WP Semibold" IsHitTestVisible="False" Opacity="0" Foreground="White"/>
-    		<TextBlock x:Name="textBlock" Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="White"/>
-    		<Canvas Grid.RowSpan="3">
+	<Grid x:Name="LayoutRoot">
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="HVAC_States">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.5" To="Cooling">
+						<Storyboard/>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.5" To="Heating">
+						<Storyboard/>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.5" To="Default"/>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="Default"/>
+				<VisualState x:Name="Heating">
+					<Storyboard>
+						<ColorAnimation Duration="0" To="#FFFF2301" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+						<ColorAnimation Duration="0" To="#FFFE9B4A" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0.776" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="Cooling">
+					<Storyboard>
+						<ColorAnimation Duration="0" To="#FF0353E5" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+						<ColorAnimation Duration="0" To="#FF5CB1F6" Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="orb" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="Away_States">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.2" To="NotAway">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.2" To="Away">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="NotAway"/>
+				<VisualState x:Name="Away">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="textBlock" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="upButton" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="downButton" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="awayButton">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>True</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="awayButton" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="awayTextBlock" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="Fan_States">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.2" To="FanOn">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.2" To="FanAuto">
+						<VisualTransition.GeneratedEasingFunction>
+							<QuadraticEase EasingMode="EaseInOut"/>
+						</VisualTransition.GeneratedEasingFunction>
+					</VisualTransition>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="FanOn">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="fanViewbox" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="FanAuto"/>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" Margin="1,0,-1,0">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition Height="0*"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Ellipse x:Name="orb" Height="380" VerticalAlignment="Center" Margin="0" Grid.RowSpan="3" Width="380" HorizontalAlignment="Center">
+				<Ellipse.Fill>
+					<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+						<GradientStop Color="#FF515253" Offset="0"/>
+						<GradientStop Color="#FF262B2F" Offset="0.686"/>
+					</LinearGradientBrush>
+				</Ellipse.Fill>
+			</Ellipse>
+			<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380"/>
+			<Path x:Name="mediumTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="3"/>
+			<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7"/>
+			<TextBlock x:Name="awayTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="AWAY" VerticalAlignment="Center" Grid.RowSpan="3" FontSize="80" FontFamily="Segoe WP Semibold" IsHitTestVisible="False" Opacity="0" Foreground="White"/>
+			<TextBlock x:Name="textBlock" Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="0,-10,0,0" Foreground="White"/>
+			<Canvas Grid.RowSpan="3">
 				<TextBlock x:Name="currentTemperature" HorizontalAlignment="Left" TextWrapping="NoWrap" TextAlignment="Center" 
-						   LayoutUpdated="OnCurrentTemperatureLayoutUpdated" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" 
-						   FontSize="18.667" FontWeight="Bold" Foreground="White" />
+					LayoutUpdated="OnCurrentTemperatureLayoutUpdated" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" 
+					FontSize="18.667" FontWeight="Bold" Foreground="White" />
 			</Canvas>
-    		<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
-    		<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
-    		<Button x:Name="awayButton" Content="Button" Grid.RowSpan="3" Template="{StaticResource EmptyButton}" Opacity="0" IsHitTestVisible="False" Click="OnAwayButtonPressed"/>
-    	</Grid>
+			<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
+			<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}"/>
+			<Button x:Name="awayButton" Content="Button" Grid.RowSpan="3" Template="{StaticResource EmptyButton}" Opacity="0" IsHitTestVisible="False" Click="OnAwayButtonPressed"/>
+			<Viewbox x:Name="fanViewbox" HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="40" Grid.Row="2" Margin="0,0,0,20" Opacity="0" IsHitTestVisible="False">
+				<Assets:FanIcon VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Opacity="0.4"/>
+			</Viewbox>
+			<Viewbox x:Name="leafViewbox" HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="55" Grid.Row="2" Margin="0,0,0,25" Visibility="Collapsed">
+				<Assets:LeafIcon HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			</Viewbox>
+		</Grid>
 
-    </Grid>
+	</Grid>
 </UserControl>

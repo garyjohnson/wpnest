@@ -82,6 +82,25 @@ namespace WPNest {
 			set { SetValue(IsAwayProperty, value); }
 		}
 
+		public static readonly DependencyProperty FanModeProperty =
+			DependencyProperty.Register("FanMode", typeof(FanMode), typeof(ThermostatControl), 
+			new PropertyMetadata(FanMode.Auto, OnFanModeChanged));
+
+		public FanMode FanMode {
+			get { return (FanMode)GetValue(FanModeProperty); }
+			set { SetValue(FanModeProperty, value); }
+		}
+
+		private static void OnFanModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var thermostat = (ThermostatControl)sender;
+			var fanMode = (FanMode)args.NewValue;
+
+			if(fanMode == FanMode.Auto)
+				thermostat.GoToFanAutoVisualState();
+			else
+				thermostat.GoToFanOnVisualState();
+		}
+
 		private static void OnHVACChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostat = (ThermostatControl) sender;
 			thermostat.UpdateHvacVisualState();
@@ -104,6 +123,7 @@ namespace WPNest {
 			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
 			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
 			SetBinding(IsAwayProperty, new Binding("IsAway"));
+			SetBinding(FanModeProperty, new Binding("FanMode"));
 		}
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -262,5 +282,14 @@ namespace WPNest {
 			if (result == MessageBoxResult.OK)
 				ViewModel.IsAway = false;
 		}
+
+		private void GoToFanAutoVisualState() {
+			VisualStateManager.GoToState(this, "FanAuto", true);
+		}
+
+		private void GoToFanOnVisualState() {
+			VisualStateManager.GoToState(this, "FanOn", true);
+		}
+
 	}
 }
