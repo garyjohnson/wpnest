@@ -432,7 +432,7 @@
 		<Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" Margin="1,0,-1,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="127*"/>
-				<ColumnDefinition Width="30"/>
+				<ColumnDefinition Width="25"/>
 				<ColumnDefinition Width="126*"/>
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
@@ -451,20 +451,20 @@
 			<Path x:Name="ticks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" Grid.ColumnSpan="3"/>
 			<Path x:Name="mediumTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="3" Grid.ColumnSpan="3"/>
 			<Path x:Name="heavyTicks" Data="M0,0" UseLayoutRounding="False" Grid.RowSpan="3" Stroke="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="380" StrokeThickness="7" Grid.ColumnSpan="3"/>
-			<TextBlock x:Name="awayTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="AWAY" VerticalAlignment="Center" Grid.RowSpan="3" FontSize="80" FontFamily="Segoe WP Semibold" IsHitTestVisible="False" Opacity="0" Foreground="White" Grid.ColumnSpan="3" Margin="80,137,80,136"/>
+			<TextBlock x:Name="awayTextBlock" HorizontalAlignment="Center" Text="AWAY" VerticalAlignment="Center" Grid.RowSpan="3" FontSize="80" FontFamily="Segoe WP Semibold" IsHitTestVisible="False" Opacity="0" Foreground="White" Grid.ColumnSpan="3"/>
 			<TextBlock x:Name="targetTemperature" Text="{Binding TargetTemperature}" FontSize="133.333" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Margin="117,96,117,106" Foreground="White" Grid.ColumnSpan="3"/>
 			<Canvas Grid.RowSpan="3" Grid.ColumnSpan="3">
 				<TextBlock x:Name="currentTemperature" HorizontalAlignment="Left" TextWrapping="NoWrap" TextAlignment="Center" 
 					LayoutUpdated="OnCurrentTemperatureLayoutUpdated" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" 
 					FontSize="18.667" FontWeight="Bold" Foreground="White" />
 			</Canvas>
-			<Button x:Name="upCoolButton" Content="Button" Style="{StaticResource UpButton}" HorizontalContentAlignment="Right" Padding="10,30,10,5"/>
-			<Button x:Name="downCoolButton" Content="Button" Style="{StaticResource DownButton}" Grid.Row="2" HorizontalContentAlignment="Right" Padding="10,3,10,30"/>
-			<Button x:Name="upHeatButton" Content="Button" Style="{StaticResource UpButton}" Grid.Column="4" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,30,10,5"/>
-			<Button x:Name="downHeatButton" Content="Button" Style="{StaticResource DownButton}" Grid.Column="4" Grid.Row="2" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,3,10,30"/>
-			<TextBlock x:Name="targetCoolTemperature" Text="{Binding TargetTemperature}" FontSize="96" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Foreground="White" Margin="0,126"/>
-			<Ellipse x:Name="seperator" Fill="White" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="10" Grid.Column="1" Grid.RowSpan="3" Margin="0,15,0,0"/>
-			<TextBlock x:Name="targetHeatTemperature" Text="{Binding TargetTemperature}" FontSize="96" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Foreground="White" Grid.Column="4" Grid.ColumnSpan="2" Margin="0,126"/>
+			<Button x:Name="upCoolButton" Content="Button" Style="{StaticResource UpButton}" HorizontalContentAlignment="Right" Padding="10,70,10,5" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="downCoolButton" Content="Button" Style="{StaticResource DownButton}" Grid.Row="2" HorizontalContentAlignment="Right" Padding="10,3,10,50" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="upHeatButton" Content="Button" Style="{StaticResource UpButton}" Grid.Column="4" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,70,10,5" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="downHeatButton" Content="Button" Style="{StaticResource DownButton}" Grid.Column="4" Grid.Row="2" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,3,10,50" Opacity="0" IsHitTestVisible="False"/>
+			<TextBlock x:Name="targetCoolTemperature" Text="{Binding TargetTemperature}" FontSize="96" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Foreground="White" Margin="0,126" Opacity="0" IsHitTestVisible="False"/>
+			<Ellipse x:Name="seperator" Fill="White" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="10" Grid.Column="1" Grid.RowSpan="3" Margin="0,15,0,0" Opacity="0" IsHitTestVisible="False"/>
+			<TextBlock x:Name="targetHeatTemperature" Text="{Binding TargetTemperature}" FontSize="96" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Foreground="White" Grid.Column="4" Grid.ColumnSpan="2" Margin="0,126" Opacity="0" IsHitTestVisible="False"/>
 			<Button x:Name="upButton" Click="OnUpClick" IsEnabled="{Binding IsLoggedIn}" Grid.Row="0" BorderThickness="0" Padding="0" Style="{StaticResource UpButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="3"/>
 			<Button x:Name="downButton" Click="OnDownClick" IsEnabled="{Binding IsLoggedIn}" BorderThickness="0" Padding="0" Grid.Row="2" Style="{StaticResource DownButton}" Background="#01010101" Foreground="{x:Null}" BorderBrush="{x:Null}" Grid.ColumnSpan="3"/>
 			<Button x:Name="awayButton" Content="Button" Grid.RowSpan="3" Template="{StaticResource EmptyButton}" Opacity="0" IsHitTestVisible="False" Click="OnAwayButtonPressed" Grid.ColumnSpan="3"/>

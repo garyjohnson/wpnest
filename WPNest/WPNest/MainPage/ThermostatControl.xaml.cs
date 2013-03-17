@@ -2,24 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace WPNest {
 
 	public partial class ThermostatControl : UserControl {
-
-		private const double StartAngle = -140.0d;
-		private const double EndAngle = 140.0d;
-		private const double AngleRange = EndAngle - StartAngle;
-		private const double StartDegrees = 50.0d;
-		private const double EndDegrees = 90.0d;
-		private const double DegreeRange = EndDegrees - StartDegrees;
-		private const double TickAngleIncrement = 2.5d;
-		private const double AngleDegreeScale = AngleRange / DegreeRange;
-
-		private const double TickMarginFromTop = 20.0d;
-		private const double TickLength = 30.0d;
-		private const double TickTargetTemperatureLength = 45.0d;
 
 		private const string VisualStateCooling = "Cooling";
 		private const string VisualStateHeating = "Heating";
@@ -33,9 +19,7 @@ namespace WPNest {
 		private const string VisualStateLeafOn = "LeafOn";
 		private const string VisualStateAllOff = "AllOff";
 
-		private readonly PathGeometry _heavyTicksGeometry = new PathGeometry();
-		private readonly PathGeometry _mediumTicksGeometry = new PathGeometry();
-		private readonly PathGeometry _lightTicksGeometry = new PathGeometry();
+		private readonly ThermostatTickCreator _tickCreator = new ThermostatTickCreator();
 
 		public ThermostatControl() {
 			InitializeComponent();
@@ -137,7 +121,7 @@ namespace WPNest {
 
 		private static void OnTemperatureChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var thermostatControl = (ThermostatControl)sender;
-			thermostatControl.RedrawTicks();
+			thermostatControl.RefreshTicks();
 		}
 
 		private void OnAwayButtonPressed(object sender, RoutedEventArgs e) {
@@ -147,19 +131,26 @@ namespace WPNest {
 		}
 
 		private void OnCurrentTemperatureLayoutUpdated(object sender, EventArgs e) {
-			RefreshCurrentTemperatureLabelPosition();
+			var thermostatSize = new Size(orb.ActualWidth, orb.ActualHeight);
+			_tickCreator.UpdateCurrentTemperatureLabelPosition(currentTemperature, thermostatSize, CurrentTemperature, TargetTemperature);
 		}
 
 		private void OnLoaded(object sender, RoutedEventArgs e) {
-			heavyTicks.Data = _heavyTicksGeometry;
-			mediumTicks.Data = _mediumTicksGeometry;
-			ticks.Data = _lightTicksGeometry;
+			heavyTicks.Data = _tickCreator.HeavyTicksGeometry;
+			mediumTicks.Data = _tickCreator.MediumTicksGeometry;
+			ticks.Data = _tickCreator.LightTicksGeometry;
 
-			RedrawTicks();
+			RefreshTicks();
 		}
 
 		private void OnSizeChanged(object sender, SizeChangedEventArgs e) {
-			RedrawTicks();
+			RefreshTicks();
+		}
+
+		private void RefreshTicks() {
+			var thermostatSize = new Size(orb.ActualWidth, orb.ActualHeight);
+			_tickCreator.RedrawTicks(thermostatSize, CurrentTemperature, TargetTemperature);
+			_tickCreator.UpdateCurrentTemperatureLabelPosition(currentTemperature, thermostatSize, CurrentTemperature, TargetTemperature);
 		}
 
 		private async void OnUpClick(object sender, RoutedEventArgs e) {
@@ -178,112 +169,6 @@ namespace WPNest {
 			SetBinding(IsAwayProperty, new Binding("IsAway"));
 			SetBinding(FanModeProperty, new Binding("FanMode"));
 			SetBinding(IsLeafOnProperty, new Binding("IsLeafOn"));
-		}
-
-		private void RedrawTicks() {
-			ClearTicks();
-			DrawMinorTicks();
-			DrawTargetTemperatureTick();
-			DrawCurrentTemperatureTick();
-			RefreshCurrentTemperatureLabelPosition();
-		}
-
-		private double AngleFromTemperature(double temperature) {
-			return ((temperature - StartDegrees) * AngleDegreeScale) + StartAngle;
-		}
-
-		private RotateTransform GetRotateTransform() {
-			var rotateTransform = new RotateTransform();
-			rotateTransform.CenterX = GetHalfWidth();
-			rotateTransform.CenterY = GetHalfHeight();
-			return rotateTransform;
-		}
-
-		private double GetHalfHeight() {
-			return orb.ActualHeight / 2;
-		}
-
-		private double GetHalfWidth() {
-			return orb.ActualWidth / 2;
-		}
-
-		private void ClearTicks() {
-			_heavyTicksGeometry.Figures.Clear();
-			_mediumTicksGeometry.Figures.Clear();
-			_lightTicksGeometry.Figures.Clear();
-		}
-
-		private void DrawTargetTemperatureTick() {
-			var targetStart = new Point(GetHalfWidth(), TickMarginFromTop);
-			var targetEnd = new Point(GetHalfWidth(), TickMarginFromTop + TickTargetTemperatureLength);
-			double angle = AngleFromTemperature(TargetTemperature);
-			var tickTargetFigure = GetRotatedPathFigure(targetStart, targetEnd, angle);
-			_heavyTicksGeometry.Figures.Add(tickTargetFigure);
-		}
-
-		private void RefreshCurrentTemperatureLabelPosition() {
-			if (CurrentTemperature == TargetTemperature) {
-				currentTemperature.Visibility = Visibility.Collapsed;
-				return;
-			}
-
-			double temperaturePositionOfLabel = CurrentTemperature + 1.0d;
-			if(CurrentTemperature < TargetTemperature)
-				temperaturePositionOfLabel = CurrentTemperature - 1.0d;
-
-			var rotateTransform = GetRotateTransform();
-			rotateTransform.Angle = AngleFromTemperature(temperaturePositionOfLabel);
-
-			currentTemperature.Visibility = Visibility.Visible;
-			var labelPosition = new Point(GetHalfWidth(), TickMarginFromTop + (TickLength / 2));
-			Point rotatedLabelPosition = rotateTransform.Transform(labelPosition);
-			double labelHalfHeight = currentTemperature.ActualHeight / 2;
-			double labelHalfWidth = currentTemperature.ActualWidth / 2;
-			Canvas.SetLeft(currentTemperature, rotatedLabelPosition.X - labelHalfWidth);
-			Canvas.SetTop(currentTemperature, rotatedLabelPosition.Y - labelHalfHeight);
-		}
-
-		private void DrawCurrentTemperatureTick() {
-			var currentStart = new Point(GetHalfWidth(), TickMarginFromTop);
-			var currentEnd = new Point(GetHalfWidth(), TickMarginFromTop + TickLength);
-			double angle = AngleFromTemperature(CurrentTemperature);
-			var tickCurrentFigure = GetRotatedPathFigure(currentStart, currentEnd, angle);
-			_heavyTicksGeometry.Figures.Add(tickCurrentFigure);
-		}
-
-		private PathFigure GetRotatedPathFigure(Point start, Point end, double angle) {
-			RotateTransform rotateTransform = GetRotateTransform();
-			rotateTransform.Angle = angle;
-			Point rotatedStart = rotateTransform.Transform(start);
-			Point rotatedEnd = rotateTransform.Transform(end);
-			return GetPathFigure(rotatedStart, rotatedEnd);
-		}
-
-		private void DrawMinorTicks() {
-			double halfWidth = orb.ActualWidth / 2;
-
-			var start = new Point(halfWidth, TickMarginFromTop);
-			var end = new Point(halfWidth, TickMarginFromTop + TickLength);
-
-			double startTemperature = Math.Min(CurrentTemperature, TargetTemperature);
-			double startAngle = AngleFromTemperature(startTemperature);
-			double endTemperature = Math.Max(CurrentTemperature, TargetTemperature);
-			double endAngle = AngleFromTemperature(endTemperature);
-
-			for (double angle = StartAngle; angle <= EndAngle; angle += TickAngleIncrement) {
-				var tickFigure = GetRotatedPathFigure(start, end, angle);
-				if (angle >= startAngle && angle <= endAngle)
-					_mediumTicksGeometry.Figures.Add(tickFigure);
-				else
-					_lightTicksGeometry.Figures.Add(tickFigure);
-			}
-		}
-
-		private PathFigure GetPathFigure(Point start, Point end) {
-			var tickFigure = new PathFigure();
-			tickFigure.StartPoint = start;
-			tickFigure.Segments.Add(new LineSegment { Point = end });
-			return tickFigure;
 		}
 
 		private void UpdateHvacVisualState() {

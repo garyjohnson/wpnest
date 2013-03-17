@@ -122,6 +122,7 @@
     <Compile Include="Error\ErrorPage.xaml.cs">
       <DependentUpon>ErrorPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainPage\ThermostatTickCreator.cs" />
     <Compile Include="Model\FanMode.cs" />
     <Compile Include="MainPage\FanModeToBoolConverter.cs" />
     <Compile Include="MainPage\FanModeToLabelConverter.cs" />

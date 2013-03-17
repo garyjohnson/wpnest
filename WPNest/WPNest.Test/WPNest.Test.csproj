@@ -117,6 +117,9 @@
     <Compile Include="..\WPNest\MainPage\ThermostatControl.xaml.cs">
       <Link>MainPage\ThermostatControl.xaml.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\MainPage\ThermostatTickCreator.cs">
+      <Link>MainPage\ThermostatTickCreator.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\MainPage\TrueToVisibleConverter.cs">
       <Link>MainPage\TrueToVisibleConverter.cs</Link>
     </Compile>
