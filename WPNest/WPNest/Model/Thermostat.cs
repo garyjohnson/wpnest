@@ -12,5 +12,6 @@
 		public bool IsHeating { get; set; }
 		public bool IsCooling { get; set; }
 		public FanMode FanMode { get; set; }
+		public bool IsLeafOn { get; set; }
 	}
 }

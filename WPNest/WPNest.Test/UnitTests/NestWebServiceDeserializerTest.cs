@@ -42,5 +42,12 @@ namespace WPNest.Test.UnitTests {
 
 			Assert.AreEqual(expectedId, structure.ID);
 		}
+
+		[TestMethod]
+		public void ShouldParseLeafFromGetStatusResult() {
+			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
+
+			Assert.IsTrue(structures.ElementAt(0).Thermostats[0].IsLeafOn);
+		}
 	}
 }

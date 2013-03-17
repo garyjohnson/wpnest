@@ -40,8 +40,10 @@ namespace WPNest.Services {
 					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
+
 					thermostatValues = values["device"][thermostat.ID];
 					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
+					thermostat.IsLeafOn = thermostatValues["leaf"].Value<bool>();
 				}
 			}
 
