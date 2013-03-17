@@ -87,6 +87,30 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public void ShouldUpdateTargetTemperatureLow() {
+				var structure = new Structure("");
+				var thermostat = new Thermostat("") {TargetTemperatureLow = 48d};
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
+
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
+
+				Assert.AreEqual(thermostat.TargetTemperatureLow, _viewModel.TargetTemperatureLow, "Expected TargetTemperatureLow to update from status change.");
+			}
+
+			[TestMethod]
+			public void ShouldUpdateTargetTemperatureHigh() {
+				var structure = new Structure("");
+				var thermostat = new Thermostat("") {TargetTemperatureHigh = 48d};
+				structure.Thermostats.Add(thermostat);
+				var status = new GetStatusResult(new[] {structure});
+
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, new StatusEventArgs(status));
+
+				Assert.AreEqual(thermostat.TargetTemperatureHigh, _viewModel.TargetTemperatureHigh, "Expected TargetTemperatureHigh to update from status change.");
+			}
+
+			[TestMethod]
 			public void ShouldUpdateCurrentTemperature() {
 				var structure = new Structure("");
 				var thermostat = new Thermostat("") {CurrentTemperature = 37d};

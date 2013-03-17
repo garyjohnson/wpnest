@@ -40,6 +40,24 @@ namespace WPNest {
 			}
 		}
 
+		private double _targetTemperatureLow;
+		public double TargetTemperatureLow {
+			get { return _targetTemperatureLow; }
+			set {
+				_targetTemperatureLow = value;
+				OnPropertyChanged("TargetTemperatureLow");
+			}
+		}
+
+		private double _targetTemperatureHigh;
+		public double TargetTemperatureHigh {
+			get { return _targetTemperatureHigh; }
+			set {
+				_targetTemperatureHigh = value;
+				OnPropertyChanged("TargetTemperatureHigh");
+			}
+		}
+
 		private double _currentTemperature;
 		public double CurrentTemperature {
 			get { return _currentTemperature; }
@@ -171,6 +189,8 @@ namespace WPNest {
 			_getStatusResult = statusResult;
 
 			TargetTemperature = firstThermostat.TargetTemperature;
+			TargetTemperatureLow = firstThermostat.TargetTemperatureLow;
+			TargetTemperatureHigh = firstThermostat.TargetTemperatureHigh;
 			CurrentTemperature = firstThermostat.CurrentTemperature;
 			IsHeating = firstThermostat.IsHeating;
 			IsCooling = firstThermostat.IsCooling;
