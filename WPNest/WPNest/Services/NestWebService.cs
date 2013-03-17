@@ -208,6 +208,7 @@ namespace WPNest.Services {
 				IWebResponse response = await request.GetResponseAsync();
 				string strContent = await response.GetResponseStringAsync();
 				result.Thermostat.FanMode = _deserializer.ParseFanModeFromDeviceSubscribeResult(strContent);
+				result.Thermostat.IsLeafOn = _deserializer.ParseLeafFromDeviceSubscribeResult(strContent);
 				return result;
 			}
 			catch (Exception ex) {

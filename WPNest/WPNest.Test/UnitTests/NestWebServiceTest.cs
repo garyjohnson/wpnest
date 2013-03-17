@@ -139,7 +139,7 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public async Task ShouldSendGetDeviceResponseStringToDeserializer() {
+			public async Task ShouldGetFanModeFromDeserializer() {
 				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
 				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
 				            .Returns(Task.FromResult(FakeJsonMessages.GetSharedStatusResult))
@@ -150,6 +150,20 @@ namespace WPNest.Test.UnitTests {
 				await _webService.GetStructureAndDeviceStatusAsync(structure);
 
 				_webServiceDeserializer.Verify(d => d.ParseFanModeFromDeviceSubscribeResult(FakeJsonMessages.GetDeviceStatusResult));
+			}
+
+			[TestMethod]
+			public async Task ShouldGetLeafFromDeserializer() {
+				_webResponse.SetupSequence(w => w.GetResponseStringAsync())
+				            .Returns(Task.FromResult(FakeJsonMessages.GetStructureStatusResult))
+				            .Returns(Task.FromResult(FakeJsonMessages.GetSharedStatusResult))
+				            .Returns(Task.FromResult(FakeJsonMessages.GetDeviceStatusResult));
+
+				var structure = new Structure("");
+				structure.Thermostats.Add(new Thermostat(""));
+				await _webService.GetStructureAndDeviceStatusAsync(structure);
+
+				_webServiceDeserializer.Verify(d => d.ParseLeafFromDeviceSubscribeResult(FakeJsonMessages.GetDeviceStatusResult));
 			}
 
 			[TestMethod]
