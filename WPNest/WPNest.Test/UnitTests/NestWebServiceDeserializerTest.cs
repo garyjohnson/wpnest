@@ -60,6 +60,14 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
+		public void ShouldUpdateHvacModeFromSharedStatusResult() {
+			var thermostat = new Thermostat("");
+			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
+
+			Assert.AreEqual(HvacMode.HeatAndCool, thermostat.HvacMode);
+		}
+
+		[TestMethod]
 		public async Task ShouldParseCancelledErrorFromWebException() {
 			var exception = new WebException("Test", WebExceptionStatus.RequestCanceled);
 

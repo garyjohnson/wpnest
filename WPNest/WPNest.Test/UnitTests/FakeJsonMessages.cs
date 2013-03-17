@@ -26,6 +26,18 @@
 			}
 		}
 
+		public static string GetSharedStatusResult {
+			get { return GetSharedStatusResultBase
+				.Replace("|||TEMPTYPE|||", "\"heat\""); 
+			}
+		}
+
+		public static string GetSharedStatusResultTempRangeMode {
+			get { return GetSharedStatusResultBase
+				.Replace("|||TEMPTYPE|||", "\"range\""); 
+			}
+		}
+
 		public static string GetStructureStatusResult {
 			get { return GetStructureStatusResultBase; }
 		}
@@ -714,13 +726,13 @@
          ""heat_pump_aux_threshold_enabled"":true
       }";
 
-	public const string GetSharedStatusResult = @"{
+	private const string GetSharedStatusResultBase = @"{
          ""auto_away"":0,
          ""auto_away_learning"":""training"",
          ""hvac_heat_x3_state"":false,
          ""compressor_lockout_enabled"":false,
          ""hvac_alt_heat_state"":false,
-         ""target_temperature_type"":""heat"",
+         ""target_temperature_type"":|||TEMPTYPE|||,
          ""hvac_heater_state"":false,
          ""hvac_emer_heat_state"":false,
          ""can_heat"":true,

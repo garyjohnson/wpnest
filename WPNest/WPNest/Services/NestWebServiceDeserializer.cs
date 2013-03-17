@@ -68,6 +68,7 @@ namespace WPNest.Services {
 			thermostatToUpdate.TargetTemperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
 			thermostatToUpdate.IsHeating = values["hvac_heater_state"].Value<bool>();
 			thermostatToUpdate.IsCooling = values["hvac_ac_state"].Value<bool>();
+			thermostatToUpdate.HvacMode = GetHvacModeFromString(values["target_temperature_type"].Value<string>());
 		}
 
 		public string ParseAccessTokenFromLoginResult(string responseString) {
