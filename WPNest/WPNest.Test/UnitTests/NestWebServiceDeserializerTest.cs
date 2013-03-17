@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using WPNest.Services;
 
@@ -55,6 +57,15 @@ namespace WPNest.Test.UnitTests {
 			bool isLeafOn = _deserializer.ParseLeafFromDeviceSubscribeResult(FakeJsonMessages.GetDeviceStatusResult);
 
 			Assert.IsTrue(isLeafOn);
+		}
+
+		[TestMethod]
+		public async Task ShouldParseCancelledErrorFromWebException() {
+			var exception = new WebException("Test", WebExceptionStatus.RequestCanceled);
+
+			WebServiceError error = await _deserializer.ParseWebServiceErrorAsync(exception);
+
+			Assert.AreEqual(WebServiceError.Cancelled, error);
 		}
 	}
 }

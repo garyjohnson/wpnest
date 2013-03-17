@@ -5,6 +5,7 @@
 		InvalidCredentials,
 		SessionTokenExpired,
 		ServerNotFound,
+		Cancelled,
 		Unknown
 	}
 }

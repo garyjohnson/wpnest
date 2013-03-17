@@ -122,6 +122,8 @@ namespace WPNest.Services {
 				error = WebServiceError.SessionTokenExpired;
 			else if (IsNotFoundError(exception))
 				error = WebServiceError.ServerNotFound;
+			else if(exception is WebException && ((WebException)exception).Status == WebExceptionStatus.RequestCanceled)
+				error = WebServiceError.Cancelled;
 
 			return error;
 		}
