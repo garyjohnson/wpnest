@@ -40,6 +40,7 @@ namespace WPNest.Services {
 					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
+					thermostat.HvacMode = GetHvacModeFromString(thermostatValues["target_temperature_type"].Value<string>());
 
 					thermostatValues = values["device"][thermostat.ID];
 					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
@@ -104,6 +105,18 @@ namespace WPNest.Services {
 			return values;
 		}
 
+		private static HvacMode GetHvacModeFromString(string hvacMode) {
+			if (hvacMode == "range")
+				return HvacMode.HeatAndCool;
+			if (hvacMode == "cool")
+				return HvacMode.CoolOnly;
+			if (hvacMode == "heat")
+				return HvacMode.HeatOnly;
+			if (hvacMode == "off")
+				return HvacMode.Off;
+
+			throw new InvalidOperationException();
+		}
 		private static FanMode GetFanModeFromString(string fanMode) {
 			if (fanMode == "auto")
 				return FanMode.Auto;

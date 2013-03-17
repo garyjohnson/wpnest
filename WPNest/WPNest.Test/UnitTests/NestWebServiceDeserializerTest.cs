@@ -53,10 +53,10 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseLeafFromDeviceSubscribeResult() {
-			bool isLeafOn = _deserializer.ParseLeafFromDeviceSubscribeResult(FakeJsonMessages.GetDeviceStatusResult);
+		public void ShouldParseHvacModeFromGetStatusResult() {
+			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultTempRangeMode, FakeJsonMessages.UserId);
 
-			Assert.IsTrue(isLeafOn);
+			Assert.AreEqual(HvacMode.HeatAndCool, structures.ElementAt(0).Thermostats[0].HvacMode);
 		}
 
 		[TestMethod]

@@ -6,11 +6,24 @@
 		}
 
 		public static string GetStatusResult {
-			get { return GetStatusResultBase.Replace("|||ISAWAY|||", "false"); }
+			get { return GetStatusResultBase
+				.Replace("|||ISAWAY|||", "false")
+				.Replace("|||TEMPTYPE|||", "\"heat\""); 
+			}
 		}
 
 		public static string GetStatusResultAwayMode {
-			get { return GetStatusResultBase.Replace("|||ISAWAY|||", "true"); }
+			get { return GetStatusResultBase
+				.Replace("|||ISAWAY|||", "true")
+				.Replace("|||TEMPTYPE|||", "\"heat\""); 
+			}
+		}
+
+		public static string GetStatusResultTempRangeMode {
+			get { return GetStatusResultBase
+				.Replace("|||ISAWAY|||", "true")
+				.Replace("|||TEMPTYPE|||", "\"range\""); 
+			}
 		}
 
 		public static string GetStructureStatusResult {
@@ -507,7 +520,7 @@
          ""hvac_heat_x3_state"":false,
          ""compressor_lockout_enabled"":false,
          ""hvac_alt_heat_state"":false,
-         ""target_temperature_type"":""heat"",
+         ""target_temperature_type"":|||TEMPTYPE|||,
          ""hvac_heater_state"":false,
          ""hvac_emer_heat_state"":false,
          ""can_heat"":true,
