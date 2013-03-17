@@ -122,10 +122,20 @@ namespace WPNest.Services {
 				error = WebServiceError.SessionTokenExpired;
 			else if (IsNotFoundError(exception))
 				error = WebServiceError.ServerNotFound;
-			else if(exception is WebException && ((WebException)exception).Status == WebExceptionStatus.RequestCanceled)
+			else if(IsCancelledError(exception))
 				error = WebServiceError.Cancelled;
 
 			return error;
+		}
+
+		private static bool IsCancelledError(Exception exception) {
+			bool isCancelledError = false;
+
+			var webException = exception as WebException;
+			if (webException != null)
+				isCancelledError = webException.Status == WebExceptionStatus.RequestCanceled;
+
+			return isCancelledError;
 		}
 
 		public bool ParseLeafFromDeviceSubscribeResult(string responseString) {
