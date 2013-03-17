@@ -62,6 +62,14 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
+		public void ShouldParseTargetTemperatureHighFromGetStatusResult() {
+			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
+
+			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
+			Assert.AreEqual(expectedTemperature, structures.ElementAt(0).Thermostats[0].TargetTemperatureHigh);
+		}
+
+		[TestMethod]
 		public void ShouldParseHvacModeFromGetStatusResult() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultTempRangeMode, FakeJsonMessages.UserId);
 
@@ -83,6 +91,15 @@ namespace WPNest.Test.UnitTests {
 
 			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureLow);
+		}
+
+		[TestMethod]
+		public void ShouldUpdateTargetTemperatureHighFromSharedStatusResult() {
+			var thermostat = new Thermostat("");
+			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
+
+			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
+			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureHigh);
 		}
 
 		[TestMethod]

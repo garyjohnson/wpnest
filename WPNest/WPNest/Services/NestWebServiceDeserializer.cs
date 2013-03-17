@@ -38,6 +38,8 @@ namespace WPNest.Services {
 					thermostat.TargetTemperature = Math.Round(temperature.CelciusToFahrenheit());
 					double temperatureLow = double.Parse(thermostatValues["target_temperature_low"].Value<string>());
 					thermostat.TargetTemperatureLow = Math.Round(temperatureLow.CelciusToFahrenheit());
+					double temperatureHigh = double.Parse(thermostatValues["target_temperature_high"].Value<string>());
+					thermostat.TargetTemperatureHigh = Math.Round(temperatureHigh.CelciusToFahrenheit());
 					double currentTemperature = double.Parse(thermostatValues["current_temperature"].Value<string>());
 					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
@@ -65,11 +67,13 @@ namespace WPNest.Services {
 			var values = JObject.Parse(strContent);
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
 			double temperatureLowCelcius = double.Parse(values["target_temperature_low"].Value<string>());
+			double temperatureHighCelcius = double.Parse(values["target_temperature_high"].Value<string>());
 			double currentTemperatureCelcius = double.Parse(values["current_temperature"].Value<string>());
 
 			thermostatToUpdate.CurrentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
 			thermostatToUpdate.TargetTemperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
 			thermostatToUpdate.TargetTemperatureLow = Math.Round(temperatureLowCelcius.CelciusToFahrenheit());
+			thermostatToUpdate.TargetTemperatureHigh = Math.Round(temperatureHighCelcius.CelciusToFahrenheit());
 			thermostatToUpdate.IsHeating = values["hvac_heater_state"].Value<bool>();
 			thermostatToUpdate.IsCooling = values["hvac_ac_state"].Value<bool>();
 			thermostatToUpdate.HvacMode = GetHvacModeFromString(values["target_temperature_type"].Value<string>());
