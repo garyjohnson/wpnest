@@ -26,7 +26,8 @@ namespace WPNest {
 		private const string VisualStateDefault = "Default";
 
 		private const string VisualStateAway = "Away";
-		private const string VisualStateNotAway = "NotAway";
+		private const string VisualStateTemperatureTarget = "TemperatureTarget";
+		private const string VisualStateTemperatureRange = "TemperatureRange";
 
 		private const string VisualStateFanOn = "FanOn";
 		private const string VisualStateLeafOn = "LeafOn";
@@ -190,7 +191,7 @@ namespace WPNest {
 			if (isAway)
 				GoToVisualState(VisualStateAway);
 			else
-				GoToVisualState(VisualStateNotAway);
+				GoToVisualState(VisualStateTemperatureTarget);
 		}
 
 		private double AngleFromTemperature(double temperature) {
