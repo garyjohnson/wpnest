@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
@@ -65,6 +66,15 @@ namespace WPNest.Test.UnitTests {
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
 			Assert.AreEqual(HvacMode.HeatAndCool, thermostat.HvacMode);
+		}
+
+		[TestMethod]
+		public void ShouldUpdateTargetTemperatureLowFromSharedStatusResult() {
+			var thermostat = new Thermostat("");
+			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
+
+			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
+			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureLow);
 		}
 
 		[TestMethod]

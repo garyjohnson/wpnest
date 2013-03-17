@@ -62,10 +62,12 @@ namespace WPNest.Services {
 		public void UpdateThermostatStatusFromSharedStatusResult(string strContent, Thermostat thermostatToUpdate) {
 			var values = JObject.Parse(strContent);
 			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
+			double temperatureLowCelcius = double.Parse(values["target_temperature_low"].Value<string>());
 			double currentTemperatureCelcius = double.Parse(values["current_temperature"].Value<string>());
 
 			thermostatToUpdate.CurrentTemperature = Math.Round(currentTemperatureCelcius.CelciusToFahrenheit());
 			thermostatToUpdate.TargetTemperature = Math.Round(temperatureCelcius.CelciusToFahrenheit());
+			thermostatToUpdate.TargetTemperatureLow = Math.Round(temperatureLowCelcius.CelciusToFahrenheit());
 			thermostatToUpdate.IsHeating = values["hvac_heater_state"].Value<bool>();
 			thermostatToUpdate.IsCooling = values["hvac_ac_state"].Value<bool>();
 			thermostatToUpdate.HvacMode = GetHvacModeFromString(values["target_temperature_type"].Value<string>());
