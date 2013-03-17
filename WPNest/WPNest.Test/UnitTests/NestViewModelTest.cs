@@ -262,6 +262,17 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
+			public void ShouldNotShowMessageOnCancelledException() {
+				var result = new GetStatusResult(WebServiceError.Cancelled, new Exception());
+				var args = new StatusEventArgs(result);
+
+				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
+
+				_dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsAny<string>()), 
+					Times.Never());
+			}
+
+			[TestMethod]
 			public void ShouldShowMessageOnAnyOtherException() {
 				var result = new GetStatusResult(WebServiceError.Unknown, new InvalidCastException());
 				var args = new StatusEventArgs(result);

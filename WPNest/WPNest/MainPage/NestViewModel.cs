@@ -319,6 +319,8 @@ namespace WPNest {
 			if (error == WebServiceError.InvalidCredentials ||
 				error == WebServiceError.SessionTokenExpired)
 				HandleLoginException(error);
+			else if(error == WebServiceError.Cancelled)
+				HandleException();
 			else if (error == WebServiceError.ServerNotFound)
 				HandleException("Server was not found. Please check your network connection and press OK to retry.");
 			else if (exception != null)
@@ -330,9 +332,10 @@ namespace WPNest {
 			return exception != null;
 		}
 
-		private void HandleException(string message) {
+		private void HandleException(string message = null) {
 			IsLoggingIn = false;
-			_dialogProvider.ShowMessageBox(message);
+			if (message != null)
+				_dialogProvider.ShowMessageBox(message);
 			OnLoggedIn();
 		}
 
