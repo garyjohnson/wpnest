@@ -14,6 +14,7 @@ namespace WPNest.Services {
 		string ParseTransportUrlFromResult(string responseString);
 		FanMode ParseFanModeFromDeviceSubscribeResult(string responseString);
 		Task<WebServiceError> ParseWebServiceErrorAsync(Exception exception);
+		bool ParseLeafFromDeviceSubscribeResult(string responseString);
 	}
 
 }

@@ -49,5 +49,12 @@ namespace WPNest.Test.UnitTests {
 
 			Assert.IsTrue(structures.ElementAt(0).Thermostats[0].IsLeafOn);
 		}
+
+		[TestMethod]
+		public void ShouldParseLeafFromDeviceSubscribeResult() {
+			bool isLeafOn = _deserializer.ParseLeafFromDeviceSubscribeResult(FakeJsonMessages.GetDeviceStatusResult);
+
+			Assert.IsTrue(isLeafOn);
+		}
 	}
 }

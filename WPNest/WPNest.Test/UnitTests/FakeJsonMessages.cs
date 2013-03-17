@@ -639,7 +639,7 @@
          ""backplate_bsl_version"":""2.1"",
          ""current_schedule_mode"":""HEAT"",
          ""hvac_wires"":""Heat,Cool,Fan,Common Wire,Rc"",
-         ""leaf"":false,
+         ""leaf"":true,
          ""type"":""TBD"",
          ""pin_g_description"":""fan"",
          ""click_sound"":""on"",

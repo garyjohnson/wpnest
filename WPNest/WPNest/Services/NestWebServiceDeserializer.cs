@@ -126,6 +126,11 @@ namespace WPNest.Services {
 			return error;
 		}
 
+		public bool ParseLeafFromDeviceSubscribeResult(string responseString) {
+			var values = JObject.Parse(responseString);
+			return values["leaf"].Value<bool>();
+		}
+
 		private static bool IsNotFoundError(Exception exception) {
 			HttpStatusCode? statusCode = GetHttpStatusCodeFromException(exception);
 			return (statusCode.HasValue && statusCode.Value == HttpStatusCode.NotFound);
