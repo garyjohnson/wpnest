@@ -68,7 +68,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenCallingGetStructureStatus : NestWebServiceTestBase {
+		public class NestWebService_WhenCallingGetStructureStatus : NestWebServiceTestBase {
 
 			[TestMethod]
 			public async Task ShouldUseCorrectUrl() {
@@ -298,7 +298,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenSettingAwayMode : NestWebServiceTestBase {
+		public class NestWebService_WhenSettingAwayMode : NestWebServiceTestBase {
 			
 			[TestMethod]
 			public async Task ShouldUseCorrectUrl() {

@@ -207,6 +207,9 @@
     <Compile Include="..\WPNest\Services\StatusUpdaterService.cs">
       <Link>Services\StatusUpdaterService.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Services\TemperatureMode.cs">
+      <Link>Services\TemperatureMode.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Services\ThermostatStatusEventArgs.cs">
       <Link>Services\ThermostatStatusEventArgs.cs</Link>
     </Compile>

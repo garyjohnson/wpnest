@@ -152,6 +152,7 @@
     <Compile Include="Services\ITimestampProvider.cs" />
     <Compile Include="Services\IWebRequestProvider.cs" />
     <Compile Include="Services\NestWebServiceDeserializer.cs" />
+    <Compile Include="Services\TemperatureMode.cs" />
     <Compile Include="Services\TimerWrapper.cs" />
     <Compile Include="Services\TimestampProvider.cs" />
     <Compile Include="Services\WebRequestProvider.cs" />

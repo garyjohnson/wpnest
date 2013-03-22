@@ -458,10 +458,10 @@
 					LayoutUpdated="OnCurrentTemperatureLayoutUpdated" Text="{Binding CurrentTemperature}" VerticalAlignment="Top" 
 					FontSize="18.667" FontWeight="Bold" Foreground="White" />
 			</Canvas>
-			<Button x:Name="upCoolButton" Content="Button" Style="{StaticResource UpButton}" HorizontalContentAlignment="Right" Padding="10,70,10,5" Opacity="0" IsHitTestVisible="False"/>
-			<Button x:Name="downCoolButton" Content="Button" Style="{StaticResource DownButton}" Grid.Row="2" HorizontalContentAlignment="Right" Padding="10,3,10,50" Opacity="0" IsHitTestVisible="False"/>
-			<Button x:Name="upHeatButton" Content="Button" Style="{StaticResource UpButton}" Grid.Column="4" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,70,10,5" Opacity="0" IsHitTestVisible="False"/>
-			<Button x:Name="downHeatButton" Content="Button" Style="{StaticResource DownButton}" Grid.Column="4" Grid.Row="2" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,3,10,50" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="upCoolButton" Click="OnLowTemperatureUpButtonClick" Content="Button" Style="{StaticResource UpButton}" HorizontalContentAlignment="Right" Padding="10,70,10,5" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="downCoolButton" Click="OnLowTemperatureDownButtonClick" Content="Button" Style="{StaticResource DownButton}" Grid.Row="2" HorizontalContentAlignment="Right" Padding="10,3,10,50" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="upHeatButton" Click="OnHighTemperatureUpButtonClick" Content="Button" Style="{StaticResource UpButton}" Grid.Column="4" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,70,10,5" Opacity="0" IsHitTestVisible="False"/>
+			<Button x:Name="downHeatButton" Click="OnHighTemperatureDownButtonClick" Content="Button" Style="{StaticResource DownButton}" Grid.Column="4" Grid.Row="2" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Padding="10,3,10,50" Opacity="0" IsHitTestVisible="False"/>
 			<TextBlock x:Name="targetCoolTemperature" Text="{Binding TargetTemperatureLow}" FontSize="82.667" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Foreground="White" Margin="0,126" Opacity="0" IsHitTestVisible="False"/>
 			<Ellipse x:Name="seperator" Fill="White" HorizontalAlignment="Center" Height="10" VerticalAlignment="Center" Width="10" Grid.Column="1" Grid.RowSpan="3" Margin="0,15,0,0" Opacity="0" IsHitTestVisible="False"/>
 			<TextBlock x:Name="targetHeatTemperature" Text="{Binding TargetTemperatureHigh}" FontSize="82.667" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe WP Semibold" Grid.RowSpan="3" Foreground="White" Grid.Column="4" Grid.ColumnSpan="2" Margin="0,126" Opacity="0" IsHitTestVisible="False"/>

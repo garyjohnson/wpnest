@@ -176,10 +176,11 @@ namespace WPNest.Services {
 			throw new InvalidOperationException();
 		}
 
-		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature) {
+		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature, TemperatureMode temperatureMode) {
+			string temperatureProperty = "\"target_temperature\"";
 			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
 			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
-			string requestString = string.Format("{{\"target_change_pending\":true,\"target_temperature\":{0}}}", desiredTempCelcius.ToString());
+			string requestString = string.Format("{{\"target_change_pending\":true,{0}:{1}}}", temperatureProperty, desiredTempCelcius.ToString());
 			return await SendPutRequestAsync(url, requestString);
 		}
 

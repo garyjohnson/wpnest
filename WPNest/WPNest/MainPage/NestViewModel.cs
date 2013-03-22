@@ -256,6 +256,22 @@ namespace WPNest {
 			_statusUpdater.Stop();
 		}
 
+		public Task RaiseLowTemperatureAsync() {
+			return null;
+		}
+
+		public Task RaiseHighTemperatureAsync() {
+			return null;
+		}
+
+		public Task LowerLowTemperatureAsync() {
+			return null;
+		}
+
+		public Task LowerHighTemperatureAsync() {
+			return null;
+		}
+
 		public async Task RaiseTemperatureAsync() {
 			if (TargetTemperature >= MaxTemperature)
 				return;
@@ -268,7 +284,7 @@ namespace WPNest {
 				double desiredTemperature = TargetTemperature + 1.0d;
 				TargetTemperature = desiredTemperature;
 
-				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
+				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, TemperatureMode.Target);
 				if (IsErrorHandled(result.Error, result.Exception))
 					return;
 
@@ -326,7 +342,7 @@ namespace WPNest {
 				double desiredTemperature = TargetTemperature - 1.0d;
 				TargetTemperature = desiredTemperature;
 
-				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature);
+				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, TemperatureMode.Target);
 				if (IsErrorHandled(result.Error, result.Exception))
 					return;
 

@@ -227,5 +227,21 @@ namespace WPNest {
 		private void GoToVisualState(string visualState) {
 			VisualStateManager.GoToState(this, visualState, true);
 		}
+
+		private async void OnLowTemperatureUpButtonClick(object sender, RoutedEventArgs e) {
+			await ViewModel.RaiseLowTemperatureAsync();
+		}
+
+		private async void OnLowTemperatureDownButtonClick(object sender, RoutedEventArgs e) {
+			await ViewModel.LowerLowTemperatureAsync();
+		}
+
+		private async void OnHighTemperatureUpButtonClick(object sender, RoutedEventArgs e) {
+			await ViewModel.RaiseHighTemperatureAsync();
+		}
+
+		private async void OnHighTemperatureDownButtonClick(object sender, RoutedEventArgs e) {
+			await ViewModel.LowerHighTemperatureAsync();
+		}
 	}
 }

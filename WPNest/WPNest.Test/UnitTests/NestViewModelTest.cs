@@ -42,7 +42,7 @@ namespace WPNest.Test.UnitTests {
 				_nestWebService.Setup(w => w.UpdateTransportUrlAsync()).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.SetAwayMode(It.IsAny<Structure>(), It.IsAny<bool>())).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.GetFullStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
-				_nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>())).Returns(Task.FromResult(new WebServiceResult()));
+				_nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>())).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
 				_statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
 
@@ -71,7 +71,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenStatusIsUpdated : NestViewModelTestBase {
+		public class NestViewModel_WhenStatusIsUpdated : NestViewModelTestBase {
 
 			[TestMethod]
 			public void ShouldUpdateTargetTemperature() {
@@ -320,7 +320,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenLoggingIn : NestViewModelTestBase {
+		public class NestViewModel_WhenLoggingIn : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldResetCurrentError() {
@@ -357,7 +357,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenLoggedIn : NestViewModelTestBase {
+		public class NestViewModel_WhenLoggedIn : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldNotBeLoggingIn() {
@@ -462,7 +462,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenTearingDown : NestViewModelTestBase {
+		public class NestViewModel_WhenTearingDown : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldStartStatusUpdater() {
@@ -473,7 +473,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenRaisingTemperature : NestViewModelTestBase {
+		public class NestViewModel_WhenRaisingTemperature : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
@@ -501,7 +501,7 @@ namespace WPNest.Test.UnitTests {
 				double expectedTemperature = _viewModel.TargetTemperature + 1;
 				await _viewModel.RaiseTemperatureAsync();
 
-				_nestWebService.Verify(n => n.ChangeTemperatureAsync(_firstThermostat, expectedTemperature));
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(_firstThermostat, expectedTemperature, TemperatureMode.Target));
 			}
 
 			[TestMethod]
@@ -510,7 +510,7 @@ namespace WPNest.Test.UnitTests {
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				await _viewModel.RaiseTemperatureAsync();
 
-				_nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>()),
 					Times.Never(), "Expected ChangeTemperature to not be called.");
 			}
 
@@ -525,7 +525,7 @@ namespace WPNest.Test.UnitTests {
 			[TestMethod]
 			public async Task ShouldNotUpdateStatusIfChangeTemperatureFails() {
 				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
-				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
+				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>()))
 					.Returns(Task.FromResult(result));
 				await _viewModel.LoginAsync();
 
@@ -536,7 +536,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenLoweringTemperature : NestViewModelTestBase {
+		public class NestViewModel_WhenLoweringTemperature : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
@@ -565,7 +565,7 @@ namespace WPNest.Test.UnitTests {
 				double expectedTemperature = _viewModel.TargetTemperature - 1;
 				await _viewModel.LowerTemperatureAsync();
 
-				_nestWebService.Verify(n => n.ChangeTemperatureAsync(_firstThermostat, expectedTemperature));
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(_firstThermostat, expectedTemperature, TemperatureMode.Target));
 			}
 
 			[TestMethod]
@@ -574,7 +574,7 @@ namespace WPNest.Test.UnitTests {
 				_viewModel.TargetTemperature = NestViewModel.MinTemperature;
 				await _viewModel.LowerTemperatureAsync();
 
-				_nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()),
+				_nestWebService.Verify(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>()),
 					Times.Never(), "Expected ChangeTemperature to not be called.");
 			}
 
@@ -590,7 +590,7 @@ namespace WPNest.Test.UnitTests {
 			[TestMethod]
 			public async Task ShouldNotUpdateStatusIfChangeTemperatureFails() {
 				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
-				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>()))
+				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>()))
 					.Returns(Task.FromResult(result));
 				await _viewModel.LoginAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
@@ -602,7 +602,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenSettingFanMode : NestViewModelTestBase {
+		public class NestViewModel_WhenSettingFanMode : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
@@ -665,7 +665,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
-		public class WhenSettingIsAway : NestViewModelTestBase {
+		public class NestViewModel_WhenSettingIsAway : NestViewModelTestBase {
 				
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
