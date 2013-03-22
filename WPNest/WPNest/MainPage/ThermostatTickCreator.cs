@@ -45,8 +45,16 @@ namespace WPNest {
 
 		public void RedrawTicks(Size thermostatSize, double currentTemperature, double targetTemperature) {
 			ClearTicks();
-			DrawMinorTicks(thermostatSize, currentTemperature, targetTemperature);
+			DrawMinorTicksForTemperatureTarget(thermostatSize, currentTemperature, targetTemperature);
 			DrawTargetTemperatureTick(thermostatSize, targetTemperature);
+			DrawCurrentTemperatureTick(thermostatSize, currentTemperature);
+		}
+
+		public void RedrawTicksForTemperatureRange(Size thermostatSize, double currentTemperature, double targetTemperatureLow, double targetTemperatureHigh) {
+			ClearTicks();
+			DrawMinorTicksForTemperatureRange(thermostatSize);
+			DrawTargetTemperatureTick(thermostatSize, targetTemperatureLow);
+			DrawTargetTemperatureTick(thermostatSize, targetTemperatureHigh);
 			DrawCurrentTemperatureTick(thermostatSize, currentTemperature);
 		}
 
@@ -106,7 +114,19 @@ namespace WPNest {
 			return GetPathFigure(rotatedStart, rotatedEnd);
 		}
 
-		private void DrawMinorTicks(Size thermostatSize, double currentTemperature, double targetTemperature) {
+		private void DrawMinorTicksForTemperatureRange(Size thermostatSize) {
+			double halfWidth = thermostatSize.Width / 2;
+
+			var start = new Point(halfWidth, TickMarginFromTop);
+			var end = new Point(halfWidth, TickMarginFromTop + TickLength);
+
+			for (double angle = StartAngle; angle <= EndAngle; angle += TickAngleIncrement) {
+				var tickFigure = GetRotatedPathFigure(thermostatSize, start, end, angle);
+				LightTicksGeometry.Figures.Add(tickFigure);
+			}
+		}
+
+		private void DrawMinorTicksForTemperatureTarget(Size thermostatSize, double currentTemperature, double targetTemperature) {
 			double halfWidth = thermostatSize.Width / 2;
 
 			var start = new Point(halfWidth, TickMarginFromTop);

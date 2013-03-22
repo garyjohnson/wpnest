@@ -256,24 +256,57 @@ namespace WPNest {
 			_statusUpdater.Stop();
 		}
 
-		public Task RaiseLowTemperatureAsync() {
-			return null;
+		public async Task RaiseLowTemperatureAsync() {
+			await RaiseTemperatureAsync(TemperatureMode.RangeLow);
 		}
 
-		public Task RaiseHighTemperatureAsync() {
-			return null;
+		public async Task RaiseHighTemperatureAsync() {
+			await RaiseTemperatureAsync(TemperatureMode.RangeHigh);
 		}
 
-		public Task LowerLowTemperatureAsync() {
-			return null;
+		public async Task LowerLowTemperatureAsync() {
+			await LowerTemperatureAsync(TemperatureMode.RangeLow);
 		}
 
-		public Task LowerHighTemperatureAsync() {
-			return null;
+		public async Task LowerHighTemperatureAsync() {
+			await LowerTemperatureAsync(TemperatureMode.RangeHigh);
 		}
 
 		public async Task RaiseTemperatureAsync() {
-			if (TargetTemperature >= MaxTemperature)
+			await RaiseTemperatureAsync(TemperatureMode.Target);
+		}
+
+		private double GetTemperatureValue(TemperatureMode temperatureMode) {
+			double temperatureValue = TargetTemperature;
+			if (temperatureMode == TemperatureMode.RangeHigh)
+				temperatureValue = TargetTemperatureHigh;
+			else if (temperatureMode == TemperatureMode.RangeLow) 
+				temperatureValue = TargetTemperatureLow;
+
+			return temperatureValue;
+		}
+
+		private void SetTemperatureValue(TemperatureMode temperatureMode, double targetValue) {
+			if (temperatureMode == TemperatureMode.RangeHigh)
+				TargetTemperatureHigh = targetValue;
+			else if (temperatureMode == TemperatureMode.RangeLow)
+				TargetTemperatureLow = targetValue;
+			else
+				TargetTemperature = targetValue;
+		}
+
+		private void SetThermostatTemperatureValue(TemperatureMode temperatureMode, Thermostat thermostat, double targetValue) {
+			if (temperatureMode == TemperatureMode.RangeHigh)
+				thermostat.TargetTemperatureHigh = targetValue;
+			else if (temperatureMode == TemperatureMode.RangeLow)
+				thermostat.TargetTemperatureLow = targetValue;
+			else
+				thermostat.TargetTemperature = targetValue;
+		}
+
+		private async Task RaiseTemperatureAsync(TemperatureMode temperatureMode) {
+			double temperature = GetTemperatureValue(temperatureMode);
+			if (temperature >= MaxTemperature)
 				return;
 
 			try {
@@ -281,10 +314,39 @@ namespace WPNest {
 
 				var thermostat = GetFirstThermostat();
 
-				double desiredTemperature = TargetTemperature + 1.0d;
-				TargetTemperature = desiredTemperature;
+				double desiredTemperature = temperature + 1.0d;
+				SetTemperatureValue(temperatureMode, desiredTemperature);
+				SetThermostatTemperatureValue(temperatureMode, thermostat, desiredTemperature);
 
-				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, TemperatureMode.Target);
+				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, temperatureMode);
+				if (IsErrorHandled(result.Error, result.Exception))
+					return;
+
+				await _statusUpdater.UpdateStatusAsync();
+			}
+			finally {
+				_statusProvider.Start();
+			}
+		}
+
+		public async Task LowerTemperatureAsync() {
+			await LowerTemperatureAsync(TemperatureMode.Target);
+		}
+
+		public async Task LowerTemperatureAsync(TemperatureMode temperatureMode) {
+			double temperature = GetTemperatureValue(temperatureMode);
+			if (temperature <= MinTemperature)
+				return;
+
+			try {
+				_statusProvider.Stop();
+
+				var thermostat = GetFirstThermostat();
+				double desiredTemperature = temperature - 1.0d;
+				SetTemperatureValue(temperatureMode, desiredTemperature);
+				SetThermostatTemperatureValue(temperatureMode, thermostat, desiredTemperature);
+
+				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, temperatureMode);
 				if (IsErrorHandled(result.Error, result.Exception))
 					return;
 
@@ -331,27 +393,6 @@ namespace WPNest {
 			}
 		}
 
-		public async Task LowerTemperatureAsync() {
-			if (TargetTemperature <= MinTemperature)
-				return;
-
-			try {
-				_statusProvider.Stop();
-
-				var thermostat = GetFirstThermostat();
-				double desiredTemperature = TargetTemperature - 1.0d;
-				TargetTemperature = desiredTemperature;
-
-				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, TemperatureMode.Target);
-				if (IsErrorHandled(result.Error, result.Exception))
-					return;
-
-				await _statusUpdater.UpdateStatusAsync();
-			}
-			finally {
-				_statusProvider.Start();
-			}
-		}
 
 		private Structure GetFirstStructure() {
 			return _getStatusResult.Structures.ElementAt(0);

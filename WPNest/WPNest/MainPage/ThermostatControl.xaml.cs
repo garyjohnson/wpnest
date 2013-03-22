@@ -35,6 +35,24 @@ namespace WPNest {
 			set { SetValue(TargetTemperatureProperty, value); }
 		}
 
+		public static readonly DependencyProperty TargetTemperatureLowProperty =
+			DependencyProperty.Register("TargetTemperatureLow", typeof(double), typeof(ThermostatControl),
+			new PropertyMetadata(0.0d, OnTemperatureChanged));
+
+		public double TargetTemperatureLow {
+			get { return (double)GetValue(TargetTemperatureLowProperty); }
+			set { SetValue(TargetTemperatureLowProperty, value); }
+		}
+
+		public static readonly DependencyProperty TargetTemperatureHighProperty =
+			DependencyProperty.Register("TargetTemperatureHigh", typeof(double), typeof(ThermostatControl),
+			new PropertyMetadata(0.0d, OnTemperatureChanged));
+
+		public double TargetTemperatureHigh {
+			get { return (double)GetValue(TargetTemperatureHighProperty); }
+			set { SetValue(TargetTemperatureHighProperty, value); }
+		}
+
 		public static readonly DependencyProperty CurrentTemperatureProperty =
 			DependencyProperty.Register("CurrentTemperature", typeof(double), typeof(ThermostatControl),
 			new PropertyMetadata(0.0d, OnTemperatureChanged));
@@ -121,6 +139,7 @@ namespace WPNest {
 			var hvacMode = (HvacMode)args.NewValue;
 
 			thermostat.UpdateHvacModeVisualState(thermostat.IsAway, hvacMode);
+			thermostat.RefreshTicks();	
 		}
 
 		private static void OnIsCoolingChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -174,7 +193,11 @@ namespace WPNest {
 
 		private void RefreshTicks() {
 			var thermostatSize = new Size(orb.ActualWidth, orb.ActualHeight);
-			_tickCreator.RedrawTicks(thermostatSize, CurrentTemperature, TargetTemperature);
+			if(HvacMode == HvacMode.HeatAndCool)
+				_tickCreator.RedrawTicksForTemperatureRange(thermostatSize, CurrentTemperature, TargetTemperatureLow, TargetTemperatureHigh);
+			else
+				_tickCreator.RedrawTicks(thermostatSize, CurrentTemperature, TargetTemperature);
+
 			_tickCreator.UpdateCurrentTemperatureLabelPosition(currentTemperature, thermostatSize, CurrentTemperature, TargetTemperature);
 		}
 
@@ -189,6 +212,8 @@ namespace WPNest {
 		private void InitializeBindings() {
 			SetBinding(CurrentTemperatureProperty, new Binding("CurrentTemperature"));
 			SetBinding(TargetTemperatureProperty, new Binding("TargetTemperature"));
+			SetBinding(TargetTemperatureLowProperty, new Binding("TargetTemperatureLow"));
+			SetBinding(TargetTemperatureHighProperty, new Binding("TargetTemperatureHigh"));
 			SetBinding(IsHeatingProperty, new Binding("IsHeating"));
 			SetBinding(IsCoolingProperty, new Binding("IsCooling"));
 			SetBinding(IsAwayProperty, new Binding("IsAway"));

@@ -177,11 +177,29 @@ namespace WPNest.Services {
 		}
 
 		public async Task<WebServiceResult> ChangeTemperatureAsync(Thermostat thermostat, double desiredTemperature, TemperatureMode temperatureMode) {
-			string temperatureProperty = "\"target_temperature\"";
+			string temperatureProperty = GetTemperaturePropertyString(thermostat, desiredTemperature, temperatureMode);
+
 			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
-			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
-			string requestString = string.Format("{{\"target_change_pending\":true,{0}:{1}}}", temperatureProperty, desiredTempCelcius.ToString());
+			string requestString = string.Format("{{\"target_change_pending\":true,{0}}}", temperatureProperty);
 			return await SendPutRequestAsync(url, requestString);
+		}
+
+		private static string GetTemperaturePropertyString(Thermostat thermostat, double desiredTemperature, TemperatureMode temperatureMode) {
+			string temperatureTargetString = "\"target_temperature\":{0}";
+			string temperatureRangeString = "\"target_temperature_low\":{0},\"target_temperature_high\":{1}";
+			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
+
+			string temperatureProperty = string.Format(temperatureTargetString, desiredTemperature);
+			if (temperatureMode == TemperatureMode.RangeLow) {
+				double highTempCelcius = thermostat.TargetTemperatureHigh.FahrenheitToCelcius();
+				temperatureProperty = string.Format(temperatureRangeString, desiredTempCelcius, highTempCelcius);
+			} 
+			else if (temperatureMode == TemperatureMode.RangeHigh) {
+				double lowTempCelcius = thermostat.TargetTemperatureLow.FahrenheitToCelcius();
+				temperatureProperty = string.Format(temperatureRangeString, lowTempCelcius, desiredTempCelcius);
+			}
+					
+			return temperatureProperty;
 		}
 
 		public async Task<GetThermostatStatusResult> GetThermostatStatusAsync(Thermostat thermostat) {
