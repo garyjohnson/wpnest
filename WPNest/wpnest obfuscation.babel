@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 	Babel Obfuscator MSBuild Project File
-	Version 6.1.0.0	
+	Version 6.3.0.0	
 -->
 <Project DefaultTargets="WPNest" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask TaskName="Babel" AssemblyName="Babel.Build, Version=6.1.0.0, Culture=neutral, PublicKeyToken=138d17b5bd621ab7" />
+  <UsingTask TaskName="Babel" AssemblyName="Babel.Build, Version=6.3.0.0, Culture=neutral, PublicKeyToken=138d17b5bd621ab7" />
   <Target Name="WPNest">
     <PropertyGroup>
       <BabelInputFile>Builds\1.4\Release\WPNest.xap</BabelInputFile>
