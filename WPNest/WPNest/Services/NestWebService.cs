@@ -7,7 +7,7 @@ using WPNest.Web;
 
 namespace WPNest.Services {
 
-	public class NestWebService : INestWebService {
+	internal class NestWebService : INestWebService {
 
 		private readonly ISessionProvider _sessionProvider;
 		private readonly IAnalyticsService _analyticsService;

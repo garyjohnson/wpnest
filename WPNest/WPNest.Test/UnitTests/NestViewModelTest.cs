@@ -11,16 +11,16 @@ namespace WPNest.Test.UnitTests {
 	public class NestViewModelTest {
 
 		public abstract class NestViewModelTestBase {
-			protected Mock<IStatusProvider> _statusProvider;
-			protected Mock<ISessionProvider> _sessionProvider;
-			protected Mock<IAnalyticsService> _analyticsService;
-			protected Mock<IDialogProvider> _dialogProvider;
-			protected Mock<INestWebService> _nestWebService;
-			protected Mock<IStatusUpdaterService> _statusUpdaterService;
-			protected NestViewModel _viewModel;
-			protected Structure _structure;
-			protected Thermostat _firstThermostat;
-			protected Thermostat _secondThermostat;
+			internal Mock<IStatusProvider> _statusProvider;
+			internal Mock<ISessionProvider> _sessionProvider;
+			internal Mock<IAnalyticsService> _analyticsService;
+			internal Mock<IDialogProvider> _dialogProvider;
+			internal Mock<INestWebService> _nestWebService;
+			internal Mock<IStatusUpdaterService> _statusUpdaterService;
+			internal NestViewModel _viewModel;
+			internal Structure _structure;
+			internal Thermostat _firstThermostat;
+			internal Thermostat _secondThermostat;
 
 			[TestInitialize]
 			public void SetUp() {

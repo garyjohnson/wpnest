@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WPNest.Services {
 
-	public class SessionProvider : ISessionProvider {
+	internal class SessionProvider : ISessionProvider {
 
 		private const string SettingTransportUrl = "TransportUrl";
 		private const string SettingUserId = "UserId";

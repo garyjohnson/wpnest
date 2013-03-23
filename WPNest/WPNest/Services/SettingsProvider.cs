@@ -4,7 +4,7 @@ using System.IO.IsolatedStorage;
 
 namespace WPNest.Services {
 
-	public class SettingsProvider : ISettingsProvider {
+	internal class SettingsProvider : ISettingsProvider {
 
 		private IDictionary<string, object> SettingsDictionary {
 			get { return IsolatedStorageSettings.ApplicationSettings; }

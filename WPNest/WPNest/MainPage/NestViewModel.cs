@@ -7,7 +7,7 @@ using WPNest.Services;
 
 namespace WPNest {
 
-	public class NestViewModel : INotifyPropertyChanged {
+	internal class NestViewModel : INotifyPropertyChanged {
 
 		internal const double MinTemperature = 50.0d;
 		internal const double MaxTemperature = 90.0d;

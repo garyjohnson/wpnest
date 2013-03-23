@@ -6,7 +6,7 @@ using WPNest.Web;
 
 namespace WPNest {
 
-	public static class ExtensionMethods {
+	internal static class ExtensionMethods {
 
 		public static async Task SetRequestStringAsync(this WebRequest request, string requestString) {
 			using (Stream stream = await request.GetRequestStreamAsync()) {

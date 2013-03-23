@@ -3,7 +3,7 @@ using System.Net;
 
 namespace WPNest.Web {
 
-	public class WebHeaderCollectionWrapper : IWebHeaderCollection {
+	internal class WebHeaderCollectionWrapper : IWebHeaderCollection {
 
 		private readonly WebHeaderCollection _headers;
 

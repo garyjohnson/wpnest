@@ -2,7 +2,7 @@
 
 namespace WPNest.Services {
 
-	public class TimestampProvider : ITimestampProvider {
+	internal class TimestampProvider : ITimestampProvider {
 
 		public double GetTimestamp() {
 			var unixTime = DateTime.Now.ToUniversalTime() -

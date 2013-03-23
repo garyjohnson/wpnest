@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WPNest {
 
-	public class ServiceContainer {
+	internal class ServiceContainer {
 
 		private static readonly ServiceContainer _container;
 

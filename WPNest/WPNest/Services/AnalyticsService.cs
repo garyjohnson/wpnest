@@ -2,7 +2,7 @@
 
 namespace WPNest.Services {
 
-	public class AnalyticsService : IAnalyticsService {
+	internal class AnalyticsService : IAnalyticsService {
 
 		public void StartSession() {
 			FlurryWP7SDK.Api.StartSession("ZY7JNH8M6C4PKKMYDXJH");

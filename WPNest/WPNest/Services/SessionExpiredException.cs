@@ -2,6 +2,7 @@
 
 namespace WPNest.Services {
 
-	public class SessionExpiredException : Exception {
+	internal class SessionExpiredException : Exception {
+
 	}
 }

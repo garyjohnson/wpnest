@@ -180,7 +180,6 @@
     <Compile Include="Services\WebServiceError.cs" />
     <Compile Include="Services\WebServiceEventArgs.cs" />
     <Compile Include="Services\WebServiceResult.cs" />
-    <Compile Include="MainPage\TestValueConverter.cs" />
     <Compile Include="MainPage\ThermostatControl.xaml.cs">
       <DependentUpon>ThermostatControl.xaml</DependentUpon>
     </Compile>

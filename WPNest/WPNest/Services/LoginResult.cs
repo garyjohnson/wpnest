@@ -2,7 +2,7 @@
 
 namespace WPNest.Services {
 
-	public class LoginResult : WebServiceResult {
+	internal class LoginResult : WebServiceResult {
 
 		public LoginResult() {
 		}

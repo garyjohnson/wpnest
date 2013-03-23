@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace WPNest.Services {
 
-	public class TimerWrapper : ITimer {
+	internal class TimerWrapper : ITimer {
 
 		private Timer _timer;
 

@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 namespace WPNest.Web {
+
 	public interface IWebRequest {
 		string Method { get; set; }
 		string ContentType { get; set; }

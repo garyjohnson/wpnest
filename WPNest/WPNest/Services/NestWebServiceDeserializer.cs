@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace WPNest.Services {
+
 	internal class NestWebServiceDeserializer : INestWebServiceDeserializer {
 
 		public IEnumerable<Structure> ParseStructuresFromGetStatusResult(string responseString, string userId) {

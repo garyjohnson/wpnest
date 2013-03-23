@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace WPNest {
 
-	public class NestSampleViewModel : INotifyPropertyChanged {
+	internal class NestSampleViewModel : INotifyPropertyChanged {
 
 		public NestSampleViewModel() {
 			CurrentTemperature = "62";

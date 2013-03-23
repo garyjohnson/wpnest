@@ -2,7 +2,7 @@
 
 namespace WPNest.Services {
 
-	public class WebServiceEventArgs : EventArgs {
+	internal class WebServiceEventArgs : EventArgs {
 
 		public WebServiceEventArgs(WebServiceResult result) {
 			Result = result;

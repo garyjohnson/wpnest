@@ -14,15 +14,15 @@ namespace WPNest.Test.UnitTests {
 
 		protected static string BaseUrl = "http://fakeurl.com";
 
-		protected static NestWebService _webService;
-		protected static Mock<IWebRequestProvider> _requestProvider;
-		protected static Mock<IAnalyticsService> _analytics;
-		protected static Mock<ISessionProvider> _sessionProvider;
-		protected static Mock<IWebRequest> _webRequest;
-		protected static Mock<IWebHeaderCollection> _webHeaderCollection;
-		protected static Mock<INestWebServiceDeserializer> _webServiceDeserializer;
-		protected static Mock<IWebResponse> _webResponse;
-		protected static Mock<ITimestampProvider> _timestampProvider;
+		internal static NestWebService _webService;
+		internal static Mock<IWebRequestProvider> _requestProvider;
+		internal static Mock<IAnalyticsService> _analytics;
+		internal static Mock<ISessionProvider> _sessionProvider;
+		internal static Mock<IWebRequest> _webRequest;
+		internal static Mock<IWebHeaderCollection> _webHeaderCollection;
+		internal static Mock<INestWebServiceDeserializer> _webServiceDeserializer;
+		internal static Mock<IWebResponse> _webResponse;
+		internal static Mock<ITimestampProvider> _timestampProvider;
 
 		public class NestWebServiceTestBase {
 

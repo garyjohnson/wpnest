@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 namespace WPNest.Web {
+
 	internal class WebResponseWrapper : IWebResponse {
 
 		private WebResponse _response;
