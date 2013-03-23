@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WPNest.Services;
 
 namespace WPNest {
 
-	internal class NestViewModel : INotifyPropertyChanged {
+	public class NestViewModel : INotifyPropertyChanged {
 
 		internal const double MinTemperature = 50.0d;
 		internal const double MaxTemperature = 90.0d;

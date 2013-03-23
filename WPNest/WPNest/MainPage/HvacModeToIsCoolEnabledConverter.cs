@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace WPNest {
 
-	internal class HvacModeToIsCoolEnabledConverter : IValueConverter {
+	public class HvacModeToIsCoolEnabledConverter : IValueConverter {
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 			if (value is HvacMode) {

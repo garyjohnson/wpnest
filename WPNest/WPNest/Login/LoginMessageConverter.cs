@@ -5,7 +5,7 @@ using WPNest.Services;
 
 namespace WPNest.Login {
 
-	internal class LoginMessageConverter : IValueConverter {
+	public class LoginMessageConverter : IValueConverter {
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 			if(value is WebServiceError) {
