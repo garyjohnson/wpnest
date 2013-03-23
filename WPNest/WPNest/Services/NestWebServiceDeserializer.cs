@@ -114,6 +114,19 @@ namespace WPNest.Services {
 			return values;
 		}
 
+		public string GetHvacModeString(HvacMode hvacMode) {
+			if (hvacMode == HvacMode.HeatAndCool)
+				return "range";
+			if (hvacMode == HvacMode.HeatOnly)
+				return "heat";
+			if(hvacMode == HvacMode.CoolOnly)
+				return "cool";
+			if(hvacMode == HvacMode.Off)
+				return "off";
+
+			throw new InvalidOperationException();
+		}
+
 		private static HvacMode GetHvacModeFromString(string hvacMode) {
 			if (hvacMode == "range")
 				return HvacMode.HeatAndCool;
@@ -126,6 +139,7 @@ namespace WPNest.Services {
 
 			throw new InvalidOperationException();
 		}
+
 		private static FanMode GetFanModeFromString(string fanMode) {
 			if (fanMode == "auto")
 				return FanMode.Auto;

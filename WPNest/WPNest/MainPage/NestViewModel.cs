@@ -139,8 +139,12 @@ namespace WPNest {
 		public HvacMode HvacMode {
 			get { return _hvacMode; }
 			set {
-				_hvacMode = value;
-				OnPropertyChanged("HvacMode");
+				if (value != _hvacMode) {
+					_hvacMode = value;
+					OnPropertyChanged("HvacMode");
+					if (IsLoggedIn)
+						SetHvacModeAsync(_hvacMode);
+				}
 			}
 		}
 
@@ -393,6 +397,25 @@ namespace WPNest {
 			}
 		}
 
+		private async void SetHvacModeAsync(HvacMode hvacMode) {
+			var thermostat = GetFirstThermostat();
+			if (thermostat.HvacMode == hvacMode)
+				return;
+
+			try {
+				_statusProvider.Stop();
+
+				thermostat.HvacMode = hvacMode;
+				var result = await _nestWebService.SetHvacModeAsync(thermostat, hvacMode);
+				if (IsErrorHandled(result.Error, result.Exception))
+					return;
+
+				await _statusUpdater.UpdateStatusAsync();
+			}
+			finally {
+				_statusProvider.Start();
+			}
+		}
 
 		private Structure GetFirstStructure() {
 			return _getStatusResult.Structures.ElementAt(0);

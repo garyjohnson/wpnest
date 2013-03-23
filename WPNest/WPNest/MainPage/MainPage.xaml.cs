@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Phone.Controls;
@@ -17,6 +19,7 @@ namespace WPNest {
 			SetValue(SystemTray.IsVisibleProperty, true);
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
+			SetBinding(HvacModeProperty, new Binding("HvacMode") { Mode = BindingMode.TwoWay });
 
 			ResetZoom.Completed += OnResetZoomCompleted;
 			Loaded += OnLoaded;
@@ -38,6 +41,14 @@ namespace WPNest {
 		public bool IsLoggingIn {
 			get { return (bool)GetValue(IsLoggingInProperty); }
 			set { SetValue(IsLoggingInProperty, value); }
+		}
+
+		public static readonly DependencyProperty HvacModeProperty =
+			DependencyProperty.Register("HvacMode", typeof(HvacMode), typeof(MainPage), new PropertyMetadata(HvacMode.Off, OnHvacModeChanged));
+
+		public HvacMode HvacMode {
+			get { return (HvacMode)GetValue(HvacModeProperty); }
+			set { SetValue(HvacModeProperty, value); }
 		}
 
 		private NestViewModel ViewModel {
@@ -83,6 +94,12 @@ namespace WPNest {
 				mainPage.GoToDefaultVisualState();
 		}
 
+		private static void OnHvacModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var mainPage = (MainPage)sender;
+			var newValue = (HvacMode)args.NewValue;
+			mainPage.SelectHvacControl(newValue);
+		}
+
 		private void GoToPromptingLoginVisualState() {
 			VisualStateManager.GoToState(this, "PromptingLogIn", true);
 		}
@@ -103,11 +120,11 @@ namespace WPNest {
 			}
 		}
 
-		private void OnSettingsButtonPress(object sender, RoutedEventArgs e) {
+		private void OnSettingsButtonPress(object sender, RoutedEventArgs args) {
 			OpenSettingsPanel();
 		}
 
-		private void OnClickedOutsideOfSettings(object sender, MouseButtonEventArgs e) {
+		private void OnClickedOutsideOfSettings(object sender, MouseButtonEventArgs args) {
 			CloseSettingsPanel();
 		}
 
@@ -121,6 +138,23 @@ namespace WPNest {
 			isSettingsOpen = false;
 			MoveThermostatToForeground.Begin();
 			VisualStateManager.GoToState(this, "SettingsClosed", true);
+		}
+
+		private void OnHvacSelectionChanged(object sender, SelectionChangedEventArgs args) {
+			HvacMode? hvacMode = GetSelectedHvacMode();
+			if (hvacMode.HasValue)
+				HvacMode = hvacMode.Value;
+		}
+
+		private HvacMode? GetSelectedHvacMode() {
+			if (hvacPicker != null)
+				return ((HvacModeControl)hvacPicker.SelectedItem).HvacMode;
+
+			return null;
+		}
+
+		private void SelectHvacControl(HvacMode hvacMode) {
+			hvacPicker.SelectedItem = hvacPicker.Items.Cast<HvacModeControl>().First(h => h.HvacMode == hvacMode);
 		}
 	}
 }

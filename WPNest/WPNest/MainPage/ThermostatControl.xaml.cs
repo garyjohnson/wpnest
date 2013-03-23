@@ -14,6 +14,7 @@ namespace WPNest {
 		private const string VisualStateAway = "Away";
 		private const string VisualStateTemperatureTarget = "TemperatureTarget";
 		private const string VisualStateTemperatureRange = "TemperatureRange";
+		private const string VisualStateOff = "Off";
 
 		private const string VisualStateFanOn = "FanOn";
 		private const string VisualStateLeafOn = "LeafOn";
@@ -195,6 +196,8 @@ namespace WPNest {
 			var thermostatSize = new Size(orb.ActualWidth, orb.ActualHeight);
 			if(HvacMode == HvacMode.HeatAndCool)
 				_tickCreator.RedrawTicksForTemperatureRange(thermostatSize, CurrentTemperature, TargetTemperatureLow, TargetTemperatureHigh);
+			else if(HvacMode == HvacMode.Off)
+				_tickCreator.RedrawTicksForOff(thermostatSize, CurrentTemperature);
 			else
 				_tickCreator.RedrawTicks(thermostatSize, CurrentTemperature, TargetTemperature);
 
@@ -236,6 +239,8 @@ namespace WPNest {
 				GoToVisualState(VisualStateAway);
 			else if (hvacMode == HvacMode.HeatAndCool)
 				GoToVisualState(VisualStateTemperatureRange);
+			else if (hvacMode == HvacMode.Off)
+				GoToVisualState(VisualStateOff);
 			else
 				GoToVisualState(VisualStateTemperatureTarget);
 		}

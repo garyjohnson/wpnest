@@ -535,11 +535,19 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
 			<TextBlock x:Name="awayLabel" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Away" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
 			<toolkit:ToggleSwitch x:Name="awaySwitch" VerticalAlignment="Top" Grid.Row="2" Margin="20,10,0,0" IsChecked="{Binding IsAway, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
 			<TextBlock x:Name="fanLabel" Grid.Row="3" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Fan" VerticalAlignment="Top" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
 			<toolkit:ToggleSwitch x:Name="fanSwitch" VerticalAlignment="Top" Grid.Row="3" Margin="20,10,0,0" Content="{Binding FanMode, Converter={StaticResource FanModeToLabelConverter}}" IsChecked="{Binding FanMode, Converter={StaticResource FanModeToBoolConverter}, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
+			<toolkit:ListPicker x:Name="hvacPicker" Grid.Row="4" Margin="30,0,30,20" SelectionChanged="OnHvacSelectionChanged"
+								Template="{StaticResource ListPickerControlTemplateLight}">
+				<WPNest:HvacModeControl x:Name="hvacHeatOnly"  HvacMode="HeatOnly"/>
+				<WPNest:HvacModeControl x:Name="hvacCoolOnly" HvacMode="CoolOnly"/>
+				<WPNest:HvacModeControl x:Name="hvacHeatAndCool"  HvacMode="HeatAndCool"/>
+				<WPNest:HvacModeControl x:Name="hvacOff"  HvacMode="Off"/>
+			</toolkit:ListPicker>
 		</Grid>
 
 	</Grid>

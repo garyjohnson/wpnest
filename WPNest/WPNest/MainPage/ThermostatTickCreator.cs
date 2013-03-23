@@ -58,6 +58,12 @@ namespace WPNest {
 			DrawCurrentTemperatureTick(thermostatSize, currentTemperature);
 		}
 
+		public void RedrawTicksForOff(Size thermostatSize, double currentTemperature) {
+			ClearTicks();
+			DrawMinorTicksForTemperatureRange(thermostatSize);
+			DrawCurrentTemperatureTick(thermostatSize, currentTemperature);
+		}
+
 		public void ClearTicks() {
 			HeavyTicksGeometry.Figures.Clear();
 			MediumTicksGeometry.Figures.Clear();

@@ -140,6 +140,13 @@ namespace WPNest.Services {
 			return await SendPutRequestAsync(url, requestString);
 		}
 
+		public async Task<WebServiceResult> SetHvacModeAsync(Thermostat thermostat, HvacMode hvacMode) {
+			string url = string.Format(@"{0}/v2/put/shared.{1}", _sessionProvider.TransportUrl, thermostat.ID);
+			string hvacModeString = _deserializer.GetHvacModeString(hvacMode);
+			string requestString = string.Format("{{\"target_temperature_type\":\"{0}\"}}", hvacModeString);
+			return await SendPutRequestAsync(url, requestString);
+		}
+
 		public async Task<WebServiceResult> SetAwayMode(Structure structure, bool isAway) {
 			string url = string.Format(@"{0}/v2/put/structure.{1}", _sessionProvider.TransportUrl, structure.ID);
 			string requestString = string.Format("{{\"away_timestamp\":{0},\"away\":{1},\"away_setter\":0}}", 
@@ -189,7 +196,7 @@ namespace WPNest.Services {
 			string temperatureRangeString = "\"target_temperature_low\":{0},\"target_temperature_high\":{1}";
 			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
 
-			string temperatureProperty = string.Format(temperatureTargetString, desiredTemperature);
+			string temperatureProperty = null;
 			if (temperatureMode == TemperatureMode.RangeLow) {
 				double highTempCelcius = thermostat.TargetTemperatureHigh.FahrenheitToCelcius();
 				temperatureProperty = string.Format(temperatureRangeString, desiredTempCelcius, highTempCelcius);
@@ -197,6 +204,9 @@ namespace WPNest.Services {
 			else if (temperatureMode == TemperatureMode.RangeHigh) {
 				double lowTempCelcius = thermostat.TargetTemperatureLow.FahrenheitToCelcius();
 				temperatureProperty = string.Format(temperatureRangeString, lowTempCelcius, desiredTempCelcius);
+			}
+			else {
+				temperatureProperty = string.Format(temperatureTargetString, desiredTempCelcius);
 			}
 					
 			return temperatureProperty;

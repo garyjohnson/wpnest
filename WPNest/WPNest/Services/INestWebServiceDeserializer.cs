@@ -15,6 +15,7 @@ namespace WPNest.Services {
 		FanMode ParseFanModeFromDeviceSubscribeResult(string responseString);
 		Task<WebServiceError> ParseWebServiceErrorAsync(Exception exception);
 		bool ParseLeafFromDeviceSubscribeResult(string responseString);
+		string GetHvacModeString(HvacMode hvacMode);
 	}
 
 }
