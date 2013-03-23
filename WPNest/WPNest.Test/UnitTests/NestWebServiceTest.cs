@@ -369,5 +369,18 @@ namespace WPNest.Test.UnitTests {
 				_webHeaderCollection.VerifySet(w => w["X-nl-user-id"] = userId);
 			}
 		}
+
+		[TestClass]
+		public class NestWebService_WhenSettingHvacMode : NestWebServiceTestBase {
+			
+			[TestMethod]
+			public async Task ShouldUseCorrectUrl() {
+				var thermostat = new Thermostat("id123");
+				await _webService.SetHvacModeAsync(thermostat, HvacMode.Off);
+
+				var expectedUri = new Uri(BaseUrl + "/v2/put/shared.id123");
+				_requestProvider.Verify(r => r.CreateRequest(expectedUri));
+			}
+		}
 	}
 }
