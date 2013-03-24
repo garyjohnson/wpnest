@@ -381,6 +381,54 @@ namespace WPNest.Test.UnitTests {
 				var expectedUri = new Uri(BaseUrl + "/v2/put/shared.id123");
 				_requestProvider.Verify(r => r.CreateRequest(expectedUri));
 			}
+
+			[TestMethod]
+			public async Task ShouldSetHvacModeInRequestString() {
+				_webServiceDeserializer.Setup(d => d.GetHvacModeString(It.IsAny<HvacMode>())).Returns("testing");
+
+				var thermostat = new Thermostat("id123");
+				await _webService.SetHvacModeAsync(thermostat, HvacMode.Off);
+
+				string expectedString = "\"target_temperature_type\":\"testing\"";
+				_webRequest.Verify(r=>r.SetRequestStringAsync(It.Is<string>(s => s.Contains(expectedString))));
+			}
+
+			[TestMethod]
+			public async Task ShouldSetAuthorizationHeaderOnRequest() {
+				string accessToken = "token";
+				_sessionProvider.SetupGet(s => s.AccessToken).Returns(accessToken);
+				var thermostat = new Thermostat("id123");
+				await _webService.SetHvacModeAsync(thermostat, HvacMode.Off);
+
+				_webHeaderCollection.VerifySet(w => w["Authorization"] = "Basic " + accessToken);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetMethodToPost() {
+				var thermostat = new Thermostat("id123");
+				await _webService.SetHvacModeAsync(thermostat, HvacMode.Off);
+
+				_webRequest.VerifySet(w => w.Method = "POST");
+			}
+
+			[TestMethod]
+			public async Task ShouldSetContentTypeToJson() {
+				var thermostat = new Thermostat("id123");
+				await _webService.SetHvacModeAsync(thermostat, HvacMode.Off);
+
+				_webRequest.VerifySet(w => w.ContentType = ContentType.Json);
+			}
+
+			[TestMethod]
+			public async Task ShouldSetNestHeadersOnRequest() {
+				string userId = "userId";
+				_sessionProvider.SetupGet(s => s.UserId).Returns(userId);
+				var thermostat = new Thermostat("id123");
+				await _webService.SetHvacModeAsync(thermostat, HvacMode.Off);
+
+				_webHeaderCollection.VerifySet(w => w["X-nl-protocol-version"] = "1");
+				_webHeaderCollection.VerifySet(w => w["X-nl-user-id"] = userId);
+			}
 		}
 	}
 }
