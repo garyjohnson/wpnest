@@ -7,54 +7,42 @@ using WPNest.Services;
 
 namespace WPNest.Test.UnitTests {
 
-	[TestClass]
 	public class NestWebServiceDeserializerTest {
 
-		private NestWebServiceDeserializer _deserializer;
+		internal NestWebServiceDeserializer _deserializer;
 
 		[TestInitialize]
 		public void SetUp() {
-			_deserializer = new NestWebServiceDeserializer();	
+			_deserializer = new NestWebServiceDeserializer();
 		}
+	}
+
+	[TestClass]
+	public class NestWebServiceDeserializer_WhenParsingGetStatusResult : NestWebServiceDeserializerTest {
 
 		[TestMethod]
-		public void ShouldParseStructureIsAwayFromGetStatusResult() {
+		public void ShouldParseStructureIsAway() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultAwayMode, FakeJsonMessages.UserId);
 
 			Assert.IsTrue(structures.ElementAt(0).IsAway);
 		}
 
 		[TestMethod]
-		public void ShouldParseStructureIsAwayFromGetStatusResultWhenFalse() {
+		public void ShouldParseStructureIsAwayWhenFalse() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
 			Assert.IsFalse(structures.ElementAt(0).IsAway);
 		}
 
 		[TestMethod]
-		public void ShouldParseStructureFromGetStructureStatusResult() {
-			Structure structure = _deserializer.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, "");
-
-			Assert.IsFalse(structure.IsAway, "Expected Structure.IsAway to be parsed.");
-		}
-
-		[TestMethod]
-		public void ShouldAssignStructureIdToGetStructureStatusResult() {
-			string expectedId = "expectedId";
-			Structure structure = _deserializer.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, expectedId);
-
-			Assert.AreEqual(expectedId, structure.ID);
-		}
-
-		[TestMethod]
-		public void ShouldParseLeafFromGetStatusResult() {
+		public void ShouldParseLeaf() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
 			Assert.IsTrue(structures.ElementAt(0).Thermostats[0].IsLeafOn);
 		}
 
 		[TestMethod]
-		public void ShouldParseTargetTemperatureFromGetStatusResult() {
+		public void ShouldParseTargetTemperature() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
@@ -62,7 +50,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseCurrentTemperatureFromGetStatusResult() {
+		public void ShouldParseCurrentTemperature() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(22.46d.CelciusToFahrenheit());
@@ -70,7 +58,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseCurrentTemperatureCelciusFromGetStatusResult() {
+		public void ShouldParseCurrentTemperatureCelcius() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(22.46d);
@@ -78,7 +66,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseTargetTemperatureCelciusFromGetStatusResult() {
+		public void ShouldParseTargetTemperatureCelcius() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(20d);
@@ -86,7 +74,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseTargetTemperatureLowFromGetStatusResult() {
+		public void ShouldParseTargetTemperatureLow() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
@@ -94,7 +82,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseTargetTemperatureLowCelciusFromGetStatusResult() {
+		public void ShouldParseTargetTemperatureLowCelcius() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(20d);
@@ -102,7 +90,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseTargetTemperatureHighFromGetStatusResult() {
+		public void ShouldParseTargetTemperatureHigh() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
@@ -110,7 +98,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseTargetTemperatureHighCelciusFromGetStatusResult() {
+		public void ShouldParseTargetTemperatureHighCelcius() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
 			double expectedTemperature = Math.Round(24.444d);
@@ -118,21 +106,25 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldParseHvacModeFromGetStatusResult() {
+		public void ShouldParseHvacMode() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultTempRangeMode, FakeJsonMessages.UserId);
 
 			Assert.AreEqual(HvacMode.HeatAndCool, structures.ElementAt(0).Thermostats[0].HvacMode);
 		}
 
 		[TestMethod]
-		public void ShouldParseTemperatureScaleFromGetStatusResult() {
+		public void ShouldParseTemperatureScale() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
 			Assert.AreEqual(TemperatureScale.Celcius, structures.ElementAt(0).Thermostats[0].TemperatureScale);
 		}
+	}
+
+	[TestClass]
+	public class NestWebServiceDeserializer_WhenParsingGetSharedStatusResult : NestWebServiceDeserializerTest {
 
 		[TestMethod]
-		public void ShouldUpdateHvacModeFromSharedStatusResult() {
+		public void ShouldUpdateHvacMode() {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
@@ -140,7 +132,7 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldUpdateTargetTemperatureLowFromSharedStatusResult() {
+		public void ShouldUpdateTargetTemperatureLow() {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
@@ -149,16 +141,39 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
-		public void ShouldUpdateTargetTemperatureHighFromSharedStatusResult() {
+		public void ShouldUpdateTargetTemperatureHigh() {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
 			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureHigh);
 		}
+	}
+
+	[TestClass]
+	public class NestWebServiceDeserializer_WhenParsingGetStructureStatusResult : NestWebServiceDeserializerTest {
 
 		[TestMethod]
-		public async Task ShouldParseCancelledErrorFromWebException() {
+		public void ShouldParseStructure() {
+			Structure structure = _deserializer.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, "");
+
+			Assert.IsFalse(structure.IsAway, "Expected Structure.IsAway to be parsed.");
+		}
+
+		[TestMethod]
+		public void ShouldAssignStructureId() {
+			string expectedId = "expectedId";
+			Structure structure = _deserializer.ParseStructureFromGetStructureStatusResult(FakeJsonMessages.GetStructureStatusResult, expectedId);
+
+			Assert.AreEqual(expectedId, structure.ID);
+		}
+	}
+
+	[TestClass]
+	public class NestWebServiceDeserializer_WhenParsingWebException : NestWebServiceDeserializerTest {
+
+		[TestMethod]
+		public async Task ShouldParseCancelledError() {
 			var exception = new WebException("Test", WebExceptionStatus.RequestCanceled);
 
 			WebServiceError error = await _deserializer.ParseWebServiceErrorAsync(exception);
