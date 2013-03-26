@@ -333,14 +333,23 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public async Task ShouldClearLoginFields() {
+			public async Task ShouldClearPasswordField() {
 				_viewModel.UserName = "Bob";
 				_viewModel.Password = "Bob's Password";
 
 				await _viewModel.LoginAsync();
 
-				Assert.AreEqual(string.Empty, _viewModel.UserName);
 				Assert.AreEqual(string.Empty, _viewModel.Password);
+			}
+
+			[TestMethod]
+			public async Task ShouldNotClearUserNameField() {
+				_viewModel.UserName = "Bob";
+				_viewModel.Password = "Bob's Password";
+
+				await _viewModel.LoginAsync();
+
+				Assert.AreEqual("Bob", _viewModel.UserName);
 			}
 
 			[TestMethod]

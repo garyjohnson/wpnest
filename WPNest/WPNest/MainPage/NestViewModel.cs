@@ -232,7 +232,6 @@ namespace WPNest {
 		}
 
 		private void ClearLoginFields() {
-			UserName = string.Empty;
 			Password = string.Empty;
 		}
 
