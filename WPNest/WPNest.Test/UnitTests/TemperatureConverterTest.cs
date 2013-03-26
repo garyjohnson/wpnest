@@ -24,6 +24,16 @@ namespace WPNest.Test.UnitTests {
 
 			Assert.AreEqual(expectedTemp, actualTemp);
 		}
+
+		[TestMethod]
+		public void ShouldConvertToFahrenheitMode() {
+			double celciusTemp = 34.0d;
+			double expectedTemp = celciusTemp.CelciusToFahrenheit();
+
+			double actualTemp = _converter.ConvertTo(TemperatureScale.Fahrenheit, celciusTemp);
+
+			Assert.AreEqual(expectedTemp, actualTemp);
+		}
 	}
 
 	[TestClass]
@@ -36,6 +46,16 @@ namespace WPNest.Test.UnitTests {
 			double actualTemp = _converter.ConvertFrom(TemperatureScale.Celcius, expectedTemp);
 
 			Assert.AreEqual(expectedTemp, actualTemp);
+		}
+
+		[TestMethod]
+		public void ShouldConvertFromFahrenheitMode() {
+			double celciusTemp = 34.0d;
+			double fahrenheitTemp = celciusTemp.CelciusToFahrenheit();
+
+			double actualTemp = _converter.ConvertFrom(TemperatureScale.Fahrenheit, fahrenheitTemp);
+
+			Assert.AreEqual(celciusTemp, actualTemp);
 		}
 	}
 }
