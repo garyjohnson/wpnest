@@ -34,7 +34,12 @@ namespace WPNest.Services {
 
 			foreach (var structureResult in structureResults) {
 				foreach (var thermostat in structureResult.Thermostats) {
-					var thermostatValues = values["shared"][thermostat.ID];
+					var thermostatValues = values["device"][thermostat.ID];
+					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
+					thermostat.IsLeafOn = thermostatValues["leaf"].Value<bool>();
+					thermostat.TemperatureScale = GetTemperatureScaleFromString(thermostatValues["temperature_scale"].Value<string>());
+					
+					thermostatValues = values["shared"][thermostat.ID];
 					double temperature = double.Parse(thermostatValues["target_temperature"].Value<string>());
 					thermostat.TargetTemperature = Math.Round(temperature.CelciusToFahrenheit());
 					double temperatureLow = double.Parse(thermostatValues["target_temperature_low"].Value<string>());
@@ -46,11 +51,6 @@ namespace WPNest.Services {
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
 					thermostat.HvacMode = GetHvacModeFromString(thermostatValues["target_temperature_type"].Value<string>());
-
-					thermostatValues = values["device"][thermostat.ID];
-					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
-					thermostat.IsLeafOn = thermostatValues["leaf"].Value<bool>();
-					thermostat.TemperatureScale = GetTemperatureScaleFromString(thermostatValues["temperature_scale"].Value<string>());
 				}
 			}
 
