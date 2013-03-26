@@ -157,6 +157,15 @@ namespace WPNest.Test.UnitTests {
 			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureHigh);
 		}
+
+		[TestMethod]
+		public void ShouldUpdateCurrentTemperature() {
+			var thermostat = new Thermostat("");
+			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResult, thermostat);
+
+			double expectedTemperature = Math.Round(21.89d.CelciusToFahrenheit());
+			Assert.AreEqual(expectedTemperature, thermostat.CurrentTemperature);
+		}
 	}
 
 	[TestClass]
