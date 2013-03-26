@@ -48,7 +48,7 @@ namespace WPNest.Services {
 					double temperatureHigh = double.Parse(thermostatValues["target_temperature_high"].Value<string>());
 					thermostat.TargetTemperatureHigh = Math.Round(ConvertTo(scale, temperatureHigh));
 					double currentTemperature = double.Parse(thermostatValues["current_temperature"].Value<string>());
-					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
+					thermostat.CurrentTemperature = Math.Round(ConvertTo(scale, currentTemperature));
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
 					thermostat.IsCooling = thermostatValues["hvac_ac_state"].Value<bool>();
 					thermostat.HvacMode = GetHvacModeFromString(thermostatValues["target_temperature_type"].Value<string>());
@@ -56,15 +56,6 @@ namespace WPNest.Services {
 			}
 
 			return structureResults;
-		}
-
-		private TemperatureScale GetTemperatureScaleFromString(string value) {
-			if(value == "F")
-				return TemperatureScale.Fahrenheit;
-			if(value == "C")
-				return TemperatureScale.Celcius;
-
-			throw new InvalidOperationException(string.Format("Could not parse Temperature Scale of {0}", value));
 		}
 
 		public Structure ParseStructureFromGetStructureStatusResult(string result, string structureId) {
@@ -124,6 +115,15 @@ namespace WPNest.Services {
 			}
 			catch (Newtonsoft.Json.JsonException) { }
 			return values;
+		}
+
+		private TemperatureScale GetTemperatureScaleFromString(string value) {
+			if(value == "F")
+				return TemperatureScale.Fahrenheit;
+			if(value == "C")
+				return TemperatureScale.Celcius;
+
+			throw new InvalidOperationException(string.Format("Could not parse Temperature Scale of {0}", value));
 		}
 
 		public string GetHvacModeString(HvacMode hvacMode) {
