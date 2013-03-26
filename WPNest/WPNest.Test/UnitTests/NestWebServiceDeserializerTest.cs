@@ -62,6 +62,14 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
+		public void ShouldParseCurrentTemperatureFromGetStatusResult() {
+			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
+
+			double expectedTemperature = Math.Round(22.46d.CelciusToFahrenheit());
+			Assert.AreEqual(expectedTemperature, structures.ElementAt(0).Thermostats[0].CurrentTemperature);
+		}
+
+		[TestMethod]
 		public void ShouldParseTargetTemperatureCelciusFromGetStatusResult() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
