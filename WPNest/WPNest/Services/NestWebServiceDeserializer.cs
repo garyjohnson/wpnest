@@ -46,7 +46,7 @@ namespace WPNest.Services {
 					double temperatureLow = double.Parse(thermostatValues["target_temperature_low"].Value<string>());
 					thermostat.TargetTemperatureLow = Math.Round(ConvertTo(scale, temperatureLow));
 					double temperatureHigh = double.Parse(thermostatValues["target_temperature_high"].Value<string>());
-					thermostat.TargetTemperatureHigh = Math.Round(temperatureHigh.CelciusToFahrenheit());
+					thermostat.TargetTemperatureHigh = Math.Round(ConvertTo(scale, temperatureHigh));
 					double currentTemperature = double.Parse(thermostatValues["current_temperature"].Value<string>());
 					thermostat.CurrentTemperature = Math.Round(currentTemperature.CelciusToFahrenheit());
 					thermostat.IsHeating = thermostatValues["hvac_heater_state"].Value<bool>();
