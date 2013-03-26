@@ -29,5 +29,13 @@ namespace WPNest.Test.UnitTests {
 	[TestClass]
 	public class TemperatureConverter_WhenConvertingFrom : TemperatureConverterTest {
 		
+		[TestMethod]
+		public void ShouldConvertFromCelciusMode() {
+			double expectedTemp = 34.0d;
+
+			double actualTemp = _converter.ConvertFrom(TemperatureScale.Celcius, expectedTemp);
+
+			Assert.AreEqual(expectedTemp, actualTemp);
+		}
 	}
 }
