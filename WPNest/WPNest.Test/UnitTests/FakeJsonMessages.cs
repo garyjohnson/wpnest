@@ -5,35 +5,48 @@
 			get { return "137516"; }
 		}
 
+		public static string GetStatusResultCelcius {
+			get { return GetStatusResultBase
+				.Replace("|||ISAWAY|||", "false")
+				.Replace("|||TEMPTYPE|||", "\"heat\"")
+				.Replace("|||TEMPSCALE|||", "\"C\""); 
+			}
+		}
+
 		public static string GetStatusResult {
 			get { return GetStatusResultBase
 				.Replace("|||ISAWAY|||", "false")
-				.Replace("|||TEMPTYPE|||", "\"heat\""); 
+				.Replace("|||TEMPTYPE|||", "\"heat\"")
+				.Replace("|||TEMPSCALE|||", "\"F\""); 
 			}
 		}
 
 		public static string GetStatusResultAwayMode {
 			get { return GetStatusResultBase
 				.Replace("|||ISAWAY|||", "true")
-				.Replace("|||TEMPTYPE|||", "\"heat\""); 
+				.Replace("|||TEMPTYPE|||", "\"heat\"")
+				.Replace("|||TEMPSCALE|||", "\"F\""); 
 			}
 		}
 
 		public static string GetStatusResultTempRangeMode {
 			get { return GetStatusResultBase
 				.Replace("|||ISAWAY|||", "true")
+				.Replace("|||TEMPSCALE|||", "\"F\"")
 				.Replace("|||TEMPTYPE|||", "\"range\""); 
 			}
 		}
 
 		public static string GetSharedStatusResult {
 			get { return GetSharedStatusResultBase
+				.Replace("|||TEMPSCALE|||", "\"F\"")
 				.Replace("|||TEMPTYPE|||", "\"heat\""); 
 			}
 		}
 
 		public static string GetSharedStatusResultTempRangeMode {
 			get { return GetSharedStatusResultBase
+				.Replace("|||TEMPSCALE|||", "\"F\"")
 				.Replace("|||TEMPTYPE|||", "\"range\""); 
 			}
 		}
@@ -195,7 +208,7 @@
          ""fan_cooling_enabled"":true,
          ""leaf_away_high"":28.88,
          ""fan_cooling_readiness"":""not ready"",
-         ""temperature_scale"":""C"",
+         ""temperature_scale"":|||TEMPSCALE|||,
          ""device_locale"":""en_US"",
          ""error_code"":"""",
          ""battery_level"":3.945,

@@ -177,9 +177,6 @@
     <Compile Include="..\WPNest\Services\IStatusUpdaterService.cs">
       <Link>Services\IStatusUpdaterService.cs</Link>
     </Compile>
-    <Compile Include="..\WPNest\Services\ITemperatureConverter.cs">
-      <Link>Services\ITemperatureConverter.cs</Link>
-    </Compile>
     <Compile Include="..\WPNest\Services\ITimer.cs">
       <Link>Services\ITimer.cs</Link>
     </Compile>
@@ -209,9 +206,6 @@
     </Compile>
     <Compile Include="..\WPNest\Services\StatusUpdaterService.cs">
       <Link>Services\StatusUpdaterService.cs</Link>
-    </Compile>
-    <Compile Include="..\WPNest\Services\TemperatureConverter.cs">
-      <Link>Services\TemperatureConverter.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\Services\TemperatureMode.cs">
       <Link>Services\TemperatureMode.cs</Link>
@@ -274,7 +268,6 @@
     <Compile Include="UnitTests\NestWebServiceDeserializerTest.cs" />
     <Compile Include="UnitTests\NestWebServiceTest.cs" />
     <Compile Include="UnitTests\StatusUpdaterServiceTest.cs" />
-    <Compile Include="UnitTests\TemperatureConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

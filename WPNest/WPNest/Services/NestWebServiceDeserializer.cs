@@ -37,13 +37,14 @@ namespace WPNest.Services {
 					var thermostatValues = values["device"][thermostat.ID];
 					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
 					thermostat.IsLeafOn = thermostatValues["leaf"].Value<bool>();
-					thermostat.TemperatureScale = GetTemperatureScaleFromString(thermostatValues["temperature_scale"].Value<string>());
+					TemperatureScale scale = GetTemperatureScaleFromString(thermostatValues["temperature_scale"].Value<string>());
+					thermostat.TemperatureScale = scale;
 					
 					thermostatValues = values["shared"][thermostat.ID];
 					double temperature = double.Parse(thermostatValues["target_temperature"].Value<string>());
 					thermostat.TargetTemperature = Math.Round(temperature.CelciusToFahrenheit());
 					double temperatureLow = double.Parse(thermostatValues["target_temperature_low"].Value<string>());
-					thermostat.TargetTemperatureLow = Math.Round(temperatureLow.CelciusToFahrenheit());
+					thermostat.TargetTemperatureLow = Math.Round(ConvertTo(scale, temperatureLow));
 					double temperatureHigh = double.Parse(thermostatValues["target_temperature_high"].Value<string>());
 					thermostat.TargetTemperatureHigh = Math.Round(temperatureHigh.CelciusToFahrenheit());
 					double currentTemperature = double.Parse(thermostatValues["current_temperature"].Value<string>());
@@ -225,6 +226,20 @@ namespace WPNest.Services {
 				return response.StatusCode;
 			}
 			return null;
+		}
+
+		public double ConvertTo(TemperatureScale toScale, double celciusTemperature) {
+			if (toScale == TemperatureScale.Fahrenheit)
+				return celciusTemperature.CelciusToFahrenheit();
+
+			return celciusTemperature;
+		}
+
+		public double ConvertFrom(TemperatureScale fromScale, double fromTemperature) {
+			if (fromScale == TemperatureScale.Fahrenheit)
+				return fromTemperature.FahrenheitToCelcius();
+
+			return fromTemperature;
 		}
 
 	}
