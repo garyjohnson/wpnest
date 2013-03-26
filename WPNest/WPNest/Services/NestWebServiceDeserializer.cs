@@ -42,7 +42,7 @@ namespace WPNest.Services {
 					
 					thermostatValues = values["shared"][thermostat.ID];
 					double temperature = double.Parse(thermostatValues["target_temperature"].Value<string>());
-					thermostat.TargetTemperature = Math.Round(temperature.CelciusToFahrenheit());
+					thermostat.TargetTemperature = Math.Round(ConvertTo(scale, temperature));
 					double temperatureLow = double.Parse(thermostatValues["target_temperature_low"].Value<string>());
 					thermostat.TargetTemperatureLow = Math.Round(ConvertTo(scale, temperatureLow));
 					double temperatureHigh = double.Parse(thermostatValues["target_temperature_high"].Value<string>());
