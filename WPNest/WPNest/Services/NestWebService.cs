@@ -194,15 +194,16 @@ namespace WPNest.Services {
 		private static string GetTemperaturePropertyString(Thermostat thermostat, double desiredTemperature, TemperatureMode temperatureMode) {
 			string temperatureTargetString = "\"target_temperature\":{0}";
 			string temperatureRangeString = "\"target_temperature_low\":{0},\"target_temperature_high\":{1}";
-			double desiredTempCelcius = desiredTemperature.FahrenheitToCelcius();
+			TemperatureScale scale = thermostat.TemperatureScale;
+			double desiredTempCelcius = ConvertFrom(scale, desiredTemperature);
 
 			string temperatureProperty = null;
 			if (temperatureMode == TemperatureMode.RangeLow) {
-				double highTempCelcius = thermostat.TargetTemperatureHigh.FahrenheitToCelcius();
+				double highTempCelcius = ConvertFrom(scale, thermostat.TargetTemperatureHigh);
 				temperatureProperty = string.Format(temperatureRangeString, desiredTempCelcius, highTempCelcius);
 			} 
 			else if (temperatureMode == TemperatureMode.RangeHigh) {
-				double lowTempCelcius = thermostat.TargetTemperatureLow.FahrenheitToCelcius();
+				double lowTempCelcius = ConvertFrom(scale, thermostat.TargetTemperatureLow);
 				temperatureProperty = string.Format(temperatureRangeString, lowTempCelcius, desiredTempCelcius);
 			}
 			else {
@@ -312,6 +313,13 @@ namespace WPNest.Services {
 		private static void SetNestHeadersOnRequest(IWebRequest request, string userId) {
 			request.Headers["X-nl-protocol-version"] = "1";
 			request.Headers["X-nl-user-id"] = userId;
+		}
+
+		private static double ConvertFrom(TemperatureScale fromScale, double fromTemperature) {
+			if (fromScale == TemperatureScale.Fahrenheit)
+				return fromTemperature.FahrenheitToCelcius();
+
+			return fromTemperature;
 		}
 	}
 }
