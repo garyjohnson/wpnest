@@ -132,6 +132,15 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestMethod]
+		public void ShouldUpdateTargetTemperature() {
+			var thermostat = new Thermostat("");
+			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResult, thermostat);
+
+			double expectedTemperature = Math.Round(21.159d.CelciusToFahrenheit());
+			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperature);
+		}
+
+		[TestMethod]
 		public void ShouldUpdateTargetTemperatureLow() {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
