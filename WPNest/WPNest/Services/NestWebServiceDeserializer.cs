@@ -50,10 +50,20 @@ namespace WPNest.Services {
 					thermostatValues = values["device"][thermostat.ID];
 					thermostat.FanMode = GetFanModeFromString(thermostatValues["fan_mode"].Value<string>());
 					thermostat.IsLeafOn = thermostatValues["leaf"].Value<bool>();
+					thermostat.TemperatureScale = GetTemperatureScaleFromString(thermostatValues["temperature_scale"].Value<string>());
 				}
 			}
 
 			return structureResults;
+		}
+
+		private TemperatureScale GetTemperatureScaleFromString(string value) {
+			if(value == "F")
+				return TemperatureScale.Fahrenheit;
+			if(value == "C")
+				return TemperatureScale.Celcius;
+
+			throw new InvalidOperationException(string.Format("Could not parse Temperature Scale of {0}", value));
 		}
 
 		public Structure ParseStructureFromGetStructureStatusResult(string result, string structureId) {
@@ -138,7 +148,7 @@ namespace WPNest.Services {
 			if (hvacMode == "off")
 				return HvacMode.Off;
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException(string.Format("Could not parse Hvac Mode of {0}", hvacMode));
 		}
 
 		private static FanMode GetFanModeFromString(string fanMode) {
@@ -147,7 +157,7 @@ namespace WPNest.Services {
 			if (fanMode == "on")
 				return FanMode.On;
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException(string.Format("Could not parse Fan Mode of {0}", fanMode));
 		}
 
 		public async Task<WebServiceError> ParseWebServiceErrorAsync(Exception exception) {

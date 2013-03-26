@@ -195,7 +195,7 @@
          ""fan_cooling_enabled"":true,
          ""leaf_away_high"":28.88,
          ""fan_cooling_readiness"":""not ready"",
-         ""temperature_scale"":""F"",
+         ""temperature_scale"":""C"",
          ""device_locale"":""en_US"",
          ""error_code"":"""",
          ""battery_level"":3.945,

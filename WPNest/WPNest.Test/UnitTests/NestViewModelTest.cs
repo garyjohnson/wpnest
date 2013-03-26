@@ -44,6 +44,7 @@ namespace WPNest.Test.UnitTests {
 				_nestWebService.Setup(w => w.GetFullStatusAsync()).Returns(Task.FromResult(new GetStatusResult(structures)));
 				_nestWebService.Setup(w => w.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>())).Returns(Task.FromResult(new WebServiceResult()));
 				_nestWebService.Setup(w => w.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(new WebServiceResult()));
+				_nestWebService.Setup(w => w.SetHvacModeAsync(It.IsAny<Thermostat>(), It.IsAny<HvacMode>())).Returns(Task.FromResult(new WebServiceResult()));
 				_statusUpdaterService.Setup(s => s.UpdateStatusAsync()).Returns(Task.Delay(0));
 
 				ServiceContainer.RegisterService<IStatusProvider>(_statusProvider.Object);
@@ -661,6 +662,20 @@ namespace WPNest.Test.UnitTests {
 
 				_nestWebService.Verify(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>()), 
 					Times.Never());
+			}
+		}
+
+		[TestClass]
+		public class NestViewModel_WhenSettingHvacMode : NestViewModelTestBase {
+
+			[TestMethod]
+			public async Task ShouldStopAndStartStatusProvider() {
+				await _viewModel.LoginAsync();
+
+				_viewModel.HvacMode = HvacMode.HeatAndCool;
+
+				_statusProvider.Verify(s => s.Stop());
+				_statusProvider.Verify(s => s.Start());
 			}
 		}
 

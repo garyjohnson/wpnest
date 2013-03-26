@@ -129,6 +129,9 @@
     <Compile Include="..\WPNest\Model\Structure.cs">
       <Link>Model\Structure.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\Model\TemperatureScale.cs">
+      <Link>Model\TemperatureScale.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\Model\Thermostat.cs">
       <Link>Model\Thermostat.cs</Link>
     </Compile>
