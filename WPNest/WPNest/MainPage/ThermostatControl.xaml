@@ -108,7 +108,7 @@
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</UserControl.Foreground>
 	<d:DataContext>
-		<WPNest:NestSampleViewModel/>
+		<WPNest:ThermostatSampleViewModel/>
 	</d:DataContext>
     
 	<Grid x:Name="LayoutRoot">

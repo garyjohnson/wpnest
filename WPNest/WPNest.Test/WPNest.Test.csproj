@@ -99,6 +99,9 @@
     <Compile Include="..\WPNest\MainPage\HvacModeToLabelConverter.cs">
       <Link>MainPage\HvacModeToLabelConverter.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\MainPage\IExceptionHandler.cs">
+      <Link>MainPage\IExceptionHandler.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\MainPage\IsAwayToLabelConverter.cs">
       <Link>MainPage\IsAwayToLabelConverter.cs</Link>
     </Compile>
@@ -114,8 +117,14 @@
     <Compile Include="..\WPNest\MainPage\ThermostatControl.xaml.cs">
       <Link>MainPage\ThermostatControl.xaml.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\MainPage\ThermostatSampleViewModel.cs">
+      <Link>MainPage\ThermostatSampleViewModel.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\MainPage\ThermostatTickCreator.cs">
       <Link>MainPage\ThermostatTickCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\ThermostatViewModel.cs">
+      <Link>MainPage\ThermostatViewModel.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\MainPage\TrueToVisibleConverter.cs">
       <Link>MainPage\TrueToVisibleConverter.cs</Link>
@@ -134,6 +143,9 @@
     </Compile>
     <Compile Include="..\WPNest\Model\Thermostat.cs">
       <Link>Model\Thermostat.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Properties\Annotations.cs">
+      <Link>Properties\Annotations.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\ServiceContainer.cs">
       <Link>ServiceContainer.cs</Link>
