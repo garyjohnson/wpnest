@@ -264,7 +264,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IntegrationTests\NestWebServiceIntegrationTest.cs" />
+    <Compile Include="IntegrationTests\NestWebServiceIntegrationTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
