@@ -1,21 +1,32 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using WPNest.Services;
 
 namespace WPNest {
 
 	public class NestSampleViewModel : INotifyPropertyChanged {
 
 		public NestSampleViewModel() {
+			CurrentTemperature = "62";
+			TargetTemperature = "70";
 			IsLoggedIn = true;
+		}
 
-			var firstThermostat = new ThermostatViewModel(new Thermostat(""));
-			var secondThermostat = new ThermostatViewModel(new Thermostat(""));
-
-			Thermostats.Add(firstThermostat);
-			Thermostats.Add(secondThermostat);
-
-			SelectedThermostat = firstThermostat;
+		private string _currentTemperature = "0";
+		public string CurrentTemperature {
+			get { return _currentTemperature; }
+			set {
+				_currentTemperature = value;
+				OnPropertyChanged("CurrentTemperature");
+			}
+		}
+		
+		private string _targetTemperature = "0";
+		public string TargetTemperature {
+			get { return _targetTemperature; }
+			set {
+				_targetTemperature = value;
+				OnPropertyChanged("TargetTemperature");
+			}
 		}
 
 		private bool _isLoggingIn;
@@ -54,27 +65,31 @@ namespace WPNest {
 			}
 		}
 
-		private ThermostatViewModel _selectedThermostat;
-		public ThermostatViewModel SelectedThermostat {
-			get { return _selectedThermostat; }
+		private FanMode _fanMode;
+		public FanMode FanMode {
+			get { return _fanMode; }
 			set {
-				_selectedThermostat = value;
-				OnPropertyChanged("SelectedThermostat");
+				_fanMode = value;
+				OnPropertyChanged("FanMode");
 			}
 		}
 
-		private WebServiceError _currentError = WebServiceError.None;
-		public WebServiceError CurrentError {
-			get { return _currentError; }
+		private bool _isAway;
+		public bool IsAway {
+			get { return _isAway; }
 			set {
-				_currentError = value;
-				OnPropertyChanged("CurrentError");
+				_isAway = value;
+				OnPropertyChanged("IsAway");
 			}
 		}
 
-		private readonly ObservableCollection<ThermostatViewModel> _thermostats = new ObservableCollection<ThermostatViewModel>();
-		public ObservableCollection<ThermostatViewModel> Thermostats {
-			get { return _thermostats; }
+		private HvacMode _selectedHvacMode = HvacMode.Off;
+		public HvacMode SelectedHvacMode {
+			get { return _selectedHvacMode; }
+			set {
+				_selectedHvacMode = value;
+				OnPropertyChanged("SelectedHvacMode");
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

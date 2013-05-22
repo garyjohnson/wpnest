@@ -30,7 +30,7 @@ namespace WPNest.Test.IntegrationTests {
 		[TestMethod]
 		[Ignore]
 		public async Task ShouldGetStructureAndDeviceStatus() {
-			await _webService.LoginAsync("[login]", "[password]");
+			await _webService.LoginAsync("gary@gjtt.com", "YesMaam");
 			var t = await _webService.GetFullStatusAsync();
 			await _webService.GetStructureAndDeviceStatusAsync(t.Structures.ElementAt(0));
 		}

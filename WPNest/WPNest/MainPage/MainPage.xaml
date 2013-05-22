@@ -350,7 +350,7 @@
 	</phone:PhoneApplicationPage.Foreground>
 
 	<d:DataContext>
-		<WPNest:ThermostatSampleViewModel />
+		<WPNest:NestSampleViewModel />
 	</d:DataContext>
 
 	<phone:PhoneApplicationPage.DataContext>

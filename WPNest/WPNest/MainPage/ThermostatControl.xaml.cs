@@ -117,8 +117,8 @@ namespace WPNest {
 			set { SetValue(IsLeafOnProperty, value); }
 		}
 
-		private ThermostatViewModel ViewModel {
-			get { return DataContext as ThermostatViewModel; }
+		private NestViewModel ViewModel {
+			get { return DataContext as NestViewModel; }
 		}
 
 		private static void OnIsLeafOnChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
