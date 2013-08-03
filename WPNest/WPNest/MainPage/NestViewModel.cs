@@ -437,11 +437,11 @@ namespace WPNest {
 				error == WebServiceError.SessionTokenExpired)
 				HandleLoginException(error);
 			else if (error == WebServiceError.Cancelled)
-				HandleException();
+				HandleExceptionByRetry();
 			else if (error == WebServiceError.ServerNotFound)
-				HandleException("Server was not found. Please check your network connection and press OK to retry.");
+				HandleException();
 			else if (exception != null)
-				HandleException("An unknown error occurred. Press OK to retry.");
+				HandleException();
 
 			if (exception != null)
 				_analyticsService.LogError(exception);
@@ -449,14 +449,19 @@ namespace WPNest {
 			return exception != null;
 		}
 
-		private void HandleException(string message = null) {
+		private void HandleExceptionByRetry() {
+			IsLoggingIn = false;
+			OnLoggedIn();
+		}
+
+		private void HandleException() {
 			IsLoggingIn = false;
 			IsInErrorState = true;
 		}
 
-		public void RetryAfterError() {
+		public async void RetryAfterErrorAsync() {
 			IsInErrorState = false;
-			OnLoggedIn();
+			await OnLoggedIn();
 		}
 
 		private void HandleLoginException(WebServiceError error) {

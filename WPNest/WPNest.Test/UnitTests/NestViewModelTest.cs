@@ -14,7 +14,6 @@ namespace WPNest.Test.UnitTests {
 			internal Mock<IStatusProvider> _statusProvider;
 			internal Mock<ISessionProvider> _sessionProvider;
 			internal Mock<IAnalyticsService> _analyticsService;
-			internal Mock<IDialogProvider> _dialogProvider;
 			internal Mock<INestWebService> _nestWebService;
 			internal Mock<IStatusUpdaterService> _statusUpdaterService;
 			internal NestViewModel _viewModel;
@@ -27,7 +26,6 @@ namespace WPNest.Test.UnitTests {
 				_statusProvider = new Mock<IStatusProvider>();
 				_sessionProvider = new Mock<ISessionProvider>();
 				_analyticsService = new Mock<IAnalyticsService>();
-				_dialogProvider = new Mock<IDialogProvider>();
 				_nestWebService = new Mock<INestWebService>();
 				_statusUpdaterService = new Mock<IStatusUpdaterService>();
 
@@ -50,7 +48,6 @@ namespace WPNest.Test.UnitTests {
 				ServiceContainer.RegisterService<IStatusProvider>(_statusProvider.Object);
 				ServiceContainer.RegisterService<ISessionProvider>(_sessionProvider.Object);
 				ServiceContainer.RegisterService<IAnalyticsService>(_analyticsService.Object);
-				ServiceContainer.RegisterService<IDialogProvider>(_dialogProvider.Object);
 				ServiceContainer.RegisterService<INestWebService>(_nestWebService.Object);
 				ServiceContainer.RegisterService<IStatusUpdaterService>(_statusUpdaterService.Object);
 				_viewModel = new NestViewModel();
@@ -61,7 +58,6 @@ namespace WPNest.Test.UnitTests {
 				_statusProvider = null;
 				_sessionProvider = null;
 				_analyticsService = null;
-				_dialogProvider = null;
 				_nestWebService = null;
 				_statusUpdaterService = null;
 				_viewModel = null;
@@ -289,34 +285,33 @@ namespace WPNest.Test.UnitTests {
 			}
 
 			[TestMethod]
-			public void ShouldShowMessageOnServerNotFoundException() {
+			public void ShouldBeInErrorStateOnServerNotFoundException() {
 				var result = new GetStatusResult(WebServiceError.ServerNotFound, new Exception());
 				var args = new StatusEventArgs(result);
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				_dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("Server was not found.")));
+				Assert.IsTrue(_viewModel.IsInErrorState);
 			}
 
 			[TestMethod]
-			public void ShouldNotShowMessageOnCancelledException() {
+			public void ShouldNotBeInErrorStateOnCanceledException() {
 				var result = new GetStatusResult(WebServiceError.Cancelled, new Exception());
 				var args = new StatusEventArgs(result);
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				_dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsAny<string>()), 
-					Times.Never());
+				Assert.IsFalse(_viewModel.IsInErrorState);
 			}
 
 			[TestMethod]
-			public void ShouldShowMessageOnAnyOtherException() {
+			public void ShouldBeInErrorStateOnAnyOtherException() {
 				var result = new GetStatusResult(WebServiceError.Unknown, new InvalidCastException());
 				var args = new StatusEventArgs(result);
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				_dialogProvider.Verify(provider => provider.ShowMessageBox(It.IsRegex("An unknown error occurred.")));
+				Assert.IsTrue(_viewModel.IsInErrorState);
 			}
 		}
 

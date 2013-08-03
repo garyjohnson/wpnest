@@ -185,7 +185,7 @@ namespace WPNest {
 		}
 
 		private void OnTapToRetryAfterError(object sender, System.Windows.Input.GestureEventArgs e) {
-			ViewModel.RetryAfterError();
+			ViewModel.RetryAfterErrorAsync();
 		}
 	}
 }
