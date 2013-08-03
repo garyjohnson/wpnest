@@ -19,12 +19,21 @@ namespace WPNest {
 			SetValue(SystemTray.IsVisibleProperty, true);
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
 			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
+			SetBinding(IsInErrorStateProperty, new Binding("IsInErrorState"));
 			SetBinding(HvacModeProperty, new Binding("HvacMode") { Mode = BindingMode.TwoWay });
 
 			ResetZoom.Completed += OnResetZoomCompleted;
 			Loaded += OnLoaded;
 			Unloaded += OnUnloaded;
 			GoToDefaultVisualState(false);
+		}
+
+		public static readonly DependencyProperty IsInErrorStateProperty =
+			DependencyProperty.Register("IsInErrorState", typeof(bool), typeof(MainPage), new PropertyMetadata(false, OnIsInErrorStateChanged));
+
+		public bool IsInErrorState {
+			get { return (bool)GetValue(IsInErrorStateProperty); }
+			set { SetValue(IsInErrorStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty IsLoggedInProperty =
@@ -71,33 +80,51 @@ namespace WPNest {
 			GoToDefaultVisualState();
 		}
 
+		private static void OnIsInErrorStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+			var mainPage = (MainPage)sender;
+			var isInErrorState = (bool)args.NewValue;
+
+			mainPage.RefreshVisualState(mainPage.IsLoggedIn, mainPage.IsLoggingIn, isInErrorState);
+		}
+
+		private void RefreshVisualState(bool isLoggedIn, bool isLoggingIn, bool isInErrorState) {
+			if (isInErrorState) {
+				GoToErrorVisualState();
+			}
+			else if (isLoggedIn) {
+				GoToLoggedInVisualState();
+				ResetZoom.Begin();
+			}
+			else if (isLoggingIn) {
+				GoToPromptingLoginVisualState();
+			}
+			else {
+				GoToDefaultVisualState();
+			}
+		}
+
 		private static void OnIsLoggedInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var mainPage = (MainPage)sender;
 			var isLoggedIn = (bool)args.NewValue;
 
-			if (isLoggedIn) {
-				mainPage.GoToLoggedInVisualState();
-				mainPage.ResetZoom.Begin();
-			}
-			else {
-				mainPage.GoToDefaultVisualState();
-			}
+			mainPage.RefreshVisualState(isLoggedIn, mainPage.IsLoggingIn, mainPage.IsInErrorState);
 		}
 
 		private static void OnIsLoggingInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var mainPage = (MainPage)sender;
 			var isLoggingIn = (bool)args.NewValue;
 
-			if (isLoggingIn)
-				mainPage.GoToPromptingLoginVisualState();
-			else
-				mainPage.GoToDefaultVisualState();
+			mainPage.RefreshVisualState(mainPage.IsLoggedIn, isLoggingIn, mainPage.IsInErrorState);
 		}
 
 		private static void OnHvacModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var mainPage = (MainPage)sender;
 			var newValue = (HvacMode)args.NewValue;
 			mainPage.SelectHvacControl(newValue);
+		}
+
+		private void GoToErrorVisualState() {
+			VisualStateManager.GoToState(this, "Error", true);
 		}
 
 		private void GoToPromptingLoginVisualState() {
@@ -155,6 +182,10 @@ namespace WPNest {
 
 		private void SelectHvacControl(HvacMode hvacMode) {
 			hvacPicker.SelectedItem = hvacPicker.Items.Cast<HvacModeControl>().First(h => h.HvacMode == hvacMode);
+		}
+
+		private void OnTapToRetryAfterError(object sender, System.Windows.Input.GestureEventArgs e) {
+			ViewModel.RetryAfterError();
 		}
 	}
 }

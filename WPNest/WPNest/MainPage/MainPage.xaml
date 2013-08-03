@@ -456,6 +456,33 @@
 						</ObjectAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
+				<VisualState x:Name="Error">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.IsHitTestVisible)" Storyboard.TargetName="errorGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>True</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+							<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+								<DiscreteObjectKeyFrame.Value>
+									<System:Boolean>True</System:Boolean>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="errorGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="errorGrid">
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+						</DoubleAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
 			</VisualStateGroup>
 			<VisualStateGroup x:Name="SettingsState">
 				<VisualStateGroup.Transitions>
@@ -547,6 +574,12 @@
 				<WPNest:HvacModeControl x:Name="hvacHeatAndCool"  HvacMode="HeatAndCool"/>
 				<WPNest:HvacModeControl x:Name="hvacOff"  HvacMode="Off"/>
 			</toolkit:ListPicker>
+		</Grid>
+		<Grid x:Name="errorGrid" Grid.RowSpan="2" Background="{StaticResource BackgroundBrush}" Opacity="0" IsHitTestVisible="False" Visibility="Collapsed" Tap="OnTapToRetryAfterError">
+			<StackPanel VerticalAlignment="Center" Margin="30,0">
+				<TextBlock TextWrapping="Wrap" Foreground="#FF171717" FontSize="32" Text="Oops! We had some trouble connecting with the server." FontFamily="Segoe WP Semibold"/>
+				<TextBlock TextWrapping="Wrap" Foreground="#FF171717" FontSize="26.667" Text="Check your internet connection and tap to try again." Margin="0,10,0,0"/>
+			</StackPanel>
 		</Grid>
 
 	</Grid>

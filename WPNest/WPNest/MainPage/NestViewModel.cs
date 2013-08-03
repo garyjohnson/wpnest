@@ -19,6 +19,15 @@ namespace WPNest {
 		private readonly IDialogProvider _dialogProvider;
 		private GetStatusResult _getStatusResult;
 
+		private bool _isInErrorState;
+		public bool IsInErrorState {
+			get { return _isInErrorState; }
+			set {
+				_isInErrorState = value;
+				OnPropertyChanged("IsInErrorState");
+			}
+		}
+
 		private bool _isAway;
 		public bool IsAway {
 			get { return _isAway; }
@@ -442,8 +451,11 @@ namespace WPNest {
 
 		private void HandleException(string message = null) {
 			IsLoggingIn = false;
-			if (message != null)
-				_dialogProvider.ShowMessageBox(message);
+			IsInErrorState = true;
+		}
+
+		public void RetryAfterError() {
+			IsInErrorState = false;
 			OnLoggedIn();
 		}
 

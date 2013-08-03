@@ -195,19 +195,19 @@ namespace WPNest.Services {
 			string temperatureTargetString = "\"target_temperature\":{0}";
 			string temperatureRangeString = "\"target_temperature_low\":{0},\"target_temperature_high\":{1}";
 			TemperatureScale scale = thermostat.TemperatureScale;
-			double desiredTempCelcius = ConvertFrom(scale, desiredTemperature);
+			double desiredTempCelsius = ConvertFrom(scale, desiredTemperature);
 
 			string temperatureProperty = null;
 			if (temperatureMode == TemperatureMode.RangeLow) {
-				double highTempCelcius = ConvertFrom(scale, thermostat.TargetTemperatureHigh);
-				temperatureProperty = string.Format(temperatureRangeString, desiredTempCelcius, highTempCelcius);
+				double highTempCelsius = ConvertFrom(scale, thermostat.TargetTemperatureHigh);
+				temperatureProperty = string.Format(temperatureRangeString, desiredTempCelsius, highTempCelsius);
 			} 
 			else if (temperatureMode == TemperatureMode.RangeHigh) {
-				double lowTempCelcius = ConvertFrom(scale, thermostat.TargetTemperatureLow);
-				temperatureProperty = string.Format(temperatureRangeString, lowTempCelcius, desiredTempCelcius);
+				double lowTempCelsius = ConvertFrom(scale, thermostat.TargetTemperatureLow);
+				temperatureProperty = string.Format(temperatureRangeString, lowTempCelsius, desiredTempCelsius);
 			}
 			else {
-				temperatureProperty = string.Format(temperatureTargetString, desiredTempCelcius);
+				temperatureProperty = string.Format(temperatureTargetString, desiredTempCelsius);
 			}
 					
 			return temperatureProperty;
