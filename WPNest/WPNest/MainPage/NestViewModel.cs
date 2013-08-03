@@ -16,7 +16,6 @@ namespace WPNest {
 		private readonly INestWebService _nestWebService;
 		private readonly IStatusUpdaterService _statusUpdater;
 		private readonly IAnalyticsService _analyticsService;
-		private readonly IDialogProvider _dialogProvider;
 		private GetStatusResult _getStatusResult;
 
 		private bool _isInErrorState;
@@ -183,7 +182,6 @@ namespace WPNest {
 			_nestWebService = ServiceContainer.GetService<INestWebService>();
 			_statusUpdater = ServiceContainer.GetService<IStatusUpdaterService>();
 			_analyticsService = ServiceContainer.GetService<IAnalyticsService>();
-			_dialogProvider = ServiceContainer.GetService<IDialogProvider>();
 			_statusProvider.StatusUpdated += OnStatusUpdated;
 		}
 
