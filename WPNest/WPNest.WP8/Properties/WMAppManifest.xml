@@ -2,7 +2,7 @@
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
   <App xmlns="" ProductID="{58d4e211-a32b-410d-b2b0-6a317c230d0a}" Title="wpnest" RuntimeType="Silverlight" Version="1.5.0.0" Genre="apps.normal" Author="Sharkfist Software, LLC" Description="" Publisher="WPNest.WP8" PublisherID="{6cc63ea3-a86a-40fe-8d93-bca6395810d4}">
-    <IconPath IsRelative="true" IsResource="false">appicon.png</IconPath>
+    <IconPath IsRelative="true" IsResource="false">AppIconMedium.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
@@ -15,10 +15,11 @@
     <Tokens>
       <PrimaryToken TokenID="WPNest.WP8Token" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">appicon.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">AppIconSmall.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">appicon.png</BackgroundImageURI>
-          <Title>wpnest</Title>
+          <BackgroundImageURI IsRelative="true" IsResource="false">AppIconMedium.png</BackgroundImageURI>
+          <Title>
+          </Title>
           <BackContent>
           </BackContent>
           <BackBackgroundImageURI>

@@ -237,6 +237,140 @@
     			</Grid>
     		</StackPanel>
     	</ControlTemplate>
+    	<Style x:Key="LoginTextBoxStyle" TargetType="toolkit:PhoneTextBox">
+    		<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
+    		<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+    		<Setter Property="Background" Value="{StaticResource PhoneTextBoxBrush}"/>
+    		<Setter Property="Foreground" Value="{StaticResource PhoneTextBoxForegroundBrush}"/>
+    		<Setter Property="BorderBrush" Value="{StaticResource PhoneTextBoxBrush}"/>
+    		<Setter Property="SelectionBackground" Value="{StaticResource PhoneAccentBrush}"/>
+    		<Setter Property="SelectionForeground" Value="{StaticResource PhoneTextBoxSelectionForegroundBrush}"/>
+    		<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+    		<Setter Property="Padding" Value="{StaticResource PhoneBorderThickness}"/>
+    		<Setter Property="Template">
+    			<Setter.Value>
+    				<ControlTemplate TargetType="toolkit:PhoneTextBox">
+    					<Grid x:Name="RootGrid" Background="Transparent">
+    						<VisualStateManager.VisualStateGroups>
+    							<VisualStateGroup x:Name="CommonStates">
+    								<VisualState x:Name="Normal"/>
+    								<VisualState x:Name="Disabled">
+    									<Storyboard>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="HintBorder">
+    											<DiscreteObjectKeyFrame KeyTime="0">
+    												<DiscreteObjectKeyFrame.Value>
+    													<Visibility>Collapsed</Visibility>
+    												</DiscreteObjectKeyFrame.Value>
+    											</DiscreteObjectKeyFrame>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="TextBorder">
+    											<DiscreteObjectKeyFrame KeyTime="0">
+    												<DiscreteObjectKeyFrame.Value>
+    													<Visibility>Visible</Visibility>
+    												</DiscreteObjectKeyFrame.Value>
+    											</DiscreteObjectKeyFrame>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="TextBorder">
+    											<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TextBorder">
+    											<DiscreteObjectKeyFrame KeyTime="0" Value="0"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="HorizontalAlignment" Storyboard.TargetName="Text">
+    											<DiscreteObjectKeyFrame KeyTime="0">
+    												<DiscreteObjectKeyFrame.Value>
+    													<HorizontalAlignment>Stretch</HorizontalAlignment>
+    												</DiscreteObjectKeyFrame.Value>
+    											</DiscreteObjectKeyFrame>
+    										</ObjectAnimationUsingKeyFrames>
+    									</Storyboard>
+    								</VisualState>
+    							</VisualStateGroup>
+    							<VisualStateGroup x:Name="FocusStates">
+    								<VisualState x:Name="Focused">
+    									<Storyboard>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="HintBorder">
+    											<DiscreteObjectKeyFrame KeyTime="0" Value="white"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="HintBorder">
+    											<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxEditBorderBrush}"/>
+    										</ObjectAnimationUsingKeyFrames>
+    									</Storyboard>
+    								</VisualState>
+    								<VisualState x:Name="Unfocused"/>
+    							</VisualStateGroup>
+    							<VisualStateGroup x:Name="LengthIndicatorStates">
+    								<VisualState x:Name="LengthIndicatorVisible">
+    									<Storyboard>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LengthIndicator">
+    											<DiscreteObjectKeyFrame KeyTime="0:0:0">
+    												<DiscreteObjectKeyFrame.Value>
+    													<Visibility>Visible</Visibility>
+    												</DiscreteObjectKeyFrame.Value>
+    											</DiscreteObjectKeyFrame>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="RootGrid">
+    											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0, 0, 0, 27"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="LengthIndicator">
+    											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0.6"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<DoubleAnimation Duration="0:0:0.350" To="32" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" Storyboard.TargetName="LengthIndicator">
+    											<DoubleAnimation.EasingFunction>
+    												<ExponentialEase Exponent="6"/>
+    											</DoubleAnimation.EasingFunction>
+    										</DoubleAnimation>
+    									</Storyboard>
+    								</VisualState>
+    								<VisualState x:Name="LengthIndicatorHidden">
+    									<Storyboard>
+    										<DoubleAnimation Duration="0:0:0.350" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" Storyboard.TargetName="LengthIndicator">
+    											<DoubleAnimation.EasingFunction>
+    												<ExponentialEase Exponent="6"/>
+    											</DoubleAnimation.EasingFunction>
+    										</DoubleAnimation>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="RootGrid">
+    											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0, 0, 0, 0"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="LengthIndicator">
+    											<DiscreteObjectKeyFrame KeyTime="0:0:0.350" Value="0"/>
+    										</ObjectAnimationUsingKeyFrames>
+    										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="LengthIndicator">
+    											<DiscreteObjectKeyFrame KeyTime="0:0:0.350">
+    												<DiscreteObjectKeyFrame.Value>
+    													<Visibility>Collapsed</Visibility>
+    												</DiscreteObjectKeyFrame.Value>
+    											</DiscreteObjectKeyFrame>
+    										</ObjectAnimationUsingKeyFrames>
+    									</Storyboard>
+    								</VisualState>
+    							</VisualStateGroup>
+    						</VisualStateManager.VisualStateGroups>
+    						<Border x:Name="LengthIndicatorBorder">
+    							<TextBlock x:Name="LengthIndicator" Foreground="{StaticResource PhoneContrastBackgroundBrush}" FontSize="{StaticResource PhoneFontSizeNormal}" HorizontalAlignment="Right" Margin="{StaticResource PhoneMargin}" Opacity="0" TextAlignment="Right" VerticalAlignment="Bottom">
+    								<TextBlock.RenderTransform>
+    									<TranslateTransform/>
+    								</TextBlock.RenderTransform>
+    							</TextBlock>
+    						</Border>
+    						<Border x:Name="HintBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="{StaticResource PhoneTouchTargetOverhang}">
+    							<Grid>
+    								<ContentControl x:Name="HintContent" Background="Transparent" Content="{TemplateBinding Hint}" HorizontalAlignment="Left" Margin="3,0,3,0" Style="{TemplateBinding HintStyle}" Visibility="{TemplateBinding ActualHintVisibility}" VerticalAlignment="Center"/>
+    								<ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+    							</Grid>
+    						</Border>
+    						<Border x:Name="TextBorder" BorderBrush="{StaticResource PhoneDisabledBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}" Visibility="Collapsed">
+    							<TextBox x:Name="Text" Foreground="{StaticResource PhoneDisabledBrush}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" HorizontalAlignment="Left" SelectionForeground="{TemplateBinding SelectionForeground}" SelectionBackground="{TemplateBinding SelectionBackground}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" Text="{TemplateBinding Text}"/>
+    						</Border>
+    						<Border x:Name="ActionIconBorder" Background="Transparent" HorizontalAlignment="Right" Height="72" VerticalAlignment="Bottom" Width="84">
+    							<Image x:Name="ActionIcon" Height="26" Source="{TemplateBinding ActionIcon}" Width="26"/>
+    						</Border>
+    						<TextBlock x:Name="MeasurementTextBlock" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" IsHitTestVisible="False" Margin="8" Opacity="0" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" Text="{TemplateBinding Text}"/>
+    					</Grid>
+    				</ControlTemplate>
+    			</Setter.Value>
+    		</Setter>
+    	</Style>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

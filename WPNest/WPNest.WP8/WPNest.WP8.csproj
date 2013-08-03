@@ -32,7 +32,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Bin\WP8\Debug\</OutputPath>
+    <OutputPath>Bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -42,7 +42,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Bin\WP8\Release\</OutputPath>
+    <OutputPath>Bin\Release\</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -95,7 +95,7 @@
     <OutputPath>bin\WP8\Test\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
-    <OutputPath>bin\WP8\Test\</OutputPath>
+    <OutputPath>bin\Test\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FlurryWP7SDK">
@@ -124,12 +124,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appicon.png" />
-    <Content Include="ApplicationIcon.png" />
-    <Content Include="Background.png" />
+    <Content Include="AppIconMedium.png" />
+    <Content Include="AppIconSmall.png" />
     <Content Include="Properties\AppManifest.xml" />
     <Content Include="Properties\WMAppManifest.xml" />
-    <Content Include="settingspage.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

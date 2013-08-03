@@ -236,10 +236,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appicon.png" />
-    <Content Include="ApplicationIcon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="AppIconMedium.png" />
+    <Content Include="AppIconSmall.png" />
     <Content Include="Assets\AppBar\appbar.add.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -252,7 +250,6 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="settingspage.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup />

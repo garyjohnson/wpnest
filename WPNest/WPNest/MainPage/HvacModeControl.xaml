@@ -16,7 +16,7 @@
     	<StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
     		<Ellipse Fill="{Binding HeatDotBrush}" StrokeThickness="0" Width="25" Height="25" Margin="5,0"/>
     		<Ellipse Fill="{Binding CoolDotBrush}" StrokeThickness="0" Width="25" Height="25" Margin="5,0"/>
-    		<TextBlock TextWrapping="Wrap" Text="{Binding Label}" Margin="10,0,0,0"/>
+    		<TextBlock TextWrapping="Wrap" Text="{Binding Label}" Margin="10,0,0,0" Foreground="Black"/>
     	</StackPanel>
     </Grid>
 </UserControl>
