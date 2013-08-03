@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPNest", "WPNest\WPNest.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPNest.Test", "WPNest.Test\WPNest.Test.csproj", "{A1601AEA-A09F-463A-B3CC-137F8C5BEBDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPNest.WP8", "WPNest\WPNest.WP8.csproj", "{909A1C30-DFB1-42DD-8E7D-B6155E4BA878}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPNest.WP8", "WPNest.WP8\WPNest.WP8.csproj", "{909A1C30-DFB1-42DD-8E7D-B6155E4BA878}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

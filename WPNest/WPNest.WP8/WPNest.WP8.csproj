@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{909A1C30-DFB1-42DD-8E7D-B6155E4BA878}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WPNest.WP8</RootNamespace>
+    <AssemblyName>WPNest</AssemblyName>
+    <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>WPNest.WP8_$(Configuration)_$(Platform).xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>WPNest.App</SilverlightAppEntry>
+    <ValidateXaml>true</ValidateXaml>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\WP8\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\WP8\Release\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\WP8\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\WP8\Release\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\ARM\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\ARM\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|x86'">
+    <OutputPath>bin\WP8\Test\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\WP8\Test\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FlurryWP7SDK">
+      <HintPath>..\Libraries\Flurry\FlurryWP7SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="FlurryWP8SDK">
+      <HintPath>..\Libraries\Flurry\FlurryWP8SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Phone.Controls.Toolkit">
+      <HintPath>..\packages\WPToolkit.4.2013.06.11\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.16\lib\wp8\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.16\lib\wp8\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Phone">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.16\lib\wp8\Microsoft.Threading.Tasks.Extensions.Phone.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpGIS.GZipWebClient">
+      <HintPath>..\packages\SharpGIS.GZipWebClient.1.4.0.0\lib\wp71\SharpGIS.GZipWebClient.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appicon.png" />
+    <Content Include="ApplicationIcon.png" />
+    <Content Include="Background.png" />
+    <Content Include="Properties\AppManifest.xml" />
+    <Content Include="Properties\WMAppManifest.xml" />
+    <Content Include="settingspage.png" />
+    <Content Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\WPNest\App.xaml.cs">
+      <Link>App.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Assets\FanIcon.xaml.cs">
+      <Link>Assets\FanIcon.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Assets\LeafIcon.xaml.cs">
+      <Link>Assets\LeafIcon.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Error\CloseApplicationException.cs">
+      <Link>Error\CloseApplicationException.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Error\ErrorPage.xaml.cs">
+      <Link>Error\ErrorPage.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\ExtensionMethods.cs">
+      <Link>ExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Login\LoginControl.xaml.cs">
+      <Link>Login\LoginControl.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Login\LoginMessageConverter.cs">
+      <Link>Login\LoginMessageConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\FanModeToBoolConverter.cs">
+      <Link>MainPage\FanModeToBoolConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\FanModeToLabelConverter.cs">
+      <Link>MainPage\FanModeToLabelConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\HvacModeControl.xaml.cs">
+      <Link>MainPage\HvacModeControl.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\HvacModeToIsCoolEnabledConverter.cs">
+      <Link>MainPage\HvacModeToIsCoolEnabledConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\HvacModeToIsHeatEnabledConverter.cs">
+      <Link>MainPage\HvacModeToIsHeatEnabledConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\HvacModeToLabelConverter.cs">
+      <Link>MainPage\HvacModeToLabelConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\IExceptionHandler.cs">
+      <Link>MainPage\IExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\IsAwayToLabelConverter.cs">
+      <Link>MainPage\IsAwayToLabelConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\MainPage.xaml.cs">
+      <Link>MainPage\MainPage.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\NestSampleViewModel.cs">
+      <Link>MainPage\NestSampleViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\NestViewModel.cs">
+      <Link>MainPage\NestViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\ThermostatControl.xaml.cs">
+      <Link>MainPage\ThermostatControl.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\ThermostatTickCreator.cs">
+      <Link>MainPage\ThermostatTickCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\TrueToVisibleConverter.cs">
+      <Link>MainPage\TrueToVisibleConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Model\FanMode.cs">
+      <Link>Model\FanMode.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Model\HvacMode.cs">
+      <Link>Model\HvacMode.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Model\Structure.cs">
+      <Link>Model\Structure.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Model\TemperatureScale.cs">
+      <Link>Model\TemperatureScale.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Model\Thermostat.cs">
+      <Link>Model\Thermostat.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\ServiceContainer.cs">
+      <Link>ServiceContainer.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\AnalyticsService.cs">
+      <Link>Services\AnalyticsService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\DelayedStatusProvider.cs">
+      <Link>Services\DelayedStatusProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\DialogProvider.cs">
+      <Link>Services\DialogProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\GetStatusResult.cs">
+      <Link>Services\GetStatusResult.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\GetThermostatStatusResult.cs">
+      <Link>Services\GetThermostatStatusResult.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\IAnalyticsService.cs">
+      <Link>Services\IAnalyticsService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\IDialogProvider.cs">
+      <Link>Services\IDialogProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\INestWebService.cs">
+      <Link>Services\INestWebService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\INestWebServiceDeserializer.cs">
+      <Link>Services\INestWebServiceDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\ISessionProvider.cs">
+      <Link>Services\ISessionProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\ISettingsProvider.cs">
+      <Link>Services\ISettingsProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\IStatusProvider.cs">
+      <Link>Services\IStatusProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\IStatusUpdaterService.cs">
+      <Link>Services\IStatusUpdaterService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\ITimer.cs">
+      <Link>Services\ITimer.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\ITimestampProvider.cs">
+      <Link>Services\ITimestampProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\IWebRequestProvider.cs">
+      <Link>Services\IWebRequestProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\LoginResult.cs">
+      <Link>Services\LoginResult.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\NestWebService.cs">
+      <Link>Services\NestWebService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\NestWebServiceDeserializer.cs">
+      <Link>Services\NestWebServiceDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\SessionExpiredException.cs">
+      <Link>Services\SessionExpiredException.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\SessionProvider.cs">
+      <Link>Services\SessionProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\SettingsProvider.cs">
+      <Link>Services\SettingsProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\StatusUpdaterService.cs">
+      <Link>Services\StatusUpdaterService.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\TemperatureMode.cs">
+      <Link>Services\TemperatureMode.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\ThermostatStatusEventArgs.cs">
+      <Link>Services\ThermostatStatusEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\TimerWrapper.cs">
+      <Link>Services\TimerWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\TimestampProvider.cs">
+      <Link>Services\TimestampProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\WebRequestProvider.cs">
+      <Link>Services\WebRequestProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\WebServiceError.cs">
+      <Link>Services\WebServiceError.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\WebServiceEventArgs.cs">
+      <Link>Services\WebServiceEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Services\WebServiceResult.cs">
+      <Link>Services\WebServiceResult.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\ContentType.cs">
+      <Link>Web\ContentType.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\IWebHeaderCollection.cs">
+      <Link>Web\IWebHeaderCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\IWebRequest.cs">
+      <Link>Web\IWebRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\IWebResponse.cs">
+      <Link>Web\IWebResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\WebHeaderCollectionWrapper.cs">
+      <Link>Web\WebHeaderCollectionWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\WebRequestWrapper.cs">
+      <Link>Web\WebRequestWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\Web\WebResponseWrapper.cs">
+      <Link>Web\WebResponseWrapper.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\AppResources.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AppResources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\WPNest\App.xaml">
+      <Link>App.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\Assets\FanIcon.xaml">
+      <Link>Assets\FanIcon.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\Assets\LeafIcon.xaml">
+      <Link>Assets\LeafIcon.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\Error\ErrorPage.xaml">
+      <Link>Error\ErrorPage.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\Login\LoginControl.xaml">
+      <Link>Login\LoginControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\MainPage\HvacModeControl.xaml">
+      <Link>MainPage\HvacModeControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\MainPage\MainPage.xaml">
+      <Link>MainPage\MainPage.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\WPNest\MainPage\ThermostatControl.xaml">
+      <Link>MainPage\ThermostatControl.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.8\tools\Microsoft.Bcl.Build.targets" />
+</Project>
