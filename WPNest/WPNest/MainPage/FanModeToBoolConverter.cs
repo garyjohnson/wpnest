@@ -4,12 +4,14 @@ using System.Windows.Data;
 
 namespace WPNest {
 
+
+
 	public class FanModeToBoolConverter : IValueConverter {
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 			if (value is FanMode) {
 				var fanMode = (FanMode) value;
-				return fanMode == FanMode.Auto;
+				return (fanMode == FanMode.Auto);
 			}
 
 			return value;

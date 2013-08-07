@@ -2,6 +2,7 @@
 
 	public enum FanMode {
 		On,
-		Auto
+		Auto,
+        DutyCycle
 	}
 }
