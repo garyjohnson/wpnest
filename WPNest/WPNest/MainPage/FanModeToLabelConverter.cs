@@ -11,7 +11,10 @@ namespace WPNest {
 				var fanMode = (FanMode) value;
 				if (fanMode == FanMode.Auto)
 					return "Auto";
-
+                else if (fanMode == FanMode.DutyCycle)
+                {
+                    return "Scheduled";
+                }
 				return "On";
 			}
 

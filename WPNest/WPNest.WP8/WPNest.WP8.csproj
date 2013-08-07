@@ -329,6 +329,7 @@
     <Compile Include="..\WPNest\Web\WebResponseWrapper.cs">
       <Link>Web\WebResponseWrapper.cs</Link>
     </Compile>
+    <Compile Include="MainPage\IsEnabledFanModeConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs" />
   </ItemGroup>
