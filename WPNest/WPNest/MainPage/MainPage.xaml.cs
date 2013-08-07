@@ -15,6 +15,7 @@ namespace WPNest {
 
 		public MainPage() {
 			InitializeComponent();
+			ShowCorrectProgressBarDependingOnOSVersion();
 
 			SetValue(SystemTray.IsVisibleProperty, true);
 			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
@@ -186,6 +187,13 @@ namespace WPNest {
 
 		private void OnTapToRetryAfterError(object sender, System.Windows.Input.GestureEventArgs e) {
 			ViewModel.RetryAfterErrorAsync();
+		}
+
+		private void ShowCorrectProgressBarDependingOnOSVersion() {
+			if (Environment.OSVersion.Version.Major > 7) {
+				wp7ProgressBar.Visibility = Visibility.Collapsed;
+				wp8ProgressBar.Visibility = Visibility.Visible;
+			}
 		}
 	}
 }

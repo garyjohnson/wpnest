@@ -532,7 +532,8 @@
 
 		<StackPanel x:Name="loadingPanel" VerticalAlignment="Center" Opacity="0" IsHitTestVisible="True" Margin="0,352,0,330" Grid.Row="1">
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="wpnest" VerticalAlignment="Center" FontSize="48" FontFamily="Segoe WP SemiLight" Foreground="{StaticResource logoBrush}" Margin="0" />
-			<toolkit:PerformanceProgressBar IsIndeterminate="True" />
+			<toolkit:PerformanceProgressBar x:Name="wp7ProgressBar" IsIndeterminate="True" />
+			<ProgressBar x:Name="wp8ProgressBar" IsIndeterminate="True" Visibility="Collapsed"/>
 		</StackPanel>
 
 		<WPNest:ThermostatControl x:Name="thermostatControl" Margin="50,194,50,176" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
