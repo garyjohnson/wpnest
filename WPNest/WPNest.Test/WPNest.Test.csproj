@@ -102,6 +102,9 @@
     <Compile Include="..\WPNest\MainPage\IsAwayToLabelConverter.cs">
       <Link>MainPage\IsAwayToLabelConverter.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\MainPage\IsEnabledFanModeConverter.cs">
+      <Link>MainPage\IsEnabledFanModeConverter.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\MainPage\MainPage.xaml.cs">
       <Link>MainPage\MainPage.xaml.cs</Link>
     </Compile>

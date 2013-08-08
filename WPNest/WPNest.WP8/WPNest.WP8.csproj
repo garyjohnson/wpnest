@@ -126,6 +126,7 @@
   <ItemGroup>
     <Content Include="AppIconMedium.png" />
     <Content Include="AppIconSmall.png" />
+    <Content Include="AppIconWide.png" />
     <Content Include="Properties\AppManifest.xml" />
     <Content Include="Properties\WMAppManifest.xml" />
     <Content Include="SplashScreenImage.jpg" />
