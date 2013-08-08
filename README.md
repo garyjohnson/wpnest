@@ -25,3 +25,12 @@ Project Folders
 
 **WPNest.WP8** is the WP8 project. Code files are linked from the WPNest folder.
 
+Submitting Pull Requests
+------
+Here are some things to check for before a pull request:
+* Changes should work in WP7 and WP8
+* Tests added for anything not in the views (if you can figure out how to write good tests for the views, go for it!)
+* Tests should pass
+
+I'm not a stickler about this stuff. Any work you do on wpnest will be appreciated. 
+Just note that anything you don't do on this checklist is something I'll have to do after the fact.
