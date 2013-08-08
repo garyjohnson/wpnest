@@ -14,7 +14,8 @@
 		<WPNest:FanModeToLabelConverter x:Key="FanModeToLabelConverter"/>
 		<WPNest:IsAwayToLabelConverter x:Key="IsAwayToLabelConverter"/>
 		<WPNest:TrueToVisibleConverter x:Key="TrueToVisibleConverter" />
-		<Storyboard x:Name="ResetZoom">
+        <WPNest:IsEnabledFanModeConverter x:Key="IsEnabledFanModeConverter" />
+        <Storyboard x:Name="ResetZoom">
 			<DoubleAnimation Duration="0" To="0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="thermostatControl" d:IsOptimized="True" />
 			<DoubleAnimation Duration="0" To="0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="thermostatControl" d:IsOptimized="True" />
 			<DoubleAnimation Duration="0" To="180" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="thermostatControl" d:IsOptimized="True" />
@@ -567,7 +568,7 @@
 			<TextBlock x:Name="awayLabel" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Away" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
 			<toolkit:ToggleSwitch x:Name="awaySwitch" VerticalAlignment="Top" Grid.Row="2" Margin="20,10,0,0" IsChecked="{Binding IsAway, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
 			<TextBlock x:Name="fanLabel" Grid.Row="3" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Fan" VerticalAlignment="Top" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
-			<toolkit:ToggleSwitch x:Name="fanSwitch" VerticalAlignment="Top" Grid.Row="3" Margin="20,10,0,0" Content="{Binding FanMode, Converter={StaticResource FanModeToLabelConverter}}" IsChecked="{Binding FanMode, Converter={StaticResource FanModeToBoolConverter}, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
+            <toolkit:ToggleSwitch x:Name="fanSwitch" IsEnabled="{Binding FanMode, Converter={StaticResource IsEnabledFanModeConverter}}" VerticalAlignment="Top" Grid.Row="3" Margin="20,10,0,0" Content="{Binding FanMode, Converter={StaticResource FanModeToLabelConverter}}" IsChecked="{Binding FanMode, Converter={StaticResource FanModeToBoolConverter}, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
 			<toolkit:ListPicker x:Name="hvacPicker" Grid.Row="4" Margin="30,0,30,20" SelectionChanged="OnHvacSelectionChanged"
 								Template="{StaticResource ListPickerControlTemplateLight}">
 				<WPNest:HvacModeControl x:Name="hvacHeatOnly"  HvacMode="HeatOnly"/>

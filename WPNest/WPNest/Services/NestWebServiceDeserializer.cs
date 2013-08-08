@@ -158,6 +158,8 @@ namespace WPNest.Services {
 				return FanMode.Auto;
 			if (fanMode == "on")
 				return FanMode.On;
+            if (fanMode == "duty-cycle")
+                return FanMode.DutyCycle;
 
 			throw new InvalidOperationException(string.Format("Could not parse Fan Mode of {0}", fanMode));
 		}
