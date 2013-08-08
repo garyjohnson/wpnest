@@ -174,9 +174,6 @@
     <Compile Include="..\WPNest\MainPage\HvacModeToLabelConverter.cs">
       <Link>MainPage\HvacModeToLabelConverter.cs</Link>
     </Compile>
-    <Compile Include="..\WPNest\MainPage\IExceptionHandler.cs">
-      <Link>MainPage\IExceptionHandler.cs</Link>
-    </Compile>
     <Compile Include="..\WPNest\MainPage\IsAwayToLabelConverter.cs">
       <Link>MainPage\IsAwayToLabelConverter.cs</Link>
     </Compile>
