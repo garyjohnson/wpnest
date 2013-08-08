@@ -15,7 +15,7 @@ namespace WPNest.Login {
 			get { return DataContext as NestViewModel; }
 		}
 
-		private async void OnLoginPressed(object sender, RoutedEventArgs e) {
+		private async void OnLoginPressed(object sender, RoutedEventArgs args) {
 			if (LoginPressed != null)
 				LoginPressed(this, EventArgs.Empty);
 
@@ -23,7 +23,7 @@ namespace WPNest.Login {
 			RefreshPasswordHintVisibility();
 		}
 
-		private void OnPasswordChangedFocus(object sender, RoutedEventArgs e) {
+		private void OnPasswordChangedFocus(object sender, RoutedEventArgs args) {
 			RefreshPasswordHintVisibility();
 		}
 
@@ -32,6 +32,27 @@ namespace WPNest.Login {
 				passwordHint.Visibility = Visibility.Visible;
 			else
 				passwordHint.Visibility = Visibility.Collapsed;
+		}
+
+		private void OnUserNameKeyUp(object sender, KeyEventArgs args) {
+			if (args.Key == Key.Enter)
+				password.Focus();
+		}
+
+		private void OnPasswordKeyUp(object sender, KeyEventArgs args) {
+			if (args.Key == Key.Enter) {
+				ChangeFocusSoThatKeyboardGoesAway();
+				ManuallyUpdatePasswordBinding();
+				OnLoginPressed(sender, null);
+			}
+		}
+
+		private void ChangeFocusSoThatKeyboardGoesAway() {
+			loginButton.Focus();
+		}
+
+		private void ManuallyUpdatePasswordBinding() {
+			password.GetBindingExpression(PasswordBox.PasswordProperty).UpdateSource();
 		}
 
 		public event EventHandler LoginPressed;

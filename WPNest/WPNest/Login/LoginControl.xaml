@@ -43,11 +43,13 @@
 			</Grid.RowDefinitions>
 
 			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Log in to your Nest account" VerticalAlignment="Top" Foreground="{StaticResource logoBrush}" Margin="87,0,75,0" FontSize="24"/>
-			<toolkit:PhoneTextBox x:Name="username" Grid.Row="1" Text="{Binding UserName, Mode=TwoWay}" Hint="Email address" InputScope="EmailUserName" Style="{StaticResource LoginTextBoxStyle}" />
-			<PasswordBox x:Name="password" Grid.Row="2" Password="{Binding Password, Mode=TwoWay}" GotFocus="OnPasswordChangedFocus" LostFocus="OnPasswordChangedFocus" Style="{StaticResource PasswordBoxStyle}" />
+			<toolkit:PhoneTextBox x:Name="username" Grid.Row="1" Text="{Binding UserName, Mode=TwoWay}" Hint="Email address" 
+								  InputScope="EmailUserName" Style="{StaticResource LoginTextBoxStyle}" KeyUp="OnUserNameKeyUp" />
+			<PasswordBox x:Name="password" Grid.Row="2" Password="{Binding Password, Mode=TwoWay}" GotFocus="OnPasswordChangedFocus" 
+						 LostFocus="OnPasswordChangedFocus" Style="{StaticResource PasswordBoxStyle}" KeyUp="OnPasswordKeyUp" />
 			<TextBlock x:Name="passwordHint" TextWrapping="Wrap" Text="Password" IsHitTestVisible="False" Grid.Row="2" Padding="17,0,0,0" VerticalAlignment="Center" FontSize="24" Foreground="#FF919191" Margin="0,20"/>
 			<TextBlock x:Name="errorMessage" TextWrapping="Wrap" Grid.Row="3" Foreground="#DEF00000" TextAlignment="Center" Text="{Binding CurrentError, Converter={StaticResource LoginMessageConverter}}" Margin="12,0"/>
-			<Button Click="OnLoginPressed" Grid.Row="4" Foreground="#FF474747" BorderBrush="#FF515151" Content="Log In" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250" Background="#4CF6FBFF"/>
+			<Button x:Name="loginButton" Click="OnLoginPressed" Grid.Row="4" Foreground="#FF474747" BorderBrush="#FF515151" Content="Log In" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250" Background="#4CF6FBFF"/>
 		</Grid>
 
 	</Grid>
