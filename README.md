@@ -1,4 +1,4 @@
-WPNest
+wpnest
 ======
 
 Windows Phone client for controlling Nest thermostat. 
