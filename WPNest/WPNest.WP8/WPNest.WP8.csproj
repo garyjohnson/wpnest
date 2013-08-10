@@ -43,7 +43,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Bin\Release\</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;WP8</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -98,9 +98,6 @@
     <OutputPath>bin\Test\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FlurryWP7SDK">
-      <HintPath>..\Libraries\Flurry\FlurryWP7SDK.dll</HintPath>
-    </Reference>
     <Reference Include="FlurryWP8SDK">
       <HintPath>..\Libraries\Flurry\FlurryWP8SDK.dll</HintPath>
     </Reference>
