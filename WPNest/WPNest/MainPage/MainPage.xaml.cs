@@ -81,11 +81,10 @@ namespace WPNest {
 			GoToDefaultVisualState();
 		}
 
-        private void OnLogoutButtonPress(object sender, RoutedEventArgs args)
-        {
-            CloseSettingsPanel();
-            ViewModel.Logout();
-        }
+		private void OnLogoutButtonPress(object sender, RoutedEventArgs args) {
+			CloseThermostatSettingsPanel();
+			ViewModel.Logout();
+		}
 
 		private static void OnIsInErrorStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var mainPage = (MainPage)sender;
@@ -150,28 +149,28 @@ namespace WPNest {
 			base.OnBackKeyPress(e);
 			if (isSettingsOpen) {
 				e.Cancel = true;
-				CloseSettingsPanel();
+				CloseThermostatSettingsPanel();
 			}
 		}
 
-		private void OnSettingsButtonPress(object sender, RoutedEventArgs args) {
-			OpenSettingsPanel();
+		private void OnThermostatSettingsButtonPressed(object sender, RoutedEventArgs args) {
+			OpenThermostatSettingsPanel();
 		}
 
-		private void OnClickedOutsideOfSettings(object sender, MouseButtonEventArgs args) {
-			CloseSettingsPanel();
+		private void OnClickedOutsideOfThermostatSettings(object sender, MouseButtonEventArgs args) {
+			CloseThermostatSettingsPanel();
 		}
 
-		private void OpenSettingsPanel() {
+		private void OpenThermostatSettingsPanel() {
 			isSettingsOpen = true;
 			MoveThermostatToBackground.Begin();
-			VisualStateManager.GoToState(this, "SettingsOpen", true);
+			VisualStateManager.GoToState(this, "ThermostatSettingsOpen", true);
 		}
 
-		private void CloseSettingsPanel() {
+		private void CloseThermostatSettingsPanel() {
 			isSettingsOpen = false;
 			MoveThermostatToForeground.Begin();
-			VisualStateManager.GoToState(this, "SettingsClosed", true);
+			VisualStateManager.GoToState(this, "ThermostatSettingsClosed", true);
 		}
 
 		private void OnHvacSelectionChanged(object sender, SelectionChangedEventArgs args) {
@@ -200,6 +199,10 @@ namespace WPNest {
 				wp7ProgressBar.Visibility = Visibility.Collapsed;
 				wp8ProgressBar.Visibility = Visibility.Visible;
 			}
+		}
+
+		private void OnSettingsButtonPressed(object sender, RoutedEventArgs e) {
+			VisualStateManager.GoToState(this, "SettingsOpen", true);
 		}
 	}
 }
