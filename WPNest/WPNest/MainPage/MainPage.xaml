@@ -521,7 +521,7 @@
 				</VisualState>
 				<VisualState x:Name="SettingsClosed">
 					<Storyboard>
-						<DoubleAnimation Duration="0" To="408" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="settingsGrid" d:IsOptimized="True" />
+						<DoubleAnimation Duration="0" To="418" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="settingsGrid" d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -556,7 +556,7 @@
 		<Rectangle x:Name="settingsInputBlocker" Grid.RowSpan="2" Fill="#01FFFFFF" StrokeThickness="0" IsHitTestVisible="False" MouseLeftButtonDown="OnClickedOutsideOfSettings" Opacity="0" />
 		<Grid x:Name="settingsGrid" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Background="#FF1F1F1F">
 			<Grid.RenderTransform>
-				<CompositeTransform TranslateY="408" />
+				<CompositeTransform TranslateY="418" />
 			</Grid.RenderTransform>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="20" />
