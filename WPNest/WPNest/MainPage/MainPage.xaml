@@ -577,7 +577,7 @@
 				<WPNest:HvacModeControl x:Name="hvacHeatAndCool"  HvacMode="HeatAndCool"/>
 				<WPNest:HvacModeControl x:Name="hvacOff"  HvacMode="Off"/>
 			</toolkit:ListPicker>
-            <Button x:Name="logoutButton" Content="Logout" Grid.Row="5" Click="OnLogoutButtonPress" Margin="20,0,20,20"/>
+            <Button x:Name="logoutButton" Content="Log Out" Grid.Row="5" Click="OnLogoutButtonPress" Margin="20,0,20,20"/>
 		</Grid>
 		<Grid x:Name="errorGrid" Grid.RowSpan="2" Background="{StaticResource BackgroundBrush}" Opacity="0" IsHitTestVisible="False" Visibility="Collapsed" Tap="OnTapToRetryAfterError">
 			<StackPanel VerticalAlignment="Center" Margin="30,0">
