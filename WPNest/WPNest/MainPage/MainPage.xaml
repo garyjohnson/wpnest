@@ -521,7 +521,7 @@
 				</VisualState>
 				<VisualState x:Name="SettingsClosed">
 					<Storyboard>
-						<DoubleAnimation Duration="0" To="336" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="settingsGrid" d:IsOptimized="True" />
+						<DoubleAnimation Duration="0" To="408" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="settingsGrid" d:IsOptimized="True" />
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -556,7 +556,7 @@
 		<Rectangle x:Name="settingsInputBlocker" Grid.RowSpan="2" Fill="#01FFFFFF" StrokeThickness="0" IsHitTestVisible="False" MouseLeftButtonDown="OnClickedOutsideOfSettings" Opacity="0" />
 		<Grid x:Name="settingsGrid" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Grid.Row="1" Background="#FF1F1F1F">
 			<Grid.RenderTransform>
-				<CompositeTransform TranslateY="336" />
+				<CompositeTransform TranslateY="408" />
 			</Grid.RenderTransform>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="20" />
@@ -564,6 +564,7 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
 			<TextBlock x:Name="awayLabel" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="Away" VerticalAlignment="Top" Grid.Row="2" Margin="32,0,0,0" FontSize="21.333" FontFamily="Segoe WP Light" Foreground="#FDC1C1C1" />
 			<toolkit:ToggleSwitch x:Name="awaySwitch" VerticalAlignment="Top" Grid.Row="2" Margin="20,10,0,0" IsChecked="{Binding IsAway, Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Foreground="White" Background="Black" Style="{StaticResource ToggleSwitchDarkStyle}" />
@@ -576,6 +577,7 @@
 				<WPNest:HvacModeControl x:Name="hvacHeatAndCool"  HvacMode="HeatAndCool"/>
 				<WPNest:HvacModeControl x:Name="hvacOff"  HvacMode="Off"/>
 			</toolkit:ListPicker>
+            <Button x:Name="logoutButton" Content="Logout" Grid.Row="5" Click="OnLogoutButtonPress" Margin="20,0,20,20"/>
 		</Grid>
 		<Grid x:Name="errorGrid" Grid.RowSpan="2" Background="{StaticResource BackgroundBrush}" Opacity="0" IsHitTestVisible="False" Visibility="Collapsed" Tap="OnTapToRetryAfterError">
 			<StackPanel VerticalAlignment="Center" Margin="30,0">

@@ -234,6 +234,22 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
+        public void Logout()
+        {
+            try
+            {
+                IsLoggedIn = false;
+                IsLoggingIn = true;
+                _statusProvider.Stop();
+                _statusUpdater.Stop();
+                _sessionProvider.ClearSession();
+            }
+            finally
+            {
+                _statusProvider.Start();
+            }
+        }
+
 		private void ResetCurrentError() {
 			CurrentError = WebServiceError.None;
 		}
