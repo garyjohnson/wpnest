@@ -81,6 +81,12 @@ namespace WPNest {
 			GoToDefaultVisualState();
 		}
 
+        private void OnLogoutButtonPress(object sender, RoutedEventArgs args)
+        {
+            CloseSettingsPanel();
+            ViewModel.Logout();
+        }
+
 		private static void OnIsInErrorStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var mainPage = (MainPage)sender;
 			var isInErrorState = (bool)args.NewValue;
