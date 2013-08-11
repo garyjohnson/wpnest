@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WPNest.Services;
+using WPNest.Annotations;
 
 namespace WPNest {
 
@@ -23,63 +25,17 @@ namespace WPNest {
 			get { return _isInErrorState; }
 			set {
 				_isInErrorState = value;
-				OnPropertyChanged("IsInErrorState");
+				OnPropertyChanged();
 			}
 		}
 
-		private bool _isAway;
-		public bool IsAway {
-			get { return _isAway; }
-			set {
-				_isAway = value;
-				OnPropertyChanged("IsAway");
-				if (IsLoggedIn)
-					SetAwayModeAsync(_isAway);
-			}
-		}
-
-		private double _targetTemperature;
-		public double TargetTemperature {
-			get { return _targetTemperature; }
-			set {
-				_targetTemperature = value;
-				OnPropertyChanged("TargetTemperature");
-			}
-		}
-
-		private double _targetTemperatureLow;
-		public double TargetTemperatureLow {
-			get { return _targetTemperatureLow; }
-			set {
-				_targetTemperatureLow = value;
-				OnPropertyChanged("TargetTemperatureLow");
-			}
-		}
-
-		private double _targetTemperatureHigh;
-		public double TargetTemperatureHigh {
-			get { return _targetTemperatureHigh; }
-			set {
-				_targetTemperatureHigh = value;
-				OnPropertyChanged("TargetTemperatureHigh");
-			}
-		}
-
-		private double _currentTemperature;
-		public double CurrentTemperature {
-			get { return _currentTemperature; }
-			set {
-				_currentTemperature = value;
-				OnPropertyChanged("CurrentTemperature");
-			}
-		}
 
 		private bool _isLoggingIn;
 		public bool IsLoggingIn {
 			get { return _isLoggingIn; }
 			set {
 				_isLoggingIn = value;
-				OnPropertyChanged("IsLoggingIn");
+				OnPropertyChanged();
 			}
 		}
 
@@ -88,26 +44,7 @@ namespace WPNest {
 			get { return _isLoggedIn; }
 			set {
 				_isLoggedIn = value;
-				OnPropertyChanged("IsLoggedIn");
-			}
-		}
-
-		private bool _isHeating;
-		public bool IsHeating {
-			get { return _isHeating; }
-			set {
-				_isHeating = value;
-				OnPropertyChanged("IsHeating");
-			}
-		}
-
-
-		private bool _isCooling;
-		public bool IsCooling {
-			get { return _isCooling; }
-			set {
-				_isCooling = value;
-				OnPropertyChanged("IsCooling");
+				OnPropertyChanged();
 			}
 		}
 
@@ -116,7 +53,7 @@ namespace WPNest {
 			get { return _userName; }
 			set {
 				_userName = value;
-				OnPropertyChanged("UserName");
+				OnPropertyChanged();
 			}
 		}
 
@@ -125,42 +62,7 @@ namespace WPNest {
 			get { return _password; }
 			set {
 				_password = value;
-				OnPropertyChanged("Password");
-			}
-		}
-
-		private FanMode _fanMode;
-		public FanMode FanMode {
-			get { return _fanMode; }
-			set {
-				if (value != _fanMode) {
-					_fanMode = value;
-					OnPropertyChanged("FanMode");
-					if (IsLoggedIn)
-						SetFanModeAsync(_fanMode);
-				}
-			}
-		}
-
-		private HvacMode _hvacMode;
-		public HvacMode HvacMode {
-			get { return _hvacMode; }
-			set {
-				if (value != _hvacMode) {
-					_hvacMode = value;
-					OnPropertyChanged("HvacMode");
-					if (IsLoggedIn)
-						SetHvacModeAsync(_hvacMode);
-				}
-			}
-		}
-
-		private bool _isLeafOn;
-		public bool IsLeafOn {
-			get { return _isLeafOn; }
-			set {
-				_isLeafOn = value;
-				OnPropertyChanged("IsLeafOn");
+				OnPropertyChanged();
 			}
 		}
 
@@ -169,7 +71,7 @@ namespace WPNest {
 			get { return _currentError; }
 			set {
 				_currentError = value;
-				OnPropertyChanged("CurrentError");
+				OnPropertyChanged();
 			}
 		}
 
@@ -192,22 +94,15 @@ namespace WPNest {
 			UpdateViewModelFromGetStatusResult(e.Status);
 		}
 
+		private ThermostatViewModel _thermostat;
+
 		private void UpdateViewModelFromGetStatusResult(GetStatusResult statusResult) {
 			Structure firstStructure = statusResult.Structures.ElementAt(0);
 			Thermostat firstThermostat = firstStructure.Thermostats.ElementAt(0);
 
 			_getStatusResult = statusResult;
 
-			TargetTemperature = firstThermostat.TargetTemperature;
-			TargetTemperatureLow = firstThermostat.TargetTemperatureLow;
-			TargetTemperatureHigh = firstThermostat.TargetTemperatureHigh;
-			CurrentTemperature = firstThermostat.CurrentTemperature;
-			IsHeating = firstThermostat.IsHeating;
-			IsCooling = firstThermostat.IsCooling;
-			FanMode = firstThermostat.FanMode;
-			IsLeafOn = firstThermostat.IsLeafOn;
-			HvacMode = firstThermostat.HvacMode;
-			IsAway = firstStructure.IsAway;
+			_thermostat = new ThermostatViewModel(firstThermostat, firstStructure);
 		}
 
 		public async Task InitializeAsync() {
@@ -285,24 +180,6 @@ namespace WPNest {
 			await RaiseTemperatureAsync(TemperatureMode.Target);
 		}
 
-		private double GetTemperatureValue(TemperatureMode temperatureMode) {
-			double temperatureValue = TargetTemperature;
-			if (temperatureMode == TemperatureMode.RangeHigh)
-				temperatureValue = TargetTemperatureHigh;
-			else if (temperatureMode == TemperatureMode.RangeLow) 
-				temperatureValue = TargetTemperatureLow;
-
-			return temperatureValue;
-		}
-
-		private void SetTemperatureValue(TemperatureMode temperatureMode, double targetValue) {
-			if (temperatureMode == TemperatureMode.RangeHigh)
-				TargetTemperatureHigh = targetValue;
-			else if (temperatureMode == TemperatureMode.RangeLow)
-				TargetTemperatureLow = targetValue;
-			else
-				TargetTemperature = targetValue;
-		}
 
 		private void SetThermostatTemperatureValue(TemperatureMode temperatureMode, Thermostat thermostat, double targetValue) {
 			if (temperatureMode == TemperatureMode.RangeHigh)
@@ -314,7 +191,7 @@ namespace WPNest {
 		}
 
 		private async Task RaiseTemperatureAsync(TemperatureMode temperatureMode) {
-			double temperature = GetTemperatureValue(temperatureMode);
+			double temperature = _thermostat.GetTemperatureValue(temperatureMode);
 			if (temperature >= MaxTemperature)
 				return;
 
@@ -324,7 +201,7 @@ namespace WPNest {
 				var thermostat = GetFirstThermostat();
 
 				double desiredTemperature = temperature + 1.0d;
-				SetTemperatureValue(temperatureMode, desiredTemperature);
+				_thermostat.SetTemperatureValue(temperatureMode, desiredTemperature);
 				SetThermostatTemperatureValue(temperatureMode, thermostat, desiredTemperature);
 
 				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, temperatureMode);
@@ -343,7 +220,7 @@ namespace WPNest {
 		}
 
 		public async Task LowerTemperatureAsync(TemperatureMode temperatureMode) {
-			double temperature = GetTemperatureValue(temperatureMode);
+			double temperature = _thermostat.GetTemperatureValue(temperatureMode);
 			if (temperature <= MinTemperature)
 				return;
 
@@ -352,7 +229,7 @@ namespace WPNest {
 
 				var thermostat = GetFirstThermostat();
 				double desiredTemperature = temperature - 1.0d;
-				SetTemperatureValue(temperatureMode, desiredTemperature);
+				_thermostat.SetTemperatureValue(temperatureMode, desiredTemperature);
 				SetThermostatTemperatureValue(temperatureMode, thermostat, desiredTemperature);
 
 				var result = await _nestWebService.ChangeTemperatureAsync(thermostat, desiredTemperature, temperatureMode);
@@ -367,10 +244,12 @@ namespace WPNest {
 		}
 
 		private async void SetAwayModeAsync(bool isAway) {
-			Structure structure = GetFirstStructure();
-			if (structure.IsAway == isAway) {
+			if (!IsLoggedIn)
 				return;
-			}
+
+			Structure structure = GetFirstStructure();
+			if (structure.IsAway == isAway)
+				return;
 
 			try {
 				_statusProvider.Stop();
@@ -383,6 +262,9 @@ namespace WPNest {
 		}
 
 		private async void SetFanModeAsync(FanMode fanMode) {
+			if (!IsLoggedIn)
+				return;
+
 			var thermostat = GetFirstThermostat();
 			if (thermostat.FanMode == fanMode)
 				return;
@@ -403,6 +285,9 @@ namespace WPNest {
 		}
 
 		private async void SetHvacModeAsync(HvacMode hvacMode) {
+			if (!IsLoggedIn)
+				return;
+
 			var thermostat = GetFirstThermostat();
 			if (thermostat.HvacMode == hvacMode)
 				return;
@@ -474,10 +359,10 @@ namespace WPNest {
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		protected virtual void OnPropertyChanged(string propertyName) {
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
 			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
+			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

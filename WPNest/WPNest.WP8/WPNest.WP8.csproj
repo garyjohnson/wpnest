@@ -189,11 +189,26 @@
     <Compile Include="..\WPNest\MainPage\NestViewModel.cs">
       <Link>MainPage\NestViewModel.cs</Link>
     </Compile>
-    <Compile Include="..\WPNest\MainPage\ThermostatControl.xaml.cs">
-      <Link>MainPage\ThermostatControl.xaml.cs</Link>
+    <Compile Include="..\WPNest\MainPage\Thermostat\FanModeChangedArgs.cs">
+      <Link>MainPage\Thermostat\FanModeChangedArgs.cs</Link>
     </Compile>
-    <Compile Include="..\WPNest\MainPage\ThermostatTickCreator.cs">
-      <Link>MainPage\ThermostatTickCreator.cs</Link>
+    <Compile Include="..\WPNest\MainPage\Thermostat\HvacModeChangedArgs.cs">
+      <Link>MainPage\Thermostat\HvacModeChangedArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\Thermostat\IsAwayChangedArgs.cs">
+      <Link>MainPage\Thermostat\IsAwayChangedArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\Thermostat\ThermostatControl.xaml.cs">
+      <Link>MainPage\Thermostat\ThermostatControl.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\Thermostat\ThermostatSampleViewModel.cs">
+      <Link>MainPage\Thermostat\ThermostatSampleViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\Thermostat\ThermostatTickCreator.cs">
+      <Link>MainPage\Thermostat\ThermostatTickCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\WPNest\MainPage\Thermostat\ThermostatViewModel.cs">
+      <Link>MainPage\Thermostat\ThermostatViewModel.cs</Link>
     </Compile>
     <Compile Include="..\WPNest\MainPage\TrueToVisibleConverter.cs">
       <Link>MainPage\TrueToVisibleConverter.cs</Link>
@@ -330,6 +345,7 @@
     <Compile Include="..\WPNest\Web\WebResponseWrapper.cs">
       <Link>Web\WebResponseWrapper.cs</Link>
     </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs" />
   </ItemGroup>
@@ -372,8 +388,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\WPNest\MainPage\ThermostatControl.xaml">
-      <Link>MainPage\ThermostatControl.xaml</Link>
+    <Page Include="..\WPNest\MainPage\Thermostat\ThermostatControl.xaml">
+      <Link>MainPage\Thermostat\ThermostatControl.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
