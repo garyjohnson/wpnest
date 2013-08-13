@@ -20,9 +20,7 @@ namespace WPNest {
 			ShowCorrectProgressBarDependingOnOSVersion();
 
 			SetValue(SystemTray.IsVisibleProperty, true);
-			SetBinding(IsLoggedInProperty, new Binding("IsLoggedIn"));
-			SetBinding(IsLoggingInProperty, new Binding("IsLoggingIn"));
-			SetBinding(IsInErrorStateProperty, new Binding("IsInErrorState"));
+			SetBinding(StateProperty, new Binding("State"));
 			SetBinding(HvacModeProperty, new Binding("HvacMode") { Mode = BindingMode.TwoWay });
 
 			ResetZoom.Completed += OnResetZoomCompleted;
@@ -31,28 +29,12 @@ namespace WPNest {
 			GoToDefaultVisualState(false);
 		}
 
-		public static readonly DependencyProperty IsInErrorStateProperty =
-			DependencyProperty.Register("IsInErrorState", typeof(bool), typeof(MainPage), new PropertyMetadata(false, OnIsInErrorStateChanged));
+		public static readonly DependencyProperty StateProperty =
+			DependencyProperty.Register("State", typeof(NestViewModelState), typeof(MainPage), new PropertyMetadata(NestViewModelState.Loading, OnStateChanged));
 
-		public bool IsInErrorState {
-			get { return (bool)GetValue(IsInErrorStateProperty); }
-			set { SetValue(IsInErrorStateProperty, value); }
-		}
-
-		public static readonly DependencyProperty IsLoggedInProperty =
-			DependencyProperty.Register("IsLoggedIn", typeof(bool), typeof(MainPage), new PropertyMetadata(false, OnIsLoggedInChanged));
-
-		public bool IsLoggedIn {
-			get { return (bool)GetValue(IsLoggedInProperty); }
-			set { SetValue(IsLoggedInProperty, value); }
-		}
-
-		public static readonly DependencyProperty IsLoggingInProperty =
-			DependencyProperty.Register("IsLoggingIn", typeof(bool), typeof(MainPage), new PropertyMetadata(false, OnIsLoggingInChanged));
-
-		public bool IsLoggingIn {
-			get { return (bool)GetValue(IsLoggingInProperty); }
-			set { SetValue(IsLoggingInProperty, value); }
+		public NestViewModelState State {
+			get { return (NestViewModelState)GetValue(StateProperty); }
+			set { SetValue(StateProperty, value); }
 		}
 
 		public static readonly DependencyProperty HvacModeProperty =
@@ -88,41 +70,27 @@ namespace WPNest {
 			ViewModel.LogOut();
 		}
 
-		private static void OnIsInErrorStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
+		private static void OnStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
 			var mainPage = (MainPage)sender;
-			var isInErrorState = (bool)args.NewValue;
+			var state = (NestViewModelState)args.NewValue;
 
-			mainPage.RefreshVisualState(mainPage.IsLoggedIn, mainPage.IsLoggingIn, isInErrorState);
+			mainPage.RefreshVisualState(state);
 		}
 
-		private void RefreshVisualState(bool isLoggedIn, bool isLoggingIn, bool isInErrorState) {
-			if (isInErrorState) {
+		private void RefreshVisualState(NestViewModelState state) {
+			if (state == NestViewModelState.Error) {
 				GoToErrorVisualState();
 			}
-			else if (isLoggedIn) {
+			else if (state == NestViewModelState.LoggedIn) {
 				GoToLoggedInVisualState();
 				ResetZoom.Begin();
 			}
-			else if (isLoggingIn) {
+			else if (state == NestViewModelState.LoggingIn) {
 				GoToPromptingLoginVisualState();
 			}
 			else {
 				GoToDefaultVisualState();
 			}
-		}
-
-		private static void OnIsLoggedInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-			var mainPage = (MainPage)sender;
-			var isLoggedIn = (bool)args.NewValue;
-
-			mainPage.RefreshVisualState(isLoggedIn, mainPage.IsLoggingIn, mainPage.IsInErrorState);
-		}
-
-		private static void OnIsLoggingInChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
-			var mainPage = (MainPage)sender;
-			var isLoggingIn = (bool)args.NewValue;
-
-			mainPage.RefreshVisualState(mainPage.IsLoggedIn, isLoggingIn, mainPage.IsInErrorState);
 		}
 
 		private static void OnHvacModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {

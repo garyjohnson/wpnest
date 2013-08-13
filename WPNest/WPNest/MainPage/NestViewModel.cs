@@ -18,12 +18,12 @@ namespace WPNest {
 		private readonly IAnalyticsService _analyticsService;
 		private GetStatusResult _getStatusResult;
 
-		private bool _isInErrorState;
-		public bool IsInErrorState {
-			get { return _isInErrorState; }
+		private NestViewModelState _state;
+		public NestViewModelState State {
+			get { return _state; }
 			set {
-				_isInErrorState = value;
-				OnPropertyChanged("IsInErrorState");
+				_state = value;
+				OnPropertyChanged("State");
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace WPNest {
 			set {
 				_isAway = value;
 				OnPropertyChanged("IsAway");
-				if (IsLoggedIn)
+				if (State == NestViewModelState.LoggedIn)
 					SetAwayModeAsync(_isAway);
 			}
 		}
@@ -71,24 +71,6 @@ namespace WPNest {
 			set {
 				_currentTemperature = value;
 				OnPropertyChanged("CurrentTemperature");
-			}
-		}
-
-		private bool _isLoggingIn;
-		public bool IsLoggingIn {
-			get { return _isLoggingIn; }
-			set {
-				_isLoggingIn = value;
-				OnPropertyChanged("IsLoggingIn");
-			}
-		}
-
-		private bool _isLoggedIn;
-		public bool IsLoggedIn {
-			get { return _isLoggedIn; }
-			set {
-				_isLoggedIn = value;
-				OnPropertyChanged("IsLoggedIn");
 			}
 		}
 
@@ -136,7 +118,7 @@ namespace WPNest {
 				if (value != _fanMode) {
 					_fanMode = value;
 					OnPropertyChanged("FanMode");
-					if (IsLoggedIn)
+					if (State == NestViewModelState.LoggedIn)
 						SetFanModeAsync(_fanMode);
 				}
 			}
@@ -149,7 +131,7 @@ namespace WPNest {
 				if (value != _hvacMode) {
 					_hvacMode = value;
 					OnPropertyChanged("HvacMode");
-					if (IsLoggedIn)
+					if (State == NestViewModelState.LoggedIn)
 						SetHvacModeAsync(_hvacMode);
 				}
 			}
@@ -212,7 +194,7 @@ namespace WPNest {
 
 		public async Task InitializeAsync() {
 			if (_sessionProvider.IsSessionExpired) {
-				IsLoggingIn = true;
+				State = NestViewModelState.LoggingIn;
 				return;
 			}
 
@@ -239,8 +221,7 @@ namespace WPNest {
 				_statusProvider.Stop();
 				_statusUpdater.Stop();
 				_sessionProvider.ClearSession();
-				IsLoggedIn = false;
-				IsLoggingIn = true;
+				State = NestViewModelState.LoggingIn;
 			}
 			finally {
 				_statusProvider.Start();
@@ -256,7 +237,7 @@ namespace WPNest {
 		}
 
 		private async Task OnLoggedIn() {
-			IsLoggingIn = false;
+			//LoggingIn = false
 
 			var result = await _nestWebService.UpdateTransportUrlAsync();
 			if (IsErrorHandled(result.Error, result.Exception))
@@ -266,7 +247,7 @@ namespace WPNest {
 			if (IsErrorHandled(_getStatusResult.Error, _getStatusResult.Exception))
 				return;
 
-			IsLoggedIn = true;
+			State = NestViewModelState.LoggedIn;
 
 			UpdateViewModelFromGetStatusResult(_getStatusResult);
 
@@ -462,28 +443,28 @@ namespace WPNest {
 		}
 
 		private void HandleExceptionByRetry() {
-			IsLoggingIn = false;
+			//IsLoggingIn = false;
 			OnLoggedIn();
 		}
 
 		private void HandleException() {
-			IsLoggingIn = false;
-			IsInErrorState = true;
+			State = NestViewModelState.Error;
 		}
 
 		public async void RetryAfterErrorAsync() {
-			IsInErrorState = false;
+			//IsInErrorState = false;
 			await OnLoggedIn();
 		}
 
 		private void HandleLoginException(WebServiceError error) {
-			IsLoggedIn = false;
+			//IsLoggedIn = false;
 			// Missing test coverage. Set to false before true so UI updates. 
 			// How to test this? Or refactor out so not needed?
-			IsLoggingIn = false;
+			//IsLoggingIn = false;
 			_sessionProvider.ClearSession();
 			CurrentError = error;
-			IsLoggingIn = true;
+			//IsLoggingIn = true;
+			State = NestViewModelState.LoggingIn;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

@@ -198,7 +198,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(_viewModel.IsLoggedIn);
+				Assert.AreNotEqual(_viewModel.State, NestViewModelState.LoggedIn);
 			}
 
 			[TestMethod]
@@ -208,7 +208,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsTrue(_viewModel.IsLoggingIn);
+				Assert.AreEqual(_viewModel.State, NestViewModelState.LoggingIn);
 			}
 
 			[TestMethod]
@@ -239,7 +239,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(_viewModel.IsLoggedIn);
+				Assert.AreNotEqual(_viewModel.State, NestViewModelState.LoggedIn);
 			}
 
 			[TestMethod]
@@ -249,7 +249,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsTrue(_viewModel.IsLoggingIn);
+				Assert.AreEqual(_viewModel.State, NestViewModelState.LoggingIn);
 			}
 
 			[TestMethod]
@@ -281,7 +281,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(_viewModel.IsLoggingIn);
+				Assert.AreNotEqual(_viewModel.State, NestViewModelState.LoggingIn);
 			}
 
 			[TestMethod]
@@ -291,7 +291,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsTrue(_viewModel.IsInErrorState);
+				Assert.AreEqual(_viewModel.State, NestViewModelState.Error);
 			}
 
 			[TestMethod]
@@ -301,7 +301,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsFalse(_viewModel.IsInErrorState);
+				Assert.AreNotEqual(_viewModel.State, NestViewModelState.Error);
 			}
 
 			[TestMethod]
@@ -311,7 +311,7 @@ namespace WPNest.Test.UnitTests {
 
 				_statusProvider.Raise(provider => provider.StatusUpdated += null, args);
 
-				Assert.IsTrue(_viewModel.IsInErrorState);
+				Assert.AreEqual(_viewModel.State, NestViewModelState.Error);
 			}
 		}
 
@@ -336,14 +336,14 @@ namespace WPNest.Test.UnitTests {
 			public void ShouldNotBeLoggedIn() {
 				_viewModel.LogOut();
 
-				Assert.IsFalse(_viewModel.IsLoggedIn);
+				Assert.AreNotEqual(_viewModel.State, NestViewModelState.LoggedIn);
 			}
 
 			[TestMethod]
 			public void ShouldBeLoggingIn() {
 				_viewModel.LogOut();
 
-				Assert.IsTrue(_viewModel.IsLoggingIn);
+				Assert.AreEqual(_viewModel.State, NestViewModelState.LoggingIn);
 			}
 
 			[TestMethod]
@@ -407,7 +407,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldNotBeLoggingIn() {
 				await _viewModel.LogInAsync();
 
-				Assert.IsFalse(_viewModel.IsLoggingIn);
+				Assert.AreNotEqual(_viewModel.State, NestViewModelState.LoggingIn);
 			}
 
 			[TestMethod]
@@ -428,7 +428,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldBeLoggedIn() {
 				await _viewModel.LogInAsync();
 
-				Assert.IsTrue(_viewModel.IsLoggedIn);
+				Assert.AreEqual(_viewModel.State, NestViewModelState.LoggedIn);
 			}
 
 			[TestMethod]

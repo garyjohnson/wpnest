@@ -123,6 +123,7 @@
       <DependentUpon>ErrorPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage\IsEnabledFanModeConverter.cs" />
+    <Compile Include="MainPage\NestViewModelState.cs" />
     <Compile Include="MainPage\ThermostatTickCreator.cs" />
     <Compile Include="Model\FanMode.cs" />
     <Compile Include="MainPage\FanModeToBoolConverter.cs" />

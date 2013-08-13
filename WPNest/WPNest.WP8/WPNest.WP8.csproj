@@ -188,6 +188,9 @@
     <Compile Include="..\WPNest\MainPage\NestViewModel.cs">
       <Link>MainPage\NestViewModel.cs</Link>
     </Compile>
+    <Compile Include="..\WPNest\MainPage\NestViewModelState.cs">
+      <Link>MainPage\NestViewModelState.cs</Link>
+    </Compile>
     <Compile Include="..\WPNest\MainPage\ThermostatControl.xaml.cs">
       <Link>MainPage\ThermostatControl.xaml.cs</Link>
     </Compile>
