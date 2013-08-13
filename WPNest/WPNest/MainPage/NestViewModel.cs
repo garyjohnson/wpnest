@@ -237,8 +237,6 @@ namespace WPNest {
 		}
 
 		private async Task OnLoggedIn() {
-			//LoggingIn = false
-
 			var result = await _nestWebService.UpdateTransportUrlAsync();
 			if (IsErrorHandled(result.Error, result.Exception))
 				return;
@@ -443,7 +441,6 @@ namespace WPNest {
 		}
 
 		private void HandleExceptionByRetry() {
-			//IsLoggingIn = false;
 			OnLoggedIn();
 		}
 
@@ -452,18 +449,12 @@ namespace WPNest {
 		}
 
 		public async void RetryAfterErrorAsync() {
-			//IsInErrorState = false;
 			await OnLoggedIn();
 		}
 
 		private void HandleLoginException(WebServiceError error) {
-			//IsLoggedIn = false;
-			// Missing test coverage. Set to false before true so UI updates. 
-			// How to test this? Or refactor out so not needed?
-			//IsLoggingIn = false;
 			_sessionProvider.ClearSession();
 			CurrentError = error;
-			//IsLoggingIn = true;
 			State = NestViewModelState.LoggingIn;
 		}
 
