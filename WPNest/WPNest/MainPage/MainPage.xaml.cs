@@ -18,6 +18,7 @@ namespace WPNest {
 
 		public MainPage() {
 			InitializeComponent();
+            AddHideSystemTrayAnimation();
 			ShowCorrectProgressBarDependingOnOSVersion();
 
 			SetValue(SystemTray.IsVisibleProperty, true);
