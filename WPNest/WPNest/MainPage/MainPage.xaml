@@ -377,6 +377,16 @@
 							<QuadraticEase EasingMode="EaseInOut" />
 						</VisualTransition.GeneratedEasingFunction>
 					</VisualTransition>
+					<VisualTransition From="Error" To="Default" GeneratedDuration="0:0:0.3">
+						<Storyboard>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="loginControl"/>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="thermostatControl"/>
+							<DoubleAnimation Duration="0" To="0.995" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="loadingPanel"/>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="thermostatSettingsButton"/>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="settingsGrid"/>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="topButtonGrid"/>
+						</Storyboard>
+					</VisualTransition>
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="Default">
 					<Storyboard>
@@ -594,7 +604,7 @@
 			</WPNest:ThermostatControl.RenderTransform>
 		</WPNest:ThermostatControl>
 
-		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" LoginPressed="OnLoginPressed" Grid.RowSpan="2" Grid.Row="1" />
+		<Login:LoginControl x:Name="loginControl" Opacity="0" IsHitTestVisible="False" Grid.RowSpan="2" Grid.Row="1" />
 
 		<Button x:Name="thermostatSettingsButton" VerticalAlignment="Bottom" Style="{StaticResource SettingsButton}" RenderTransformOrigin="0.5,0.5" Click="OnThermostatSettingsButtonPressed" Padding="10,3,10,5" Grid.Row="2">
 			<Button.RenderTransform>
@@ -639,7 +649,7 @@
 				<WPNest:HvacModeControl x:Name="hvacOff" HvacMode="Off" />
 			</toolkit:ListPicker>
 		</Grid>
-		<Grid x:Name="errorGrid" Grid.RowSpan="3" Background="{StaticResource BackgroundBrush}" Opacity="0" IsHitTestVisible="False" Visibility="Collapsed" Tap="OnTapToRetryAfterError">
+		<Grid x:Name="errorGrid" Grid.RowSpan="3" Background="{StaticResource BackgroundBrush}" Opacity="0" IsHitTestVisible="False" Tap="OnTapToRetryAfterError">
 			<StackPanel VerticalAlignment="Center" Margin="30,0">
 				<TextBlock TextWrapping="Wrap" Foreground="#FF171717" FontSize="32" Text="Oops! We had some trouble connecting with the server." FontFamily="Segoe WP Semibold" />
 				<TextBlock TextWrapping="Wrap" Foreground="#FF171717" FontSize="26.667" Text="Check your internet connection and tap to try again." Margin="0,10,0,0" />

@@ -20,7 +20,7 @@ namespace WPNest {
 			ShowCorrectProgressBarDependingOnOSVersion();
 
 			SetValue(SystemTray.IsVisibleProperty, true);
-			SetBinding(StateProperty, new Binding("State"));
+			SetBinding(PageStateProperty, new Binding("State"));
 			SetBinding(HvacModeProperty, new Binding("HvacMode") { Mode = BindingMode.TwoWay });
 
 			ResetZoom.Completed += OnResetZoomCompleted;
@@ -29,12 +29,12 @@ namespace WPNest {
 			GoToDefaultVisualState(false);
 		}
 
-		public static readonly DependencyProperty StateProperty =
-			DependencyProperty.Register("State", typeof(NestViewModelState), typeof(MainPage), new PropertyMetadata(NestViewModelState.Loading, OnStateChanged));
+		public static readonly DependencyProperty PageStateProperty =
+			DependencyProperty.Register("PageState", typeof(NestViewModelState), typeof(MainPage), new PropertyMetadata(NestViewModelState.Loading, OnStateChanged));
 
-		public NestViewModelState State {
-			get { return (NestViewModelState)GetValue(StateProperty); }
-			set { SetValue(StateProperty, value); }
+		public NestViewModelState PageState {
+			get { return (NestViewModelState)GetValue(PageStateProperty); }
+			set { SetValue(PageStateProperty, value); }
 		}
 
 		public static readonly DependencyProperty HvacModeProperty =
@@ -59,10 +59,6 @@ namespace WPNest {
 
 		private async void OnLoaded(object sender, RoutedEventArgs e) {
 			await ViewModel.InitializeAsync();
-		}
-
-		private void OnLoginPressed(object sender, EventArgs e) {
-			GoToDefaultVisualState();
 		}
 
 		private void OnLogoutButtonPress(object sender, RoutedEventArgs args) {

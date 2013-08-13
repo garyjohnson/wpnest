@@ -202,6 +202,8 @@ namespace WPNest {
 		}
 
 		public async Task LogInAsync() {
+			State = NestViewModelState.Loading;
+
 			ResetCurrentError();
 			string userName = UserName;
 			string password = Password;
@@ -237,6 +239,8 @@ namespace WPNest {
 		}
 
 		private async Task OnLoggedIn() {
+			State = NestViewModelState.Loading;
+
 			var result = await _nestWebService.UpdateTransportUrlAsync();
 			if (IsErrorHandled(result.Error, result.Exception))
 				return;

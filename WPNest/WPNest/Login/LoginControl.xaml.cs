@@ -16,9 +16,6 @@ namespace WPNest.Login {
 		}
 
 		private async void OnLoginPressed(object sender, RoutedEventArgs args) {
-			if (LoginPressed != null)
-				LoginPressed(this, EventArgs.Empty);
-
 			await ViewModel.LogInAsync();
 			RefreshPasswordHintVisibility();
 		}
@@ -54,7 +51,5 @@ namespace WPNest.Login {
 		private void ManuallyUpdatePasswordBinding() {
 			password.GetBindingExpression(PasswordBox.PasswordProperty).UpdateSource();
 		}
-
-		public event EventHandler LoginPressed;
 	}
 }
