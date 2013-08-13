@@ -68,16 +68,16 @@ namespace WPNest.Services {
 
 		public void UpdateThermostatStatusFromSharedStatusResult(string strContent, Thermostat thermostatToUpdate) {
 			var values = JObject.Parse(strContent);
-			double temperatureCelcius = double.Parse(values["target_temperature"].Value<string>());
-			double temperatureLowCelcius = double.Parse(values["target_temperature_low"].Value<string>());
-			double temperatureHighCelcius = double.Parse(values["target_temperature_high"].Value<string>());
-			double currentTemperatureCelcius = double.Parse(values["current_temperature"].Value<string>());
+			double temperatureCelsius = double.Parse(values["target_temperature"].Value<string>());
+			double temperatureLowCelsius = double.Parse(values["target_temperature_low"].Value<string>());
+			double temperatureHighCelsius = double.Parse(values["target_temperature_high"].Value<string>());
+			double currentTemperatureCelsius = double.Parse(values["current_temperature"].Value<string>());
 			TemperatureScale scale = thermostatToUpdate.TemperatureScale;
 
-			thermostatToUpdate.CurrentTemperature = Math.Round(ConvertTo(scale, currentTemperatureCelcius));
-			thermostatToUpdate.TargetTemperature = Math.Round(ConvertTo(scale, temperatureCelcius));
-			thermostatToUpdate.TargetTemperatureLow = Math.Round(ConvertTo(scale, temperatureLowCelcius));
-			thermostatToUpdate.TargetTemperatureHigh = Math.Round(ConvertTo(scale, temperatureHighCelcius));
+			thermostatToUpdate.CurrentTemperature = Math.Round(ConvertTo(scale, currentTemperatureCelsius));
+			thermostatToUpdate.TargetTemperature = Math.Round(ConvertTo(scale, temperatureCelsius));
+			thermostatToUpdate.TargetTemperatureLow = Math.Round(ConvertTo(scale, temperatureLowCelsius));
+			thermostatToUpdate.TargetTemperatureHigh = Math.Round(ConvertTo(scale, temperatureHighCelsius));
 			thermostatToUpdate.IsHeating = values["hvac_heater_state"].Value<bool>();
 			thermostatToUpdate.IsCooling = values["hvac_ac_state"].Value<bool>();
 			thermostatToUpdate.HvacMode = GetHvacModeFromString(values["target_temperature_type"].Value<string>());
@@ -122,7 +122,7 @@ namespace WPNest.Services {
 			if(value == "F")
 				return TemperatureScale.Fahrenheit;
 			if(value == "C")
-				return TemperatureScale.Celcius;
+				return TemperatureScale.Celsius;
 
 			throw new InvalidOperationException(string.Format("Could not parse Temperature Scale of {0}", value));
 		}
@@ -231,11 +231,11 @@ namespace WPNest.Services {
 			return null;
 		}
 
-		private static double ConvertTo(TemperatureScale toScale, double celciusTemperature) {
+		private static double ConvertTo(TemperatureScale toScale, double celsiusTemperature) {
 			if (toScale == TemperatureScale.Fahrenheit)
-				return celciusTemperature.CelciusToFahrenheit();
+				return celsiusTemperature.CelsiusToFahrenheit();
 
-			return celciusTemperature;
+			return celsiusTemperature;
 		}
 	}
 }

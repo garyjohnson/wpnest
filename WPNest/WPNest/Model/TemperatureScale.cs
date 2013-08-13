@@ -2,6 +2,6 @@
 
 	public enum TemperatureScale {
 		Fahrenheit,
-		Celcius
+		Celsius
 	}
 }

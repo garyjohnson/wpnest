@@ -34,11 +34,11 @@ namespace WPNest {
 			return HttpUtility.UrlEncode(value);
 		}
 
-		public static double CelciusToFahrenheit(this double celcius) {
-			return (celcius * 1.8d) + 32.0d;
+		public static double CelsiusToFahrenheit(this double celsius) {
+			return (celsius * 1.8d) + 32.0d;
 		}
 
-		public static double FahrenheitToCelcius(this double fahrenheit) {
+		public static double FahrenheitToCelsius(this double fahrenheit) {
 			return (fahrenheit - 32.0d) / 1.8d;
 		}
 	}

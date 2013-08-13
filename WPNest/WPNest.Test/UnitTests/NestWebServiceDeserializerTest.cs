@@ -45,7 +45,7 @@ namespace WPNest.Test.UnitTests {
 		public void ShouldParseTargetTemperature() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
-			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(20d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, structures.ElementAt(0).Thermostats[0].TargetTemperature);
 		}
 
@@ -53,7 +53,7 @@ namespace WPNest.Test.UnitTests {
 		public void ShouldParseCurrentTemperature() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
-			double expectedTemperature = Math.Round(22.46d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(22.46d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, structures.ElementAt(0).Thermostats[0].CurrentTemperature);
 		}
 
@@ -77,7 +77,7 @@ namespace WPNest.Test.UnitTests {
 		public void ShouldParseTargetTemperatureLow() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
-			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(20d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, structures.ElementAt(0).Thermostats[0].TargetTemperatureLow);
 		}
 
@@ -93,7 +93,7 @@ namespace WPNest.Test.UnitTests {
 		public void ShouldParseTargetTemperatureHigh() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResult, FakeJsonMessages.UserId);
 
-			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(24d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, structures.ElementAt(0).Thermostats[0].TargetTemperatureHigh);
 		}
 
@@ -116,7 +116,7 @@ namespace WPNest.Test.UnitTests {
 		public void ShouldParseTemperatureScale() {
 			var structures = _deserializer.ParseStructuresFromGetStatusResult(FakeJsonMessages.GetStatusResultCelcius, FakeJsonMessages.UserId);
 
-			Assert.AreEqual(TemperatureScale.Celcius, structures.ElementAt(0).Thermostats[0].TemperatureScale);
+			Assert.AreEqual(TemperatureScale.Celsius, structures.ElementAt(0).Thermostats[0].TemperatureScale);
 		}
 	}
 
@@ -136,7 +136,7 @@ namespace WPNest.Test.UnitTests {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResult, thermostat);
 
-			double expectedTemperature = Math.Round(21.159d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(21.159d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperature);
 		}
 
@@ -145,7 +145,7 @@ namespace WPNest.Test.UnitTests {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
-			double expectedTemperature = Math.Round(20d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(20d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureLow);
 		}
 
@@ -154,7 +154,7 @@ namespace WPNest.Test.UnitTests {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
-			double expectedTemperature = Math.Round(24d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(24d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.TargetTemperatureHigh);
 		}
 
@@ -163,13 +163,13 @@ namespace WPNest.Test.UnitTests {
 			var thermostat = new Thermostat("");
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResult, thermostat);
 
-			double expectedTemperature = Math.Round(21.89d.CelciusToFahrenheit());
+			double expectedTemperature = Math.Round(21.89d.CelsiusToFahrenheit());
 			Assert.AreEqual(expectedTemperature, thermostat.CurrentTemperature);
 		}
 
 		[TestMethod]
 		public void ShouldUpdateTargetTemperatureCelcius() {
-			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celcius};
+			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celsius};
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResult, thermostat);
 
 			double expectedTemperature = Math.Round(21.159d);
@@ -178,7 +178,7 @@ namespace WPNest.Test.UnitTests {
 
 		[TestMethod]
 		public void ShouldUpdateTargetTemperatureLowCelcius() {
-			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celcius};
+			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celsius};
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
 			double expectedTemperature = Math.Round(20d);
@@ -187,7 +187,7 @@ namespace WPNest.Test.UnitTests {
 
 		[TestMethod]
 		public void ShouldUpdateTargetTemperatureHighCelcius() {
-			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celcius};
+			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celsius};
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResultTempRangeMode, thermostat);
 
 			double expectedTemperature = Math.Round(24d);
@@ -196,7 +196,7 @@ namespace WPNest.Test.UnitTests {
 
 		[TestMethod]
 		public void ShouldUpdateCurrentTemperatureCelcius() {
-			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celcius};
+			var thermostat = new Thermostat("") {TemperatureScale = TemperatureScale.Celsius};
 			_deserializer.UpdateThermostatStatusFromSharedStatusResult(FakeJsonMessages.GetSharedStatusResult, thermostat);
 
 			double expectedTemperature = Math.Round(21.89d);

@@ -317,7 +317,7 @@ namespace WPNest.Services {
 
 		private static double ConvertFrom(TemperatureScale fromScale, double fromTemperature) {
 			if (fromScale == TemperatureScale.Fahrenheit)
-				return fromTemperature.FahrenheitToCelcius();
+				return fromTemperature.FahrenheitToCelsius();
 
 			return fromTemperature;
 		}
