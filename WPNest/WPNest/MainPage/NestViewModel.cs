@@ -310,9 +310,7 @@ namespace WPNest {
 			if (temperature >= MaxTemperature)
 				return;
 
-			try {
-				_statusProvider.Stop();
-
+			await PauseStatusProviderWhile(async () => {
 				var thermostat = GetFirstThermostat();
 
 				double desiredTemperature = temperature + 1.0d;
@@ -324,24 +322,11 @@ namespace WPNest {
 					return;
 
 				await _statusUpdater.UpdateStatusAsync();
-			}
-			finally {
-				_statusProvider.Start();
-			}
+			});
 		}
 
 		public async Task LowerTemperatureAsync() {
 			await LowerTemperatureAsync(TemperatureMode.Target);
-		}
-
-		private async Task PauseStatusProviderWhile(Func<Task> action) {
-			try {
-				_statusProvider.Stop();
-				await action();
-			}
-			finally {
-				_statusProvider.Start();
-			}
 		}
 
 		public async Task LowerTemperatureAsync(TemperatureMode temperatureMode) {
@@ -454,6 +439,16 @@ namespace WPNest {
 			PropertyChangedEventHandler handler = PropertyChanged;
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private async Task PauseStatusProviderWhile(Func<Task> action) {
+			try {
+				_statusProvider.Stop();
+				await action();
+			}
+			finally {
+				_statusProvider.Start();
+			}
 		}
 	}
 }
