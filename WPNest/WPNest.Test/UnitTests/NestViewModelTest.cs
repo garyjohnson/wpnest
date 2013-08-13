@@ -345,13 +345,6 @@ namespace WPNest.Test.UnitTests {
 
 				Assert.AreEqual(_viewModel.State, NestViewModelState.LoggingIn);
 			}
-
-			[TestMethod]
-			public void ShouldRestartStatusProvider() {
-				_viewModel.LogOut();
-
-				_statusProvider.Verify(s => s.Start());
-			}
 		}
 
 		[TestClass]
