@@ -132,6 +132,7 @@ namespace WPNest {
 		}
 
 		private void CloseSettingsPanel() {
+            SetValue(SystemTray.IsVisibleProperty, true);
 			isSettingsOpen = false;
 			VisualStateManager.GoToState(this, "SettingsClosed", true);
 		}
@@ -185,6 +186,7 @@ namespace WPNest {
 		}
 
 		private void OpenSettingsPanel() {
+            SetValue(SystemTray.IsVisibleProperty, false);
 			isSettingsOpen = true;
 			VisualStateManager.GoToState(this, "SettingsOpen", true);
 		}
