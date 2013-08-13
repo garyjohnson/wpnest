@@ -7,7 +7,6 @@ using System.Windows.Input;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
-using System.Windows.Media.Animation;
 
 namespace WPNest {
 
@@ -18,7 +17,6 @@ namespace WPNest {
 
 		public MainPage() {
 			InitializeComponent();
-            AddHideSystemTrayAnimation();
 			ShowCorrectProgressBarDependingOnOSVersion();
 
 			SetValue(SystemTray.IsVisibleProperty, true);
@@ -134,6 +132,7 @@ namespace WPNest {
 		}
 
 		private void CloseSettingsPanel() {
+            SetValue(SystemTray.IsVisibleProperty, true);
 			isSettingsOpen = false;
 			VisualStateManager.GoToState(this, "SettingsClosed", true);
 		}
@@ -187,6 +186,7 @@ namespace WPNest {
 		}
 
 		private void OpenSettingsPanel() {
+            SetValue(SystemTray.IsVisibleProperty, false);
 			isSettingsOpen = true;
 			VisualStateManager.GoToState(this, "SettingsOpen", true);
 		}
@@ -194,16 +194,5 @@ namespace WPNest {
 		private void OnReviewPressed(object sender, RoutedEventArgs args) {
 			new MarketplaceReviewTask().Show();
 		}
-
-        private void AddHideSystemTrayAnimation() {
-            ObjectAnimationUsingKeyFrames animation = new ObjectAnimationUsingKeyFrames();
-            Storyboard.SetTargetProperty(animation, new PropertyPath(SystemTray.IsVisibleProperty));
-            Storyboard.SetTargetName(animation, "Page");
-            DiscreteObjectKeyFrame keyFrame = new DiscreteObjectKeyFrame();
-            keyFrame.Value = false;
-            keyFrame.KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
-            animation.KeyFrames.Add(keyFrame);
-            SettingsOpen.Storyboard.Children.Add(animation);
-        }
 	}
 }
