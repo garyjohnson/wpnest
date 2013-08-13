@@ -503,6 +503,13 @@ namespace WPNest.Test.UnitTests {
 
 				_statusUpdaterService.Verify(s => s.Start());
 			}
+
+			[TestMethod]
+			public async Task ShouldStartStatusProvider() {
+				await _viewModel.LogInAsync();
+
+				_statusProvider.Verify(s => s.Start());
+			}
 		}
 
 		[TestClass]

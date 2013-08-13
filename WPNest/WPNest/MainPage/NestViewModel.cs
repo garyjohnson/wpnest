@@ -272,6 +272,7 @@ namespace WPNest {
 
 			_statusUpdater.CurrentStructure = _getStatusResult.Structures.ElementAt(0);
 			_statusUpdater.Start();
+			_statusProvider.Start();
 		}
 
 		public void Teardown() {

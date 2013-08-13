@@ -11,7 +11,6 @@ namespace WPNest.Services {
 
 		public DelayedStatusProvider() {
 			_displayCachedStatusTimer = new Timer(OnDisplayCachedStatusTick);
-			StartDisplayCachedStatusTimer();
 		}
 
 		public void CacheStatus(GetStatusResult status) {
