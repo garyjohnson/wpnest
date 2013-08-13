@@ -19,7 +19,7 @@ namespace WPNest.Login {
 			if (LoginPressed != null)
 				LoginPressed(this, EventArgs.Empty);
 
-			await ViewModel.LoginAsync();
+			await ViewModel.LogInAsync();
 			RefreshPasswordHintVisibility();
 		}
 

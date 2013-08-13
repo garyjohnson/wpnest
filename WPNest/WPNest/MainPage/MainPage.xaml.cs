@@ -6,11 +6,13 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 
 namespace WPNest {
 
 	public partial class MainPage : PhoneApplicationPage {
 
+		private bool isThermostatSettingsOpen;
 		private bool isSettingsOpen;
 
 		public MainPage() {
@@ -82,8 +84,8 @@ namespace WPNest {
 		}
 
 		private void OnLogoutButtonPress(object sender, RoutedEventArgs args) {
-			CloseThermostatSettingsPanel();
-			ViewModel.Logout();
+			CloseSettingsPanel();
+			ViewModel.LogOut();
 		}
 
 		private static void OnIsInErrorStateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) {
@@ -147,9 +149,13 @@ namespace WPNest {
 
 		protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e) {
 			base.OnBackKeyPress(e);
-			if (isSettingsOpen) {
+			if (isThermostatSettingsOpen) {
 				e.Cancel = true;
 				CloseThermostatSettingsPanel();
+			}
+			else if (isSettingsOpen) {
+				e.Cancel = true;
+				CloseSettingsPanel();
 			}
 		}
 
@@ -157,18 +163,27 @@ namespace WPNest {
 			OpenThermostatSettingsPanel();
 		}
 
+		private void OnClickedOutsideOfSettings(object sender, MouseButtonEventArgs args) {
+			CloseSettingsPanel();
+		}
+
+		private void CloseSettingsPanel() {
+			isSettingsOpen = false;
+			VisualStateManager.GoToState(this, "SettingsClosed", true);
+		}
+
 		private void OnClickedOutsideOfThermostatSettings(object sender, MouseButtonEventArgs args) {
 			CloseThermostatSettingsPanel();
 		}
 
 		private void OpenThermostatSettingsPanel() {
-			isSettingsOpen = true;
+			isThermostatSettingsOpen = true;
 			MoveThermostatToBackground.Begin();
 			VisualStateManager.GoToState(this, "ThermostatSettingsOpen", true);
 		}
 
 		private void CloseThermostatSettingsPanel() {
-			isSettingsOpen = false;
+			isThermostatSettingsOpen = false;
 			MoveThermostatToForeground.Begin();
 			VisualStateManager.GoToState(this, "ThermostatSettingsClosed", true);
 		}
@@ -202,7 +217,16 @@ namespace WPNest {
 		}
 
 		private void OnSettingsButtonPressed(object sender, RoutedEventArgs e) {
+			OpenSettingsPanel();
+		}
+
+		private void OpenSettingsPanel() {
+			isSettingsOpen = true;
 			VisualStateManager.GoToState(this, "SettingsOpen", true);
+		}
+
+		private void OnReviewPressed(object sender, RoutedEventArgs args) {
+			new MarketplaceReviewTask().Show();
 		}
 	}
 }

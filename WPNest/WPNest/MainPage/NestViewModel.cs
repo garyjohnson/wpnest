@@ -219,7 +219,7 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
-		public async Task LoginAsync() {
+		public async Task LogInAsync() {
 			ResetCurrentError();
 			string userName = UserName;
 			string password = Password;
@@ -234,21 +234,18 @@ namespace WPNest {
 			await OnLoggedIn();
 		}
 
-        public void Logout()
-        {
-            try
-            {
-                IsLoggedIn = false;
-                IsLoggingIn = true;
-                _statusProvider.Stop();
-                _statusUpdater.Stop();
-                _sessionProvider.ClearSession();
-            }
-            finally
-            {
-                _statusProvider.Start();
-            }
-        }
+		public void LogOut() {
+			try {
+				_statusProvider.Stop();
+				_statusUpdater.Stop();
+				_sessionProvider.ClearSession();
+				IsLoggedIn = false;
+				IsLoggingIn = true;
+			}
+			finally {
+				_statusProvider.Start();
+			}
+		}
 
 		private void ResetCurrentError() {
 			CurrentError = WebServiceError.None;
@@ -305,7 +302,7 @@ namespace WPNest {
 			double temperatureValue = TargetTemperature;
 			if (temperatureMode == TemperatureMode.RangeHigh)
 				temperatureValue = TargetTemperatureHigh;
-			else if (temperatureMode == TemperatureMode.RangeLow) 
+			else if (temperatureMode == TemperatureMode.RangeLow)
 				temperatureValue = TargetTemperatureLow;
 
 			return temperatureValue;

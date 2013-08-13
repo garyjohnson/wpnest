@@ -316,13 +316,52 @@ namespace WPNest.Test.UnitTests {
 		}
 
 		[TestClass]
+		public class NestViewModel_WhenLoggingOut : NestViewModelTestBase {
+			
+			[TestMethod]
+			public void ShouldStopStatusProvider() {
+				_viewModel.LogOut();
+
+				_statusProvider.Verify(s => s.Stop());
+			}
+
+			[TestMethod]
+			public void ShouldStopStatusUpdater() {
+				_viewModel.LogOut();
+
+				_statusUpdaterService.Verify(s => s.Stop());
+			}
+
+			[TestMethod]
+			public void ShouldNotBeLoggedIn() {
+				_viewModel.LogOut();
+
+				Assert.IsFalse(_viewModel.IsLoggedIn);
+			}
+
+			[TestMethod]
+			public void ShouldBeLoggingIn() {
+				_viewModel.LogOut();
+
+				Assert.IsTrue(_viewModel.IsLoggingIn);
+			}
+
+			[TestMethod]
+			public void ShouldRestartStatusProvider() {
+				_viewModel.LogOut();
+
+				_statusProvider.Verify(s => s.Start());
+			}
+		}
+
+		[TestClass]
 		public class NestViewModel_WhenLoggingIn : NestViewModelTestBase {
 
 			[TestMethod]
 			public async Task ShouldResetCurrentError() {
 				_viewModel.CurrentError = WebServiceError.InvalidCredentials;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(WebServiceError.None, _viewModel.CurrentError);
 			}
@@ -332,7 +371,7 @@ namespace WPNest.Test.UnitTests {
 				_viewModel.UserName = "Bob";
 				_viewModel.Password = "Bob's Password";
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(string.Empty, _viewModel.Password);
 			}
@@ -342,7 +381,7 @@ namespace WPNest.Test.UnitTests {
 				_viewModel.UserName = "Bob";
 				_viewModel.Password = "Bob's Password";
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual("Bob", _viewModel.UserName);
 			}
@@ -355,7 +394,7 @@ namespace WPNest.Test.UnitTests {
 				_viewModel.UserName = expectedUserName;
 				_viewModel.Password = expectedPassword;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_nestWebService.Verify(n => n.LoginAsync(expectedUserName, expectedPassword));
 			}
@@ -366,28 +405,28 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldNotBeLoggingIn() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.IsFalse(_viewModel.IsLoggingIn);
 			}
 
 			[TestMethod]
 			public async Task ShouldUpdateTransportUrls() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_nestWebService.Verify(n => n.UpdateTransportUrlAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldGetStatus() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_nestWebService.Verify(n => n.GetFullStatusAsync());
 			}
 
 			[TestMethod]
 			public async Task ShouldBeLoggedIn() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.IsTrue(_viewModel.IsLoggedIn);
 			}
@@ -397,7 +436,7 @@ namespace WPNest.Test.UnitTests {
 				double expectedTargetTemperature = 12.3d;
 				_firstThermostat.TargetTemperature = expectedTargetTemperature;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(expectedTargetTemperature, _viewModel.TargetTemperature);
 			}
@@ -407,7 +446,7 @@ namespace WPNest.Test.UnitTests {
 				double expectedCurrentTemperature = 12.3d;
 				_firstThermostat.CurrentTemperature = expectedCurrentTemperature;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(expectedCurrentTemperature, _viewModel.CurrentTemperature);
 			}
@@ -417,7 +456,7 @@ namespace WPNest.Test.UnitTests {
 				bool expectedIsHeating = true;
 				_firstThermostat.IsHeating = expectedIsHeating;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(expectedIsHeating, _viewModel.IsHeating);
 			}
@@ -427,7 +466,7 @@ namespace WPNest.Test.UnitTests {
 				bool expectedIsCooling = true;
 				_firstThermostat.IsCooling = expectedIsCooling;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(expectedIsCooling, _viewModel.IsCooling);
 			}
@@ -437,7 +476,7 @@ namespace WPNest.Test.UnitTests {
 				var expectedFanMode = FanMode.Auto;
 				_firstThermostat.FanMode = expectedFanMode;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(expectedFanMode, _viewModel.FanMode);
 			}
@@ -446,21 +485,21 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldSetIsAwayToStructureIsAway() {
 				_structure.IsAway = true;
 
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				Assert.AreEqual(_structure.IsAway, _viewModel.IsAway);
 			}
 
 			[TestMethod]
 			public async Task ShouldSetStatusUpdaterCurrentStructureToStructure() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_statusUpdaterService.VerifySet(s => s.CurrentStructure = _structure);
 			}
 
 			[TestMethod]
 			public async Task ShouldStartStatusUpdater() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_statusUpdaterService.Verify(s => s.Start());
 			}
@@ -471,7 +510,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldStartStatusUpdater() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_statusUpdaterService.Verify(s => s.Start());
 			}
@@ -482,7 +521,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				await _viewModel.RaiseTemperatureAsync();
 
 				_statusProvider.Verify(s => s.Stop());
@@ -491,7 +530,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldIncrementTargetTemperature() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = 31.0d;
 				double expectedTemperature = _viewModel.TargetTemperature + 1;
 				await _viewModel.RaiseTemperatureAsync();
@@ -501,7 +540,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldChangedTemperatureOnFirstThermostatToIncrementedTemp() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = 31.0d;
 				double expectedTemperature = _viewModel.TargetTemperature + 1;
 				await _viewModel.RaiseTemperatureAsync();
@@ -511,7 +550,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldNotChangeTemperatureIfTargetTemperatureIsAtMaxiumum() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				await _viewModel.RaiseTemperatureAsync();
 
@@ -521,7 +560,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldUpdateStatus() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				await _viewModel.RaiseTemperatureAsync();
 
 				_statusUpdaterService.Verify(s => s.UpdateStatusAsync());
@@ -532,7 +571,7 @@ namespace WPNest.Test.UnitTests {
 				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
 				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>()))
 					.Returns(Task.FromResult(result));
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				await _viewModel.RaiseTemperatureAsync();
 
@@ -545,7 +584,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				await _viewModel.LowerTemperatureAsync();
 
@@ -555,7 +594,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldDecrementTargetTemperature() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				double expectedTemperature = _viewModel.TargetTemperature - 1;
 				await _viewModel.LowerTemperatureAsync();
@@ -565,7 +604,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldChangeTemperatureOnFirstThermostatToDecrementedTemp() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				double expectedTemperature = _viewModel.TargetTemperature - 1;
 				await _viewModel.LowerTemperatureAsync();
@@ -575,7 +614,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldNotChangeTemperatureIfTargetTemperatureIsAtMinimum() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MinTemperature;
 				await _viewModel.LowerTemperatureAsync();
 
@@ -585,7 +624,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldUpdateStatus() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 				await _viewModel.LowerTemperatureAsync();
 
@@ -597,7 +636,7 @@ namespace WPNest.Test.UnitTests {
 				var result = new WebServiceResult(WebServiceError.Unknown, new Exception());
 				_nestWebService.Setup(n => n.ChangeTemperatureAsync(It.IsAny<Thermostat>(), It.IsAny<double>(), It.IsAny<TemperatureMode>()))
 					.Returns(Task.FromResult(result));
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 				_viewModel.TargetTemperature = NestViewModel.MaxTemperature;
 
 				await _viewModel.LowerTemperatureAsync();
@@ -611,7 +650,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.FanMode = FanMode.Auto;
 
@@ -621,7 +660,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldSetFanModeOnFirstThermostat() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				var expectedFanMode = FanMode.Auto;
 				_viewModel.FanMode = expectedFanMode;
@@ -631,7 +670,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldSetFanModeOnWebService() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.FanMode = FanMode.Auto;
 
@@ -640,7 +679,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldUpdateStatus() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.FanMode = FanMode.Auto;
 
@@ -651,7 +690,7 @@ namespace WPNest.Test.UnitTests {
 			public async Task ShouldNotUpdateStatusIfSetFanModeFails() {
 				var errorResult = new WebServiceResult(WebServiceError.Unknown, new Exception());
 				_nestWebService.Setup(n => n.SetFanModeAsync(It.IsAny<Thermostat>(), It.IsAny<FanMode>())).Returns(Task.FromResult(errorResult));
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.FanMode = FanMode.Auto;
 
@@ -660,7 +699,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldNotSetFanModeIfFanModeDidNotChange() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.FanMode = _viewModel.FanMode;
 
@@ -674,7 +713,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.HvacMode = HvacMode.HeatAndCool;
 
@@ -688,7 +727,7 @@ namespace WPNest.Test.UnitTests {
 				
 			[TestMethod]
 			public async Task ShouldStopAndStartStatusProvider() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.IsAway = true;
 
@@ -698,7 +737,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldCallWebServiceSetAwayMode() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.IsAway = true;
 
@@ -707,7 +746,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldProvideStructureToWebService() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.IsAway = true;
 
@@ -716,7 +755,7 @@ namespace WPNest.Test.UnitTests {
 
 			[TestMethod]
 			public async Task ShouldNotSetIsAwayIfSameAsStructure() {
-				await _viewModel.LoginAsync();
+				await _viewModel.LogInAsync();
 
 				_viewModel.IsAway = _structure.IsAway;
 
