@@ -28,8 +28,8 @@ namespace WPNest.Web {
 			get { return new WebHeaderCollectionWrapper(_request.Headers); }
 		}
 
-		public async Task<Stream> GetRequestStreamAsync() {
-			return await _request.GetRequestStreamAsync();
+		public Task<Stream> GetRequestStreamAsync() {
+			return _request.GetRequestStreamAsync();
 		}
 
 		public async Task<IWebResponse> GetResponseAsync() {
@@ -37,8 +37,8 @@ namespace WPNest.Web {
 			return new WebResponseWrapper(response);
 		}
 
-		public async Task SetRequestStringAsync(string requestString) {
-			await _request.SetRequestStringAsync(requestString);
+		public Task SetRequestStringAsync(string requestString) {
+			return _request.SetRequestStringAsync(requestString);
 		}
 	}
 }

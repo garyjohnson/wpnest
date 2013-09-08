@@ -23,8 +23,8 @@ namespace WPNest.Web {
 			return _response.GetResponseStream();
 		}
 
-		public async Task<string> GetResponseStringAsync() {
-			return await _response.GetResponseStringAsync();
+		public Task<string> GetResponseStringAsync() {
+			return _response.GetResponseStringAsync();
 		}
 	}
 }
