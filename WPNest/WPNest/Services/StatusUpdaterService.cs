@@ -27,8 +27,8 @@ namespace WPNest.Services {
 			_updateStatusTimer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 
-		public async Task UpdateStatusAsync() {
-			await UpdateStatusAsync(CurrentStructure);
+		public Task UpdateStatusAsync() {
+			return UpdateStatusAsync(CurrentStructure);
 		}
 
 		private async Task UpdateStatusAsync(Structure structure) {

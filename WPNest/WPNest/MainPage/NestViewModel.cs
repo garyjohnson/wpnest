@@ -192,13 +192,13 @@ namespace WPNest {
 			IsAway = firstStructure.IsAway;
 		}
 
-		public async Task InitializeAsync() {
+		public Task InitializeAsync() {
 			if (_sessionProvider.IsSessionExpired) {
 				State = NestViewModelState.LoggingIn;
-				return;
+				return null;
 			}
 
-			await OnLoggedIn();
+			return OnLoggedIn();
 		}
 
 		public async Task LogInAsync() {
@@ -257,24 +257,24 @@ namespace WPNest {
 			_statusUpdater.Stop();
 		}
 
-		public async Task RaiseLowTemperatureAsync() {
-			await RaiseTemperatureAsync(TemperatureMode.RangeLow);
+		public Task RaiseLowTemperatureAsync() {
+			return RaiseTemperatureAsync(TemperatureMode.RangeLow);
 		}
 
-		public async Task RaiseHighTemperatureAsync() {
-			await RaiseTemperatureAsync(TemperatureMode.RangeHigh);
+		public Task RaiseHighTemperatureAsync() {
+			return RaiseTemperatureAsync(TemperatureMode.RangeHigh);
 		}
 
-		public async Task LowerLowTemperatureAsync() {
-			await LowerTemperatureAsync(TemperatureMode.RangeLow);
+		public Task LowerLowTemperatureAsync() {
+			return LowerTemperatureAsync(TemperatureMode.RangeLow);
 		}
 
-		public async Task LowerHighTemperatureAsync() {
-			await LowerTemperatureAsync(TemperatureMode.RangeHigh);
+		public Task LowerHighTemperatureAsync() {
+			return LowerTemperatureAsync(TemperatureMode.RangeHigh);
 		}
 
-		public async Task RaiseTemperatureAsync() {
-			await RaiseTemperatureAsync(TemperatureMode.Target);
+		public Task RaiseTemperatureAsync() {
+			return RaiseTemperatureAsync(TemperatureMode.Target);
 		}
 
 		private double GetTemperatureValue(TemperatureMode temperatureMode) {
@@ -305,12 +305,12 @@ namespace WPNest {
 				thermostat.TargetTemperature = targetValue;
 		}
 
-		private async Task RaiseTemperatureAsync(TemperatureMode temperatureMode) {
+		private Task RaiseTemperatureAsync(TemperatureMode temperatureMode) {
 			double temperature = GetTemperatureValue(temperatureMode);
 			if (temperature >= MaxTemperature)
-				return;
+				return null;
 
-			await PauseStatusProviderWhile(async () => {
+			return PauseStatusProviderWhile(async () => {
 				var thermostat = GetFirstThermostat();
 
 				double desiredTemperature = temperature + 1.0d;
@@ -325,16 +325,16 @@ namespace WPNest {
 			});
 		}
 
-		public async Task LowerTemperatureAsync() {
-			await LowerTemperatureAsync(TemperatureMode.Target);
+		public Task LowerTemperatureAsync() {
+			return LowerTemperatureAsync(TemperatureMode.Target);
 		}
 
-		public async Task LowerTemperatureAsync(TemperatureMode temperatureMode) {
+		public Task LowerTemperatureAsync(TemperatureMode temperatureMode) {
 			double temperature = GetTemperatureValue(temperatureMode);
-			if (temperature <= MinTemperature)
-				return;
+            if (temperature <= MinTemperature)
+                return null;
 
-			await PauseStatusProviderWhile(async () => {
+			return PauseStatusProviderWhile(async () => {
 				var thermostat = GetFirstThermostat();
 				double desiredTemperature = temperature - 1.0d;
 				SetTemperatureValue(temperatureMode, desiredTemperature);
